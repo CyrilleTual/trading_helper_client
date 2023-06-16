@@ -1,0 +1,36 @@
+.main {
+    padding: 20px;
+}
+
+.main form {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    max-width: 300px;
+    margin: 10px auto;
+}
+
+
+.main input {
+    margin-bottom: 10px;
+}
+
+.main input[type="submit"]{
+    padding: 10px;
+    background-color: rgb(121, 173, 42);
+    border-radius: 10px;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: bold;
+
+}
+
+.main p {
+    text-align: center;
+}
+
+.main a {
+    display: inline;
+    color: gray;
+    
+}
