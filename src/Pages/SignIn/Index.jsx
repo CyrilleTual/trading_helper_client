@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import style from "./index.module.css";
 import { useSignUserInMutation } from "../../store/slice/tradeApi";
 import { signIn } from "../../store/slice/user";
+import { useNavigate } from "react-router-dom";
+
 
 function SignIn() {
   const [inputs, setInputs] = useState({ email: "", pwd: "" });
@@ -20,13 +21,9 @@ function SignIn() {
   // middlware pour le set de la state via le store
   const [signUserIn, response] = useSignUserInMutation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  // affichage du nom recuperé dans le store  
-  const { alias } = useSelector((state) => ({
-    ...state.user.infos,
-  }));
  
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -35,12 +32,13 @@ function SignIn() {
       //localStorage.setItem("infos", JSON.stringify({alias:res.data.alias, email:res.data.email, role:res.data.role}));
       dispatch(
         signIn({
+          id: res.data.id,
           alias: res.data.alias,
           email: res.data.email,
           role: res.data.role,
         })
       );
-      // navigate("/");
+      navigate("/global");
     } catch (err) {
       console.log(err);
       //setMsg("problème d'identifiant");
@@ -49,7 +47,7 @@ function SignIn() {
 
   return (
     <main className={style.main}>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} method="post">
         <label htmlFor="email">email :</label>
         <input
           type="email"
@@ -71,10 +69,10 @@ function SignIn() {
       </form>
 
       <p>
-        Pas de compte ? En créer un <Link to={"/"}>👉 ici 👈</Link>
+        Pas de compte ? En créer un <Link to={"/signUp"}>👉 ici 👈</Link>
       </p>
 
-      {response.isSuccess && <p>Bonjour {alias}</p>}
+ 
     </main>
   );
 }

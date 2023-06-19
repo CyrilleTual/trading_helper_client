@@ -4,7 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    infos: null, // infos sous forme d'objet : alias, email et role
+    infos: null, // infos sous forme d'objet : id, alias, email et role
     isLogged: false, // est log ou non 
   },
   reducers: {
