@@ -47,7 +47,7 @@ function SignIn() {
 
   return (
     <main className={style.main}>
-      <form onSubmit={handleSubmit} method="post">
+      <form onSubmit={handleSubmit} >
         <label htmlFor="email">email :</label>
         <input
           type="email"

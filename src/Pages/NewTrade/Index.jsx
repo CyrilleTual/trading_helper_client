@@ -80,10 +80,13 @@ function NewTrade() {
       comment: values.comment,
       strategy_id: +values.strategyId,
       portfolio_id: +values.portfolioId,
-      currency_id : currencyId
+      currency_id : currencyId,
+      lastQuote: lastInfos.last,
+      beforeQuote: lastInfos.before
     };
     
     try {
+       
       const res = await newTrade(datas);
       console.log(res);
       // navigate("/");

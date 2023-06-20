@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSearchStocksQuery } from "../../../store/slice/tradeApi";
 
 function SearchStock({selectedItem, setSelectedItem} ) {
@@ -15,7 +15,6 @@ function SearchStock({selectedItem, setSelectedItem} ) {
   const handleInputChange = (e) => {
     setstock({ ...stock, title: e.target.value });
   };
-
 
   const { data: searchResult, isSuccess: searchIsSuccess } =
     useSearchStocksQuery(stock.title);

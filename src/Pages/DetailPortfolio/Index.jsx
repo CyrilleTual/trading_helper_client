@@ -40,25 +40,29 @@ function DetailPorfolio() {
         <div className={styles.detail}>
           <p>Bonjour ! </p>
           <table>
-            {newArrayValues.map((element, i) => (
-              <tr key={i}>
-                {element.map((elt, j) => (
-                  <td key={j}>{elt}</td>
+             <tbody>
+              {newArrayValues.map((element, i) => (
+                <tr key={i}>
+                  {element.map((elt, j) => (
+                    <td key={j}>{elt}</td>
+                  ))}
+                </tr>
+              ))}
+              <tr>
+                <td>Buy more</td>
+                {data.map((elt, j) => (
+                  <td key={j}>lien vers buyMore trade N°{elt.tradeId}</td>
                 ))}
               </tr>
-            ))}
-            <tr>
-              <td>Buy more</td>
-              {data.map((elt, j) => (
-                <td>lien vers buyMore trade N°{elt.tradeId}</td>
-              ))}
-            </tr>
-            <tr>
-              <td>Sell</td>
-              {data.map((elt, j) => (
-                <td>lien vers sell trade N°{elt.tradeId}</td>
-              ))}
-            </tr>
+              <tr>
+                <td>Sell</td>
+                {data.map((elt, k) => (
+                  <td key={k}>lien vers sell trade N°{elt.tradeId}</td>
+                ))}
+              </tr>
+             </tbody>
+              
+            
           </table>
         </div>
       )}
