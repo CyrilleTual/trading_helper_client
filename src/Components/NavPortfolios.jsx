@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useGetPortfoliosByUserQuery } from "../store/slice/tradeApi";
-import style from "./navPortfolios.module.css";
+import style from "./nav.module.css";
 
 function NavPorfolios() {
   // pour les onglets besion de la liste des portfolios pour cet user
@@ -19,10 +19,8 @@ function NavPorfolios() {
       {isLoading ? (
         <p>loading</p>
       ) : (
-        <>
-          <NavLink className={style.button} to="/">
-            LogIn
-          </NavLink>
+        <div>
+          <br></br>
           <NavLink className={style.button} to="/global">
             Summary
           </NavLink>
@@ -31,7 +29,7 @@ function NavPorfolios() {
               {portfolio.title}
             </NavLink>
           ))}
-        </>
+        </div>
       )}
     </>
   );

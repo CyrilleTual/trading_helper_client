@@ -43,6 +43,37 @@ export const tradeApi = createApi({
     getPortfolioDashboardById: builder.query({
       query: (id) => `/portfolio/dashboard/${id}`,
     }),
+
+    // le détail d'un portefeuille par id de portefeuille
+    getDetailPortfolioById: builder.query({
+      query: (id) => `/portfolio/details/${id}`,
+    }),
+
+    // liste des strategies par user
+    getStategiesByUserId: builder.query({
+      query: (id) => `strategies/user/${id}`,
+    }),
+
+    //recherhce des stocks
+    searchStocks: builder.query({
+      query: (title) => `/stock/find/${title}`,
+    }),
+
+    //dernier cours d'un stock
+    lastQuote: builder.query({
+      query: (item) => `/stock/last/${item.isin}&${item.place}`,
+    }),
+
+    // nouveau trade
+    newTrade: builder.mutation({
+      query: (payload) => ({
+        url: "/trade/newEntry",
+        method: "POST",
+        body: payload,
+      }),
+    }),
+
+
   }),
 });
 
@@ -52,4 +83,9 @@ export const {
   useGetPortfoliosByUserQuery,
   useGetGlobalDashBoardByUserQuery,
   useGetPortfolioDashboardByIdQuery,
+  useGetDetailPortfolioByIdQuery,
+  useGetStategiesByUserIdQuery,
+  useSearchStocksQuery,
+  useLastQuoteQuery,
+  useNewTradeMutation,
 } = tradeApi;
