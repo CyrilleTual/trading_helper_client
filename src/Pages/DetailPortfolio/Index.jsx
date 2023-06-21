@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, NavLink } from "react-router-dom";
 import styles from "./detailPorfolio.module.css";
 import { useGetDetailPortfolioByIdQuery } from "../../store/slice/tradeApi";
 
@@ -40,7 +40,7 @@ function DetailPorfolio() {
         <div className={styles.detail}>
           <p>Bonjour ! </p>
           <table>
-             <tbody>
+            <tbody>
               {newArrayValues.map((element, i) => (
                 <tr key={i}>
                   {element.map((elt, j) => (
@@ -57,12 +57,17 @@ function DetailPorfolio() {
               <tr>
                 <td>Sell</td>
                 {data.map((elt, k) => (
-                  <td key={k}>lien vers sell trade N°{elt.tradeId}</td>
+                  <td>
+                    <NavLink
+                      className={styles.button}
+                      to={`/exitTrade/${elt.tradeId}`}
+                    >
+                      Exit
+                    </NavLink>
+                  </td>
                 ))}
               </tr>
-             </tbody>
-              
-            
+            </tbody>
           </table>
         </div>
       )}

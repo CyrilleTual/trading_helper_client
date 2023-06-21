@@ -1,23 +1,23 @@
 import { useState } from "react";
 import { useSearchStocksQuery } from "../../../store/slice/tradeApi";
 
-function SearchStock({selectedItem, setSelectedItem} ) {
+function SearchStock({ selectedItem, setSelectedItem }) {
+  const [stock, setstock] = useState({
+    id: 0,
+    title: "",
+    isin: 0,
+    place: "",
+    ticker: "",
+  });
 
-    const [stock, setstock] = useState({
-      id: 0,
-      title: "",
-      isin: 0,
-      place: "",
-      ticker: "",
-    });
-  
+  const [skip, setSkip] = useState(true);
+  const { data: searchResult, isSuccess: searchIsSuccess } =
+    useSearchStocksQuery(stock.title, { skip });
 
   const handleInputChange = (e) => {
     setstock({ ...stock, title: e.target.value });
+    e.target.value.length > 2 ? setSkip(false) : setSkip(true);
   };
-
-  const { data: searchResult, isSuccess: searchIsSuccess } =
-    useSearchStocksQuery(stock.title);
 
   return (
     <>

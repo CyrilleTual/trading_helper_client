@@ -8,6 +8,7 @@ import Portfolio from './Pages/Portfolio';
 import DetailPorfolio from './Pages/DetailPortfolio/Index';
 import Nav from './Components/Nav';
 import NewTrade from './Pages/NewTrade/Index';
+import ExitTrade from './Pages/ExitTrade/Index';
  
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path= "/portfolio/:portfolioId" element = {<Portfolio/>}/>
         <Route path= "/portfolio/detail/:portfolioId" element = {<DetailPorfolio/>}/>
         <Route path= "/newTrade" element = {<NewTrade/>}/>
+        <Route path= "/exitTrade/:tradeId" element = {<ExitTrade/>}/>
      </Routes>
      </>
   );
