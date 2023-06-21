@@ -73,6 +73,20 @@ export const tradeApi = createApi({
       }),
     }),
 
+    // preparation exit / re-enter
+    prepare: builder.query({
+      query: (id) => `/trade/prepare/${id}`,
+    }),
+
+    // exit Process
+    exitProcess: builder.mutation({
+      query: (payload) => ({
+        url: `/trade/exitProcess`,
+        method: "POST",
+        body: payload,
+      }),
+    }),
+
 
   }),
 });
@@ -88,4 +102,7 @@ export const {
   useSearchStocksQuery,
   useLastQuoteQuery,
   useNewTradeMutation,
+  useExitProcessMutation,
+  usePrepareQuery,
+
 } = tradeApi;
