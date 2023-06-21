@@ -12,6 +12,7 @@ export const tradeApi = createApi({
       return headers;
     },
   }),
+  tagTypes: ["Auth", "Portfolio", "GlobalDatas"],
   endpoints: (builder) => ({
     signUserIn: builder.mutation({
       query: (payload) => ({
@@ -19,6 +20,7 @@ export const tradeApi = createApi({
         method: "POST",
         body: payload,
       }),
+      providesTags: ["Auth"],
     }),
 
     signUserUp: builder.mutation({
@@ -32,21 +34,25 @@ export const tradeApi = createApi({
     // la liste des portfolios pour un user
     getPortfoliosByUser: builder.query({
       query: (id) => `/portfolio/user/${id}`,
+      providesTags: ["Portfolio"],
     }),
 
     // la synthèses des portfolios
     getGlobalDashBoardByUser: builder.query({
       query: (id) => `/portfolio/dashboard/user/global/${id}`,
+      providesTags: ["GlobalDatas"],
     }),
 
     // le dashboard d'un portfolio particulier par id de portfolio
     getPortfolioDashboardById: builder.query({
       query: (id) => `/portfolio/dashboard/${id}`,
+      providesTags: ["GlobalDatas"],
     }),
 
     // le détail d'un portefeuille par id de portefeuille
     getDetailPortfolioById: builder.query({
       query: (id) => `/portfolio/details/${id}`,
+      providesTags: ["GlobalDatas"],
     }),
 
     // liste des strategies par user
@@ -71,6 +77,7 @@ export const tradeApi = createApi({
         method: "POST",
         body: payload,
       }),
+      invalidatesTags: ["GlobalDatas"],
     }),
 
     // preparation exit / re-enter
@@ -85,9 +92,18 @@ export const tradeApi = createApi({
         method: "POST",
         body: payload,
       }),
+      invalidatesTags: ["GlobalDatas"],
     }),
 
-
+    // reEnter Process
+    reEnter: builder.mutation({
+      query: (payload) => ({
+        url: `/trade/reEnter`,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["GlobalDatas"],
+    }),
   }),
 });
 
@@ -104,5 +120,6 @@ export const {
   useNewTradeMutation,
   useExitProcessMutation,
   usePrepareQuery,
+  useReEnterMutation,
 
 } = tradeApi;

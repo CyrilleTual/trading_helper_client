@@ -51,13 +51,20 @@ function DetailPorfolio() {
               <tr>
                 <td>Buy more</td>
                 {data.map((elt, j) => (
-                  <td key={j}>lien vers buyMore trade N°{elt.tradeId}</td>
+                  <td key={j}>
+                    <NavLink
+                      className={styles.button}
+                      to={`/reEnter/${elt.tradeId}`}
+                    >
+                      Re-Enter
+                    </NavLink>
+                  </td>
                 ))}
               </tr>
               <tr>
                 <td>Sell</td>
                 {data.map((elt, k) => (
-                  <td>
+                  <td key={k}>
                     <NavLink
                       className={styles.button}
                       to={`/exitTrade/${elt.tradeId}`}

@@ -1,18 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { usePrepareQuery, useExitProcessMutation } from "../../store/slice/tradeApi";
-import styles from "./exitTrade.module.css"
+import { usePrepareQuery, useReEnterMutation } from "../../store/slice/tradeApi";
+import styles from "./reEnter.module.css";
 
-function ExitTrade() {
+function ReEnter() {
   const { tradeId } = useParams();
 
   // va recupérer les infos du trade
   const { data: trade, isLoading, isSuccess } = usePrepareQuery(tradeId);
 
-  // hook de création de sortie
-  const [exitProcess] = useExitProcessMutation();
+  // hook de création de la reEnter
+  const [reEnter] = useReEnterMutation()
 
-  
   ///  disponible pour l'affichage : ( trade . qq chose)
   //   const {
   //   closureQuantity,
@@ -23,6 +22,7 @@ function ExitTrade() {
   //   exposition,
   //   firstEnter,
   //   isin,
+  //   lastQuote,
   //   place,
   //   portfolio,
   //   position,
@@ -35,18 +35,25 @@ function ExitTrade() {
   //   tradeId,
   // } = data;
 
-  ///// gestion du formulaire //////////////////////////////
-
-  /// to do -> verifier que l'on est bien sur le bon trade 
-  /// -> tradeId === trade.tradeId ? 
   const [values, setValues] = useState({
     quantity: 0,
     price: 0,
     fees: 0,
     tax: 0,
     date: new Date().toISOString().split("T")[0],
-    comment: ""
+    comment: "",
+    target: 0,
+    stop: 0,
   });
+  ///// gestion du formulaire //////////////////////////////
+  useEffect(() => {
+    if (isSuccess) {
+      setValues({ ...values, target: trade.target, stop: trade.stop, comment:trade.comment });
+    }
+  }, [trade]);
+
+  /// to do -> verifier que l'on est bien sur le bon trade
+  /// -> tradeId === trade.tradeId ?
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -56,35 +63,41 @@ function ExitTrade() {
     e.preventDefault();
     const datas = {
       trade_id: tradeId,
+      date: values.date,
       price: +(+values.price).toFixed(2),
+      target: +(+values.target).toFixed(3),
+      stop: +(+values.stop).toFixed(3),
       quantity: +(+values.quantity).toFixed(0),
-      remains: trade.remains,
       fees: +(+values.fees).toFixed(3),
       tax: +(+values.fees).toFixed(3),
-      date: values.date,
       comment: values.comment,
       stock_id: trade.stock_id,
     };
 
     try {
-    const res = await exitProcess(datas);
-    console.log(res);
+      console.log("datas à traiter", datas);
+      const resp = await reEnter(datas);
+      console.log(resp);
       // navigate("/");
     } catch (err) {
       console.log(err);
     }
   };
 
-  //*******************************************************
   return (
     <>
       {!isSuccess ? (
         <p>Loading</p>
       ) : (
         <>
-          <p>Tu veux vendre {trade.title}? </p>
-          <p>Le dernier cours est de {trade.lastQuote}</p>
-          <p>Tu disposes de {trade.remains} titres en portefeuille</p>
+          <p>
+            Tu veux reprendre un peu de {trade.title}? c'est un {trade.position}
+          </p>
+          <p>
+            Le dernier cours est de {trade.lastQuote} ton Pru actuel est de{" "}
+            {trade.pru}
+          </p>
+          <p>Tu es positionné sur {trade.remains} titres </p>
           <form className={styles.form} onSubmit={handleSubmit} method="POST ">
             <label className={styles.label} htmlFor="price">
               Price
@@ -96,7 +109,6 @@ function ExitTrade() {
               value={values.price}
               onChange={handleChange}
             />
-            {values.price}
             <label className={styles.label} htmlFor="quantity">
               quantity
             </label>
@@ -105,6 +117,26 @@ function ExitTrade() {
               id="quantity"
               name="quantity"
               value={values.quantity}
+              onChange={handleChange}
+            />
+            <label className={styles.label} htmlFor="target">
+              target (pour l'ensemble de la postion)
+            </label>
+            <input
+              type="target"
+              id="target"
+              name="target"
+              value={values.target}
+              onChange={handleChange}
+            />
+            <label className={styles.label} htmlFor="stop">
+              stop (pour l'ensemble de la postion)
+            </label>
+            <input
+              type="stop"
+              id="stop"
+              name="stop"
+              value={values.stop}
               onChange={handleChange}
             />
             <label className={styles.label} htmlFor="fees">
@@ -128,7 +160,7 @@ function ExitTrade() {
               onChange={handleChange}
             />
             <label className={styles.label} htmlFor="comment">
-              comment
+              comment (pour l'ensemble de la position)
             </label>
             <input
               type="comment"
@@ -156,4 +188,4 @@ function ExitTrade() {
   );
 }
 
-export default ExitTrade;
+export default ReEnter;

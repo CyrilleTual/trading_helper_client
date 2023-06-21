@@ -9,6 +9,7 @@ import DetailPorfolio from './Pages/DetailPortfolio/Index';
 import Nav from './Components/Nav';
 import NewTrade from './Pages/NewTrade/Index';
 import ExitTrade from './Pages/ExitTrade/Index';
+import ReEnter from './Pages/ReEnter/Index';
  
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path= "/portfolio/detail/:portfolioId" element = {<DetailPorfolio/>}/>
         <Route path= "/newTrade" element = {<NewTrade/>}/>
         <Route path= "/exitTrade/:tradeId" element = {<ExitTrade/>}/>
+        <Route path= "/reEnter/:tradeId" element = {<ReEnter/>}/>
      </Routes>
      </>
   );
