@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
-import style from "./index.module.css";
+import styles from "./index.module.css";
 import { useSignUserInMutation } from "../../store/slice/tradeApi";
 import { signIn } from "../../store/slice/user";
 import { useNavigate } from "react-router-dom";
+import BtnSubmit from "../../Components/UI/BtnSubmit";
+import BtnLink from "../../Components/UI/BtnLink";
+import logo from "../../assets/img/logo.jpg";
+ 
 
 
 function SignIn() {
@@ -19,7 +22,7 @@ function SignIn() {
 
 
   // middlware pour le set de la state via le store
-  const [signUserIn, response] = useSignUserInMutation();
+  const [signUserIn] = useSignUserInMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -46,14 +49,17 @@ function SignIn() {
   };
 
   return (
-    <main className={style.main}>
-      <form onSubmit={handleSubmit} >
+    <main className={styles.signin}>
+      <img src={logo} alt="Logo" />
+      <h1>Trading Helper</h1>
+      <form onSubmit={handleSubmit}>
         <label htmlFor="email">email :</label>
         <input
           type="email"
           name="email"
           id="email"
           value={email}
+          autoComplete="username"
           onChange={handleInputChange}
         />
 
@@ -61,18 +67,18 @@ function SignIn() {
         <input
           type="pwd"
           name="pwd"
+          autoComplete="current-password"
           id="pwd"
           value={pwd}
           onChange={handleInputChange}
         />
-        <input type="submit" value="LogIn" />
+        <BtnSubmit value="LogIn" />
       </form>
 
       <p>
-        Pas de compte ? En créer un <Link to={"/signUp"}>👉 ici 👈</Link>
+        Pas de compte ? En créer un
+        <BtnLink link="/signUp" title="👉 ici 👈" />
       </p>
-
- 
     </main>
   );
 }

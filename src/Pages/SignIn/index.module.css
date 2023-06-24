@@ -1,36 +1,34 @@
-.main {
+.signin {
     padding: 20px;
+    text-align: center;
 }
 
-.main form {
+.signin form {
     display: flex;
     flex-direction: column;
     width: 70%;
     max-width: 300px;
     margin: 10px auto;
+    text-align: left;
 }
 
 
-.main input {
+
+
+.signin input {
     margin-bottom: 10px;
 }
 
-.main input[type="submit"]{
-    padding: 10px;
-    background-color: rgb(121, 173, 42);
-    border-radius: 10px;
-    color: #fff;
-    text-transform: uppercase;
-    font-weight: bold;
-
-}
-
-.main p {
+.signin p {
     text-align: center;
 }
 
-.main a {
+.signin a {
     display: inline;
     color: gray;
     
+}
+
+img {
+    height: 150px;
 }

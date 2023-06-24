@@ -1,18 +1,25 @@
-import React from 'react'
-import { useSelector } from 'react-redux';
-import { useGetPortfoliosByUserQuery, useGetStategiesByUserIdQuery, useLastQuoteQuery, useNewTradeMutation } from "../../store/slice/tradeApi";
-import { useState, useEffect } from 'react';
+import React from "react";
+import { useSelector } from "react-redux";
+import {
+  useGetPortfoliosByUserQuery,
+  useGetStategiesByUserIdQuery,
+  useLastQuoteQuery,
+  useNewTradeMutation,
+} from "../../store/slice/tradeApi";
+import { useState, useEffect } from "react";
 import styles from "./newTrade.module.css";
-import SearchStock from './Components/SearchStock';
+import SearchStock from "./Components/SearchStock";
 
 function NewTrade() {
   // un new trade va automatiquement créer une entrée
   // pas de trade sans entrée
 
   // on va chercher la liste des portfolios de l'user
-  const { id, alias } = useSelector((state) => ({
-    ...state.user.infos,
-  }));
+  // const { id, alias } = useSelector((state) => ({
+  //   ...state.user.infos,
+  // }));
+  const id = useSelector((state) => state.user.infos.id);
+  const alias = useSelector((state) => state.user.infos.alias);
 
   // le titre selectionné
   const [selectedItem, setSelectedItem] = useState({
@@ -30,13 +37,14 @@ function NewTrade() {
   const { data: strategies, isLoading: stategiesIsLoading } =
     useGetStategiesByUserIdQuery(id);
   // dernier cotation
-  const { data: lastInfos, isSuccess: lastIsSuccess } = 
+  const { data: lastInfos, isSuccess: lastIsSuccess } =
     useLastQuoteQuery(selectedItem);
-  // nouveau trade  
-  const [newTrade] = useNewTradeMutation();   
+  // nouveau trade
+  const [newTrade] = useNewTradeMutation();
 
-  const [currency, setCurrency] = useState("");
-  const [currencyId, setCurrencyId] = useState("");
+
+  const [currency, setCurrency] = useState("euro");
+  const [currencyId, setCurrencyId] = useState(1);
   const [values, setValues] = useState({
     price: 0,
     target: 0,
@@ -51,17 +59,37 @@ function NewTrade() {
 
   useEffect(() => {
     if (!portfolioIsLoading && !stategiesIsLoading) {
-      let currencyValue = portfolios.find(
-        (portfolio) => portfolio.id === +values.portfolioId
-      ).currency;
-      let currencyIdValue = portfolios.find(
-        (portfolio) => portfolio.id === +values.portfolioId
-      ).currencyId;
+      const toSet = portfolios[0].id;
 
-      setCurrency(currencyValue);
-      setCurrencyId(currencyIdValue);
+      const toSet2 = strategies[0].id;
+      setValues({ ...values, portfolioId: toSet, strategyId: toSet2 });
+
+      // let { currency, currencyId } = portfolios.find(
+      //   (portfolio) => +portfolio.id === toSet
+      // );
+
+      // setCurrency(currency);
+      // setCurrencyId(currencyId);
     }
-  }, [portfolios, values.portfolioId, selectedItem]);
+  }, [
+    selectedItem,
+    portfolioIsLoading,
+    stategiesIsLoading,
+    portfolios,
+    strategies, 
+  ]);
+
+  useEffect(() => {
+
+    if (!portfolioIsLoading && !stategiesIsLoading) {
+      let { currency, currencyId } = portfolios.find(
+        (portfolio) => +portfolio.id === +values.portfolioId
+      );  
+
+      setCurrency(currency);
+      setCurrencyId(currencyId);
+    }
+  }, [values.portfolioId]);
 
   ///// gestion du formulaire //////////////////////////////
   const handleChange = (e) => {
@@ -80,20 +108,18 @@ function NewTrade() {
       comment: values.comment,
       strategy_id: +values.strategyId,
       portfolio_id: +values.portfolioId,
-      currency_id : currencyId,
+      currency_id: currencyId,
       lastQuote: lastInfos.last,
-      beforeQuote: lastInfos.before
+      beforeQuote: lastInfos.before,
     };
-    
+
     try {
-       
       const res = await newTrade(datas);
       console.log(res);
       // navigate("/");
     } catch (err) {
       console.log(err);
     }
-
   };
 
   return (
@@ -200,7 +226,7 @@ function NewTrade() {
                 <option
                   key={i}
                   value={portfolio.id}
-                  selected={portfolio.id === values.portfolioId ? true : false}
+                  // selected={portfolio.id === values.portfolioId ? true : false}
                 >
                   {portfolio.title}
                 </option>
@@ -220,11 +246,7 @@ function NewTrade() {
               defaultValue={values.strategyId}
             >
               {strategies.map((strategy, i) => (
-                <option
-                  key={i}
-                  value={strategy.id}
-                  selected={strategy.id === values.strategyId ? true : false}
-                >
+                <option key={i} value={strategy.id}>
                   {strategy.title}
                 </option>
               ))}
@@ -239,4 +261,4 @@ function NewTrade() {
   );
 }
 
-export default NewTrade
+export default NewTrade;
