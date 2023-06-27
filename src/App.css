@@ -1,2 +1,73 @@
+/*
+ _____ _       _           _ 
+|  __ | |     | |         | |
+| |  \| | ___ | |__   __ _| |
+| | __| |/ _ \| '_ \ / _` | |
+| |_\ | | (_) | |_) | (_| | |
+ \____|_|\___/|_.__/ \__,_|_|*/
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+.container {
+  max-width: 1100px;
+  margin: auto;
+}
+
+body {
+  font-size: 1.6rem;
+  margin: 0; /*enleve la marge autour de la page */
+  background-color: #f2f2f2;
+  line-height: 1.8;
+  height: 100vh;
+}
+
+section {
+  background-color: white;
+}
+
+h1,
+h2,
+h3 {
+  text-align: center;
+  font-weight: normal;
+}
+
+h1 {
+  font-size: 3.2rem;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+figure {
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: inline-block;
+}
+
+.clear {
+  clear: both;
+}
+
+.hidden{
+  display: none; 
+}
 
 

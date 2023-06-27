@@ -1,15 +1,20 @@
 import ReactSpeedometer from "react-d3-speedometer";
 
- 
+function PerfMeter( {legend, min, max, perf, meterHeight, meterWidth}) {
 
-function PerfMeter({ min, max, perf}) {
-
-
-    let value = 666;
+    // calcul de la position de l'aiguille
+    let value = 0;
+    if (perf === 0){
+        value = 500
+    }else if (perf>0){
+        value = (perf/max*500)+500
+    }else if (perf<0){
+        value = 500-(perf/min*500) ;
+    }
 
     function segmentValueFormatter(value) {
       if (value < 200) {
-        return `-125`;
+        return `${min}`;
       }
       if (value < 400) {
         return `😐`;
@@ -23,52 +28,30 @@ function PerfMeter({ min, max, perf}) {
       if (value < 900) {
         return `😉`;
       }
-      return `+1254`;
+      return `${max}`;
     }
 
 
-
+    /// style inline indispensable, gestion par le module 
+    // doit être conforme au container pour centrage 
   return (
-    <ReactSpeedometer
-      value={value}
-      currentValueText="Performance globale"
-      needleColor="black"
-      needleTransitionDuration={3000}
-      needleTransition="easeElastic"
-      ringWidth={50}
-      needleHeightRatio={0.7}
-      segments={5}
-      segmentValueFormatter={segmentValueFormatter}
-     // segmentColors={["#bf616a", "#d08770", "#ebcb8b", "#a3be8c", "#b48ead"]}
-    //   customSegmentLabels={[
-    //     {
-    //       text: "perte",
-    //       position: "INSIDE",
-    //       color: "#555",
-    //     },
-    //     {
-    //       text: "",
-    //       position: "INSIDE",
-    //       color: "#555",
-    //     },
-    //     {
-    //       text: "neutre",
-    //       position: "INSIDE",
-    //       color: "#555",
-    //       fontSize: "19px",
-    //     },
-    //     {
-    //       text: "",
-    //       position: "INSIDE",
-    //       color: "#555",
-    //     },
-    //     {
-    //       text: "profit",
-    //       position: "INSIDE",
-    //       color: "#555",
-    //     },
-    //   ]}
-    />
+    <div style={{
+      width: `${meterWidth}`,
+      height: `${meterHeight}`,
+    }}>
+      <ReactSpeedometer
+        fluidWidth={true}
+        value={value}
+        currentValueText={legend}
+        needleColor="black"
+        needleTransitionDuration={3000}
+        needleTransition="easeElastic"
+        ringWidth={50}
+        needleHeightRatio={0.7}
+        segments={5}
+        segmentValueFormatter={segmentValueFormatter}
+      />
+    </div>
   );}
 
 export default PerfMeter

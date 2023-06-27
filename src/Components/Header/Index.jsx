@@ -1,11 +1,15 @@
- import Nav from "./Nav";
+ 
+import Nav from "./Nav";
  import NavPorfolios from "./NavPortfolios";
 
 function Header() {
   return (
     <header>
-      <Nav />
-      <NavPorfolios />
+      <nav>
+        <Nav />
+        <NavPorfolios />
+      </nav>
+
     </header>
   );
 }

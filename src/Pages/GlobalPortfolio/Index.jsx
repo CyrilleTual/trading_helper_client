@@ -1,4 +1,3 @@
-import React from 'react'
 import { useSelector } from 'react-redux';
 import { useGetGlobalDashBoardByUserQuery } from '../../store/slice/tradeApi';
 import styles from "./globalPortfolio.module.css"
@@ -12,11 +11,6 @@ function Global(){
   // on va chercher la tableau de bord global pour un user (idUser)
   const { data: global, isLoading } = useGetGlobalDashBoardByUserQuery(id);
 
-
-  
-
-
-
   return (
     <>
       {isLoading ? (
@@ -24,7 +18,17 @@ function Global(){
       ) : (
         <main>
           <h1>Tableau de bord</h1>
-          <PerfMeter nim="0"  max="100" value="50" />
+          <div className={styles.meter_container}>
+            <PerfMeter
+              legend="Trades actifs"
+              min={global.perfIfStopeed}
+              max={global.potential}
+              perf={global.currentPv}
+              meterWidth={styles.meterWidth}
+              meterHeight={styles.meterHeight}
+            />
+          </div>
+
           <table>
             <caption>Synthèse de tout les comptes</caption>
             <tr>
@@ -77,8 +81,6 @@ function Global(){
       )}
     </>
   );
-
-
 }
 
 

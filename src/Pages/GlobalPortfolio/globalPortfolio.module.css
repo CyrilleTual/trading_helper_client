@@ -1,6 +1,28 @@
+/* Attention pour les dimensions du meter indispensable de passer
+par des variables ( et de les setter 2* -> pour la div container et 
+Pour le svg) */
+
 main{
     text-align: center;
+    --metW : 600px;
+    --metH : 400px
 }
+
+:export {
+    meterWidth: var(--metW);
+    meterHeight: var(--metH);
+}
+
+.meter_container {
+    width: var(--metW);
+    height: var(--metH);
+    /* background-color: pink; */
+    margin: auto;
+    /* text-align: center; */
+    
+}
+
+
 table {
     
     width: 300px;
