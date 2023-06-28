@@ -1,0 +1,33 @@
+.portTable {
+    table-layout: fixed;
+    width: 400px;
+    margin: auto;
+    border-collapse: collapse;
+    border: 3px solid var(--color-bgTableaux);;
+    border-radius: 5px;
+}
+
+.portTable td:first-of-type {
+  width:50%;
+  padding-right: 20px;
+  text-align: right;
+}
+
+.portTable td:nth-of-type(2) {
+  width:20%;
+  text-align: right;
+}
+
+.portTable td:nth-of-type(3){
+  width: 20%;
+  text-align: right;
+}
+
+.portTable tr:nth-last-of-type(even){
+    background-color: var(--color-bgTableaux);
+}
+
+
+.portTable td {
+  padding: 5px;
+}

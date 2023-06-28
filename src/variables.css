@@ -7,5 +7,6 @@
     --color-1-dark: rgb(64,112,34); 
     --color-1-light: rgb(141,196,66);
     --color-2-dark: rgb(35,140,185);
-    --color-2-light: rgb(41,170,225);
+    --color-2-light: rgba(74, 184, 231, 0.223);
+    --color-bgTableaux:  rgb(242,241,239);
 }

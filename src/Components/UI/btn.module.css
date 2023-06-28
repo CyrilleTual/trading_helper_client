@@ -2,11 +2,12 @@ input:hover{
      cursor: pointer;
 }
 
-input[type="submit"]{
+input[type="submit"]
+{
     padding: 10px;
     background-color: var(--color-1-light);
     border-radius: 10px;
     color: var(--txt-color-light);
     text-transform: uppercase;
     font-weight: bold;
-}
+} 

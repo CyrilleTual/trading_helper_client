@@ -42,7 +42,6 @@ function NewTrade() {
   // nouveau trade
   const [newTrade] = useNewTradeMutation();
 
-
   const [currency, setCurrency] = useState("euro");
   const [currencyId, setCurrencyId] = useState(1);
   const [values, setValues] = useState({
@@ -60,31 +59,22 @@ function NewTrade() {
   useEffect(() => {
     if (!portfolioIsLoading && !stategiesIsLoading) {
       const toSet = portfolios[0].id;
-
       const toSet2 = strategies[0].id;
       setValues({ ...values, portfolioId: toSet, strategyId: toSet2 });
-
-      // let { currency, currencyId } = portfolios.find(
-      //   (portfolio) => +portfolio.id === toSet
-      // );
-
-      // setCurrency(currency);
-      // setCurrencyId(currencyId);
     }
   }, [
     selectedItem,
     portfolioIsLoading,
     stategiesIsLoading,
     portfolios,
-    strategies, 
+    strategies,
   ]);
 
   useEffect(() => {
-
     if (!portfolioIsLoading && !stategiesIsLoading) {
       let { currency, currencyId } = portfolios.find(
         (portfolio) => +portfolio.id === +values.portfolioId
-      );  
+      );
 
       setCurrency(currency);
       setCurrencyId(currencyId);
@@ -123,141 +113,155 @@ function NewTrade() {
   };
 
   return (
-    <div className="container">
+    <main className="container">
       {portfolioIsLoading || stategiesIsLoading ? (
         <p>Loading</p>
       ) : (
-        <>
+        <div>
           <div>Bonjour {alias} tu es parti pour de nouvelles aventures ...</div>
-          <h2>Création d'un trade :</h2>
-          <SearchStock
-            selectedItem={selectedItem}
-            setSelectedItem={setSelectedItem}
-          />
-          {selectedItem.id !== 0 && (
-            <p>
-              Vous avez selectionné {selectedItem.title} qui a l'id{" "}
-              {selectedItem.id}{" "}
-              {lastIsSuccess && <span>dernier cours : {lastInfos.last}</span>}
-            </p>
+          <h1>Création d'un trade :</h1>
+          {!selectedItem.id && (
+            <div >
+              <h2>Recherher d'intrument par son nom : </h2>
+              <SearchStock
+                selectedItem={selectedItem}
+                setSelectedItem={setSelectedItem}
+              />
+            </div>
           )}
 
-          <form className={styles.form} onSubmit={handleSubmit} method="POST ">
-            <label className={styles.label} htmlFor="price">
-              Price
-            </label>
-            <input
-              type="price"
-              id="price"
-              name="price"
-              value={values.price}
-              onChange={handleChange}
-            />
-            <label className={styles.label} htmlFor="target">
-              target
-            </label>
-            <input
-              type="target"
-              id="target"
-              name="target"
-              value={values.target}
-              onChange={handleChange}
-            />
-            <label className={styles.label} htmlFor="stop">
-              stop
-            </label>
-            <input
-              type="stop"
-              id="stop"
-              name="stop"
-              value={values.stop}
-              onChange={handleChange}
-            />
-            <label className={styles.label} htmlFor="quantity">
-              quantity
-            </label>
-            <input
-              type="quantity"
-              id="quantity"
-              name="quantity"
-              value={values.quantity}
-              onChange={handleChange}
-            />
-            <label className={styles.label} htmlFor="fees">
-              fees
-            </label>
-            <input
-              type="fees"
-              id="fees"
-              name="fees"
-              value={values.fees}
-              onChange={handleChange}
-            />
-            <label className={styles.label} htmlFor="tax">
-              tax
-            </label>
-            <input
-              type="tax"
-              id="tax"
-              name="tax"
-              value={values.tax}
-              onChange={handleChange}
-            />
-            <label className={styles.label} htmlFor="comment">
-              comment
-            </label>
-            <input
-              type="comment"
-              id="comment"
-              name="comment"
-              value={values.comment}
-              onChange={handleChange}
-            />
-            <label className={styles.label} htmlFor="portfolioId">
-              Choisissez un portefeuille
-            </label>
-            <select
-              onChange={handleChange}
-              id="portfolioId"
-              name="portfolioId"
-              defaultValue={values.portfolioId}
-            >
-              {portfolios.map((portfolio, i) => (
-                <option
-                  key={i}
-                  value={portfolio.id}
-                  // selected={portfolio.id === values.portfolioId ? true : false}
+          {selectedItem.id !== 0 && (
+            <>
+              <p>
+                Vous avez selectionné {selectedItem.title} qui a l'id{" "}
+                {selectedItem.id}{" "}
+                {lastIsSuccess && <span>dernier cours : {lastInfos.last}</span>}
+              </p>
+
+              <div className={styles.form_enter}>
+                <form
+                  className={styles.form}
+                  onSubmit={handleSubmit}
+                  method="POST "
                 >
-                  {portfolio.title}
-                </option>
-              ))}
-            </select>
-            {values.portfolioId}
-            <p>
-              ce portefeuille est en {currency} devise {currencyId}
-            </p>
-            <label className={styles.label} htmlFor="strategyId">
-              Choisissez une strategies
-            </label>
-            <select
-              onChange={handleChange}
-              id="strategyId"
-              name="strategyId"
-              defaultValue={values.strategyId}
-            >
-              {strategies.map((strategy, i) => (
-                <option key={i} value={strategy.id}>
-                  {strategy.title}
-                </option>
-              ))}
-            </select>
-            {values.strategyId}
-            <br />
-            <input type="submit" value="Validation" /> <br />
-          </form>
-        </>
+                  <label className={styles.label} htmlFor="price">
+                    Price
+                  </label>
+                  <input
+                    type="price"
+                    id="price"
+                    name="price"
+                    value={values.price}
+                    onChange={handleChange}
+                  />
+                  <label className={styles.label} htmlFor="target">
+                    target
+                  </label>
+                  <input
+                    type="target"
+                    id="target"
+                    name="target"
+                    value={values.target}
+                    onChange={handleChange}
+                  />
+                  <label className={styles.label} htmlFor="stop">
+                    stop
+                  </label>
+                  <input
+                    type="stop"
+                    id="stop"
+                    name="stop"
+                    value={values.stop}
+                    onChange={handleChange}
+                  />
+                  <label className={styles.label} htmlFor="quantity">
+                    quantity
+                  </label>
+                  <input
+                    type="quantity"
+                    id="quantity"
+                    name="quantity"
+                    value={values.quantity}
+                    onChange={handleChange}
+                  />
+                  <label className={styles.label} htmlFor="fees">
+                    fees
+                  </label>
+                  <input
+                    type="fees"
+                    id="fees"
+                    name="fees"
+                    value={values.fees}
+                    onChange={handleChange}
+                  />
+                  <label className={styles.label} htmlFor="tax">
+                    tax
+                  </label>
+                  <input
+                    type="tax"
+                    id="tax"
+                    name="tax"
+                    value={values.tax}
+                    onChange={handleChange}
+                  />
+                  <label className={styles.label} htmlFor="comment">
+                    comment
+                  </label>
+                  <input
+                    type="comment"
+                    id="comment"
+                    name="comment"
+                    value={values.comment}
+                    onChange={handleChange}
+                  />
+                  <label className={styles.label} htmlFor="portfolioId">
+                    Choisissez un portefeuille
+                  </label>
+                  <select
+                    onChange={handleChange}
+                    id="portfolioId"
+                    name="portfolioId"
+                    defaultValue={values.portfolioId}
+                  >
+                    {portfolios.map((portfolio, i) => (
+                      <option
+                        key={i}
+                        value={portfolio.id}
+                        // selected={portfolio.id === values.portfolioId ? true : false}
+                      >
+                        {portfolio.title}
+                      </option>
+                    ))}
+                  </select>
+                  {values.portfolioId}
+                  <p>
+                    ce portefeuille est en {currency} devise {currencyId}
+                  </p>
+                  <label className={styles.label} htmlFor="strategyId">
+                    Choisissez une strategies
+                  </label>
+                  <select
+                    onChange={handleChange}
+                    id="strategyId"
+                    name="strategyId"
+                    defaultValue={values.strategyId}
+                  >
+                    {strategies.map((strategy, i) => (
+                      <option key={i} value={strategy.id}>
+                        {strategy.title}
+                      </option>
+                    ))}
+                  </select>
+                  {values.strategyId}
+                  <br />
+                  <input type="submit" value="Validation" /> <br />
+                </form>
+              </div>
+            </>
+          )}
+        </div>
       )}
-    </div>
+    </main>
   );
 }
 

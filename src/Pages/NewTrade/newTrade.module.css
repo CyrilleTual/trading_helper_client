@@ -1,11 +1,35 @@
-.form {
+.form_enter{
+    
+    margin: auto;
+}
+
+
+.form_enter {
     display: flex;
-    flex-direction: column;
-    width: 35%;
+    flex-direction: row;
+    width: 80%;
+    width: 400px;
     margin:auto;
+    flex-wrap: wrap;
+    align-items: baseline;
    
 }
 
 .label {
-    margin-top: 20px;
+    margin-top: 10px;
+    display: inline-block;
+    width: 200px;
+     
+}
+
+.form_enter input {
+    display: inline-block;
+    width: 100px;
+    text-align: right;
+}
+
+.form_enter input[type="submit"]{
+    
+    margin: auto ;
+    margin-top: 30px;
 }

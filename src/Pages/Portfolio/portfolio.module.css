@@ -3,20 +3,20 @@
 par des variables ( et de les setter 2* -> pour la div container et 
 Pour le svg) */
 
-.global_portfolio{
+.portfolio{
    
     --metW :80vw;
     --metH : calc((var(--metW))*0.58);
 }
 
 @media  screen and (min-width:480px) {
-   .global_portfolio{
+   .portfolio{
     --metW :400px;
     --metH :230px; 
     }
 }
 
-.global_portfolio h1{
+.portfolio h1{
     position: fixed;
     top :15px;
     left: calc(50vw);
@@ -29,7 +29,7 @@ Pour le svg) */
     meterHeight: var(--metH);
 }
 
-.global_portfolio .meter_container {
+.portfolio .meter_container {
      text-align: center;
     width: var(--metW);
     height: var(--metH); 
@@ -37,3 +37,8 @@ Pour le svg) */
     /* text-align: center; */  
 }
 
+.under_table{
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+}

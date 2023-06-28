@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { usePrepareQuery, useReEnterMutation } from "../../store/slice/tradeApi";
 import styles from "./reEnter.module.css";
+ 
 
 function ReEnter() {
   const { tradeId } = useParams();
@@ -11,6 +12,8 @@ function ReEnter() {
 
   // hook de création de la reEnter
   const [reEnter] = useReEnterMutation()
+
+ 
 
   ///  disponible pour l'affichage : ( trade . qq chose)
   //   const {
@@ -59,6 +62,8 @@ function ReEnter() {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
+  const navigate =useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const datas = {
@@ -78,7 +83,7 @@ function ReEnter() {
       console.log("datas à traiter", datas);
       const resp = await reEnter(datas);
       console.log(resp);
-      // navigate("/");
+      navigate (`/portfolio/detail/${trade.portfolio_id}`);
     } catch (err) {
       console.log(err);
     }
@@ -89,18 +94,25 @@ function ReEnter() {
       {!isSuccess ? (
         <p>Loading</p>
       ) : (
-        <>
-          <p>
-            Tu veux reprendre un peu de {trade.title}? c'est un {trade.position}
-          </p>
-          <p>
-            Le dernier cours est de {trade.lastQuote} ton Pru actuel est de{" "}
-            {trade.pru}
-          </p>
-          <p>Tu es positionné sur {trade.remains} titres </p>
+        <main className={styles.re_enter}>
+          <h1>Re-enter</h1>
+          <div className="comments">
+            <p>
+              Portefeuille {trade.portfolio}, renforcer sur {trade.title}?
+            </p>
+            <p>
+              C'est un {trade.position}, le dernier cours est à{" "}
+              {trade.lastQuote}.
+            </p>
+            <p>
+              Le PRU actuel est de {trade.pru} pour une ligne de{" "}
+              {trade.remains} titres.
+            </p>
+          </div>
+
           <form className={styles.form} onSubmit={handleSubmit} method="POST ">
             <label className={styles.label} htmlFor="price">
-              Price
+              Niveau d'entrée:
             </label>
             <input
               type="price"
@@ -110,7 +122,7 @@ function ReEnter() {
               onChange={handleChange}
             />
             <label className={styles.label} htmlFor="quantity">
-              quantity
+              quantité :
             </label>
             <input
               type="quantity"
@@ -120,7 +132,7 @@ function ReEnter() {
               onChange={handleChange}
             />
             <label className={styles.label} htmlFor="target">
-              target (pour l'ensemble de la postion)
+              target (postion)
             </label>
             <input
               type="target"
@@ -130,7 +142,7 @@ function ReEnter() {
               onChange={handleChange}
             />
             <label className={styles.label} htmlFor="stop">
-              stop (pour l'ensemble de la postion)
+              stop (postion)
             </label>
             <input
               type="stop"
@@ -140,7 +152,7 @@ function ReEnter() {
               onChange={handleChange}
             />
             <label className={styles.label} htmlFor="fees">
-              fees
+              commissions
             </label>
             <input
               type="fees"
@@ -150,7 +162,7 @@ function ReEnter() {
               onChange={handleChange}
             />
             <label className={styles.label} htmlFor="tax">
-              tax
+              taxes
             </label>
             <input
               type="tax"
@@ -160,7 +172,7 @@ function ReEnter() {
               onChange={handleChange}
             />
             <label className={styles.label} htmlFor="comment">
-              comment (pour l'ensemble de la position)
+              comment (position)
             </label>
             <input
               type="comment"
@@ -182,7 +194,7 @@ function ReEnter() {
             <br />
             <input type="submit" value="Validation" /> <br />
           </form>
-        </>
+        </main>
       )}
     </>
   );

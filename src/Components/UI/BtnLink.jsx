@@ -1,10 +1,11 @@
- import { Link } from "react-router-dom";
+ import { NavLink } from "react-router-dom";
+ import styles from "./btn.module.css";
 
 function BtnLink({link, title}) {
   return (
-    <Link to={link}>
+    <NavLink to={link}>
       {title}
-    </Link>
+    </NavLink>
   )
 }
 

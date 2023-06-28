@@ -6,6 +6,26 @@ function DetailPorfolio() {
   const { portfolioId } = useParams();
 
   const { data, isLoading } = useGetDetailPortfolioByIdQuery(portfolioId);
+  let myLabels = [
+    "trade N°",
+    "support",
+    "dernier",
+    "type de position",
+    "pru",
+    "-/+ value ",
+    "-/+ value %",
+    "potentiel  ",
+    "potentiel %",
+    "si stop touché",
+    "si stop toiuché %",
+    "variation jour",
+    "variation jour %",
+    "objectif",
+    "stop",
+    "valeur initilale",
+    "valeur actuelle",
+    "nombre de titres",
+  ];
 
   let newArrayValues = [];
   if (!isLoading) {
@@ -20,63 +40,80 @@ function DetailPorfolio() {
       // on push les values dans un tableau
       arrayValues.push(values);
     }
-
-    // on unshift le tableau des clé -> intitules de lignes
-    // a remplacer par des intitulés compréhensibles
-
-    arrayValues.unshift(arrayKeys);
     // flit du tableau
     newArrayValues = Object.keys(arrayValues[0]).map(function (c) {
       return arrayValues.map(function (r) {
         return r[c];
       });
     });
+
+    console.log(data);
   }
   return (
     <>
       {isLoading ? (
         <p>Loading</p>
       ) : (
-        <div className={styles.detail}>
-          <p>Bonjour ! </p>
-          <table>
-            <tbody>
-              {newArrayValues.map((element, i) => (
-                <tr key={i}>
-                  {element.map((elt, j) => (
-                    <td key={j}>{elt}</td>
+        <main className={styles.detail}>
+          <h1>Trades actifs</h1>
+          <div className={styles.arraysContainer}>
+            <div className={styles.leftArray}>
+              {" "}
+              <table>
+                <tbody>
+                  {myLabels.map((element, i) => (
+                    <tr key={i}>
+                      <td>{element}</td>
+                    </tr>
                   ))}
-                </tr>
-              ))}
-              <tr>
-                <td>Buy more</td>
-                {data.map((elt, j) => (
-                  <td key={j}>
-                    <NavLink
-                      className={styles.button}
-                      to={`/reEnter/${elt.tradeId}`}
-                    >
-                      Re-Enter
-                    </NavLink>
-                  </td>
-                ))}
-              </tr>
-              <tr>
-                <td>Sell</td>
-                {data.map((elt, k) => (
-                  <td key={k}>
-                    <NavLink
-                      className={styles.button}
-                      to={`/exitTrade/${elt.tradeId}`}
-                    >
-                      Exit
-                    </NavLink>
-                  </td>
-                ))}
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                  <tr>
+                    <td>Renforcer ?</td>
+                  </tr>
+                  <tr>
+                    <td>Alléger ?</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div className={styles.rightArray}>
+              <table>
+                <tbody>
+                  {newArrayValues.map((element, i) => (
+                    <tr key={i}>
+                      {element.map((elt, j) => (
+                        <td key={j}>{elt}</td>
+                      ))}
+                    </tr>
+                  ))}
+                  <tr>
+                    {data.map((elt, j) => (
+                      <td key={j}>
+                        <NavLink
+                          className={styles.button}
+                          to={`/reEnter/${elt.tradeId}`}
+                        >
+                          Re-Enter
+                        </NavLink>
+                      </td>
+                    ))}
+                  </tr>
+                  <tr>
+                    {data.map((elt, k) => (
+                      <td key={k}>
+                        <NavLink
+                          className={styles.button}
+                          to={`/exitTrade/${elt.tradeId}`}
+                        >
+                          Exit
+                        </NavLink>
+                      </td>
+                    ))}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </main>
       )}
     </>
   );

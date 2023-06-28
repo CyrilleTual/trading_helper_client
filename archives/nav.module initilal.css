@@ -1,13 +1,7 @@
 .button {
     font-size: 2rem;
+
 }
-
-.navContainer{
-  display: flex;
-  height: 100vh;
-}
-
-
 .navbar{
   display: flex;
   flex-wrap: wrap;
@@ -46,7 +40,7 @@
     bottom: 0;
     width: 0;
     right: -100vh;
-    height: 100%;
+    height: 100vh;
     padding: 2rem;
     background-color: rgba(0, 0, 0, 0.236);
     left: 0;
@@ -61,11 +55,7 @@
     background-color: rgba(0, 0, 0, 0.468);
    }
   
-   .navbar_item {
-    width: 100%;
-    text-align: center;
-    background-color: #fff;
-   }
+
 
   .navbar_link{
     display: block;
@@ -73,16 +63,17 @@
     font-size: 5vw;
     flex-direction: column;
   }
- /**********************  burger  ****************/
+
   .navbar_burger{
-    display: inline-block;
+    display: block;
     cursor: pointer;
-    position: relative;
+    position: fixed;
     top:1rem;
     right: 1 rem;
     z-index: 10;
   }
- 
+
+  /**********************  burger  ****************/
   .burger_bar,
   .burger_bar::before,
   .burger_bar::after{

@@ -1,7 +1,8 @@
 import { Routes, Route } from 'react-router-dom'
 import SignIn from './Pages/SignIn/Index';
-import './App.css';
+
 import "./variables.css";
+import './App.css';
 import SignUp from './Pages/SignUp/Index';
 import Global from './Pages/GlobalPortfolio/Index'
 import Portfolio from './Pages/Portfolio';
@@ -13,7 +14,7 @@ import Footer from './Components/Footer/Footer';
 import Header from './Components/Header/Index';
 import Legal from './Pages/Legal/Index';
 import Credits from './Pages/Credits/Index';
-
+ 
  
 
 function App() {

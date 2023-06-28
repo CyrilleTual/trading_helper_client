@@ -1,44 +1,45 @@
 import ReactSpeedometer from "react-d3-speedometer";
+import styles from "./perfmeter.module.css";
 
-function PerfMeter( {legend, min, max, perf, meterHeight, meterWidth}) {
+function PerfMeter({ legend, min, max, perf, meterHeight, meterWidth }) {
+  // calcul de la position de l'aiguille
+  let value = 0;
+  if (perf === 0) {
+    value = 500;
+  } else if (perf > 0) {
+    value = (perf / max) * 500 + 500;
+  } else if (perf < 0) {
+    value = 500 - (perf / min) * 500;
+  }
 
-    // calcul de la position de l'aiguille
-    let value = 0;
-    if (perf === 0){
-        value = 500
-    }else if (perf>0){
-        value = (perf/max*500)+500
-    }else if (perf<0){
-        value = 500-(perf/min*500) ;
+  function segmentValueFormatter(value) {
+    if (value < 200) {
+      return `${min}`;
     }
-
-    function segmentValueFormatter(value) {
-      if (value < 200) {
-        return `${min}`;
-      }
-      if (value < 400) {
-        return `😐`;
-      }
-      if (value < 600) {
-        return `😌`;
-      }
-      if (value < 800) {
-        return `😊`;
-      }
-      if (value < 900) {
-        return `😉`;
-      }
-      return `${max}`;
+    if (value < 400) {
+      return `😐`;
     }
+    if (value < 600) {
+      return `😌`;
+    }
+    if (value < 800) {
+      return `😊`;
+    }
+    if (value < 900) {
+      return `😉`;
+    }
+    return `${max}`;
+  }
 
-
-    /// style inline indispensable, gestion par le module 
-    // doit être conforme au container pour centrage 
+  /// style inline indispensable, gestion par le module
+  // doit être conforme au container pour centrage
   return (
-    <div style={{
-      width: `${meterWidth}`,
-      height: `${meterHeight}`,
-    }}>
+    <div
+      style={{
+        width: `${meterWidth}`,
+        height: `${meterHeight}`,
+      }}
+    >
       <ReactSpeedometer
         fluidWidth={true}
         value={value}
@@ -52,6 +53,7 @@ function PerfMeter( {legend, min, max, perf, meterHeight, meterWidth}) {
         segmentValueFormatter={segmentValueFormatter}
       />
     </div>
-  );}
+  );
+}
 
-export default PerfMeter
+export default PerfMeter;
