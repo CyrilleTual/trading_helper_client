@@ -77,7 +77,7 @@ function ExitTrade() {
 
   //*******************************************************
   return (
-    <>
+    <main className={styles.exit}>
       {!isSuccess ? (
         <p>Loading</p>
       ) : (
@@ -85,23 +85,24 @@ function ExitTrade() {
           <p>Tu veux vendre {trade.title}? </p>
           <p>Le dernier cours est de {trade.lastQuote}</p>
           <p>Tu disposes de {trade.remains} titres en portefeuille</p>
+
           <form className={styles.form} onSubmit={handleSubmit} method="POST ">
             <label className={styles.label} htmlFor="price">
               Price
             </label>
             <input
-              type="price"
+              type="number"
               id="price"
               name="price"
               value={values.price}
               onChange={handleChange}
             />
-            {values.price}
+           
             <label className={styles.label} htmlFor="quantity">
               quantity
             </label>
             <input
-              type="quantity"
+              type="number"
               id="quantity"
               name="quantity"
               value={values.quantity}
@@ -111,7 +112,7 @@ function ExitTrade() {
               fees
             </label>
             <input
-              type="fees"
+              type="number"
               id="fees"
               name="fees"
               value={values.fees}
@@ -121,7 +122,7 @@ function ExitTrade() {
               tax
             </label>
             <input
-              type="tax"
+              type="number"
               id="tax"
               name="tax"
               value={values.tax}
@@ -131,7 +132,7 @@ function ExitTrade() {
               comment
             </label>
             <input
-              type="comment"
+              type="text"
               id="comment"
               name="comment"
               value={values.comment}
@@ -152,7 +153,7 @@ function ExitTrade() {
           </form>
         </>
       )}
-    </>
+    </main>
   );
 }
 

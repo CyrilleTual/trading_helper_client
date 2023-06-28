@@ -1,5 +1,9 @@
+.newTrade{
+    text-align: center;
+}
+
 .form_enter{
-    
+
     margin: auto;
 }
 
@@ -19,6 +23,8 @@
     margin-top: 10px;
     display: inline-block;
     width: 200px;
+    text-align: right;
+    padding-right: 30px;
      
 }
 

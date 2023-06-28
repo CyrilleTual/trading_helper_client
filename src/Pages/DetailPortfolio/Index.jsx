@@ -33,12 +33,30 @@ function DetailPorfolio() {
     // pour chaque share
     let arrayValues = [];
     let arrayKeys = [];
+   
     for (const element of data) {
       // on recupère les clés
       arrayKeys = Object.keys(element);
       const values = Object.values(element);
+
+    let newValues = [];
+
+    for (let index = 0; index < values.length; index++) {
+       if ((typeof values[index] === "number") && index !== 0 &&index !== values.length-1) {
+         values[index] = values[index].toFixed(2);
+       }
+       newValues.push(values[index]);
+    }
+
+    //  values.forEach(function(item){
+    //   if( typeof (item)=== "number"){
+    //     item = item.toFixed(2)
+    //   }
+    //   newValues.push(item)
+    //  })
+
       // on push les values dans un tableau
-      arrayValues.push(values);
+      arrayValues.push(newValues);
     }
     // flit du tableau
     newArrayValues = Object.keys(arrayValues[0]).map(function (c) {
@@ -47,7 +65,7 @@ function DetailPorfolio() {
       });
     });
 
-    console.log(data);
+ 
   }
   return (
     <>

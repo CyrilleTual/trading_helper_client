@@ -31,7 +31,7 @@ function SignIn() {
     e.preventDefault();
     try {
       const res = await signUserIn(inputs); // envoyer des inputs "sains/nettoyés"
-      localStorage.setItem("auth", res.data.TOKEN);
+      localStorage.setItem("auth42titi@", res.data.TOKEN);
       //localStorage.setItem("infos", JSON.stringify({alias:res.data.alias, email:res.data.email, role:res.data.role}));
       dispatch(
         signIn({
@@ -65,7 +65,7 @@ function SignIn() {
 
         <label htmlFor="pwd">password :</label>
         <input
-          type="pwd"
+          type="password"
           name="pwd"
           autoComplete="current-password"
           id="pwd"

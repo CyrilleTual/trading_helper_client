@@ -32,21 +32,21 @@
     min-width: 100px;
  }
 
-table {
+ .arraysContainer table {
     table-layout: fixed;
     border-collapse: collapse;
     border: 3px solid var(--color-bgTableaux);;
 }
 
 
+.arraysContainer td {
+   padding: 2px;
+   white-space: nowrap;
+   text-align: right;
+   border: 2px solid var(--color-bgTableaux);
+}
 
- td {
-    padding: 2px;
-    white-space: nowrap;
-    text-align: right;
-    border: 2px solid var(--color-bgTableaux)
-; }
- tr:nth-of-type(even){
+.arraysContainer  tr:nth-of-type(even){
     background-color: var(--color-bgTableaux);
 }
  

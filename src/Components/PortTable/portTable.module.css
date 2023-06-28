@@ -3,7 +3,7 @@
     width: 400px;
     margin: auto;
     border-collapse: collapse;
-    border: 3px solid var(--color-bgTableaux);;
+    border: 3px solid var(--color-bgTableaux);
     border-radius: 5px;
 }
 

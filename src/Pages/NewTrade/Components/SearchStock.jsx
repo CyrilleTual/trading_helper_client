@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useSearchStocksQuery } from "../../../store/slice/tradeApi";
+import styles from "./searchStock.module.css";
 
 function SearchStock({ selectedItem, setSelectedItem }) {
   const [stock, setstock] = useState({
@@ -19,44 +20,61 @@ function SearchStock({ selectedItem, setSelectedItem }) {
     e.target.value.length > 2 ? setSkip(false) : setSkip(true);
   };
 
+
+
   return (
-    <>
+    <div className={styles.search}>
+      <h2>Recherher d'intrument par son nom : </h2>
       <form>
-        <label htmlFor="stock">stock :</label>
+        <label htmlFor="stock">votre recherche :  </label>
         <input
           type="stock"
           name="stock"
           id="stock"
+          placeholder="minimum 3 caractères"
           value={stock.title}
           onChange={handleInputChange}
         />
       </form>
-      {!searchIsSuccess ? (
-        <p>Recherche par nom</p>
-      ) : (
+      {searchIsSuccess  && searchResult.length===0 &&
+      <p> Aucun resultat </p>
+      }
+      {searchIsSuccess  && searchResult.length>0 &&
         <>
-          {searchResult.map((item, i) => (
-            <tr
-              key={i}
-              onClick={() =>
-                setSelectedItem({
-                  id: item.id,
-                  title: item.title,
-                  isin: item.isin,
-                  place: item.place,
-                  ticker: item.ticker,
-                })
-              }
-            >
-              <td>{item.isin}</td>
-              <td>{item.title}</td>
-              <td>{item.ticker}</td>
-              <td>{item.place}</td>
-            </tr>
-          ))}
+          <table>
+            <thead>
+              <tr>
+                <th>code Isin</th>
+                <th>nom</th>
+                <th>ticker</th>
+                <th>place</th>
+              </tr>
+            </thead>
+            <tbody>
+              {searchResult.map((item, i) => (
+                <tr
+                  key={i}
+                  onClick={() =>
+                    setSelectedItem({
+                      id: item.id,
+                      title: item.title,
+                      isin: item.isin,
+                      place: item.place,
+                      ticker: item.ticker,
+                    })
+                  }
+                >
+                  <td>{item.isin}</td>
+                  <td>{item.title}</td>
+                  <td>{item.ticker}</td>
+                  <td>{item.place}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </>
-      )}
-    </>
+      }
+    </div>
   );
 }
 

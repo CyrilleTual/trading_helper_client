@@ -1,16 +1,22 @@
  
+import { useSelector } from "react-redux";
 import Nav from "./Nav";
- import NavPorfolios from "./NavPortfolios";
+import NavPorfolios from "./NavPortfolios";
+ 
 
 function Header() {
-  return (
-    <header>
-      <nav>
-        <Nav />
-        <NavPorfolios />
-      </nav>
 
-    </header>
+  const islogged = useSelector((state)=> state.user.isLogged)
+  
+  return (
+    <>
+      {islogged &&<header>
+        <nav>
+          <Nav />
+          <NavPorfolios />
+        </nav>
+      </header>}
+    </>
   );
 }
 

@@ -113,29 +113,27 @@ function NewTrade() {
   };
 
   return (
-    <main className="container">
+    <main className={`container ${styles.newTrade}`}>
+      <h1>Création d'un trade :</h1>
       {portfolioIsLoading || stategiesIsLoading ? (
         <p>Loading</p>
       ) : (
         <div>
-          <div>Bonjour {alias} tu es parti pour de nouvelles aventures ...</div>
-          <h1>Création d'un trade :</h1>
+          <p>Bonjour {alias} tu es parti pour de nouvelles aventures ...</p>
           {!selectedItem.id && (
-            <div >
-              <h2>Recherher d'intrument par son nom : </h2>
-              <SearchStock
-                selectedItem={selectedItem}
-                setSelectedItem={setSelectedItem}
-              />
-            </div>
+            <SearchStock
+              selectedItem={selectedItem}
+              setSelectedItem={setSelectedItem}
+            />
           )}
 
           {selectedItem.id !== 0 && (
             <>
               <p>
-                Vous avez selectionné {selectedItem.title} qui a l'id{" "}
-                {selectedItem.id}{" "}
-                {lastIsSuccess && <span>dernier cours : {lastInfos.last}</span>}
+                Vous avez selectionné {selectedItem.title}
+                {lastIsSuccess && (
+                  <span>, dernier cours : {lastInfos.last}</span>
+                )}
               </p>
 
               <div className={styles.form_enter}>
@@ -145,10 +143,10 @@ function NewTrade() {
                   method="POST "
                 >
                   <label className={styles.label} htmlFor="price">
-                    Price
+                    prix
                   </label>
                   <input
-                    type="price"
+                    type="number"
                     id="price"
                     name="price"
                     value={values.price}
@@ -158,57 +156,57 @@ function NewTrade() {
                     target
                   </label>
                   <input
-                    type="target"
+                    type="number"
                     id="target"
                     name="target"
                     value={values.target}
                     onChange={handleChange}
                   />
                   <label className={styles.label} htmlFor="stop">
-                    stop
+                    stop-loss
                   </label>
                   <input
-                    type="stop"
+                    type="number"
                     id="stop"
                     name="stop"
                     value={values.stop}
                     onChange={handleChange}
                   />
                   <label className={styles.label} htmlFor="quantity">
-                    quantity
+                    quantité
                   </label>
                   <input
-                    type="quantity"
+                    type="number"
                     id="quantity"
                     name="quantity"
                     value={values.quantity}
                     onChange={handleChange}
                   />
                   <label className={styles.label} htmlFor="fees">
-                    fees
+                    commissions
                   </label>
                   <input
-                    type="fees"
+                    type="number"
                     id="fees"
                     name="fees"
                     value={values.fees}
                     onChange={handleChange}
                   />
                   <label className={styles.label} htmlFor="tax">
-                    tax
+                    taxes
                   </label>
                   <input
-                    type="tax"
+                    type="number"
                     id="tax"
                     name="tax"
                     value={values.tax}
                     onChange={handleChange}
                   />
                   <label className={styles.label} htmlFor="comment">
-                    comment
+                    commentaires
                   </label>
                   <input
-                    type="comment"
+                    type="text"
                     id="comment"
                     name="comment"
                     value={values.comment}
@@ -233,10 +231,7 @@ function NewTrade() {
                       </option>
                     ))}
                   </select>
-                  {values.portfolioId}
-                  <p>
-                    ce portefeuille est en {currency} devise {currencyId}
-                  </p>
+                  <p>ce portefeuille est en {currency}</p>
                   <label className={styles.label} htmlFor="strategyId">
                     Choisissez une strategies
                   </label>
@@ -252,7 +247,6 @@ function NewTrade() {
                       </option>
                     ))}
                   </select>
-                  {values.strategyId}
                   <br />
                   <input type="submit" value="Validation" /> <br />
                 </form>

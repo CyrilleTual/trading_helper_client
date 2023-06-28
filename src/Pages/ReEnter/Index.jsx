@@ -98,24 +98,24 @@ function ReEnter() {
           <h1>Re-enter</h1>
           <div className="comments">
             <p>
-              Portefeuille {trade.portfolio}, renforcer sur {trade.title}?
+              Portefeuille {trade.portfolio}, renforcer sur {trade.title} ?
             </p>
             <p>
-              C'est un {trade.position}, le dernier cours est à{" "}
+              C'est un trade {trade.position}, le dernier cours est à{" "}
               {trade.lastQuote}.
             </p>
             <p>
-              Le PRU actuel est de {trade.pru} pour une ligne de{" "}
-              {trade.remains} titres.
+              Le PRU actuel est de {trade.pru} pour une ligne de {trade.remains}{" "}
+              titres.
             </p>
           </div>
 
           <form className={styles.form} onSubmit={handleSubmit} method="POST ">
             <label className={styles.label} htmlFor="price">
-              Niveau d'entrée:
+              niveau d'entrée:
             </label>
             <input
-              type="price"
+              type="number"
               id="price"
               name="price"
               value={values.price}
@@ -125,7 +125,7 @@ function ReEnter() {
               quantité :
             </label>
             <input
-              type="quantity"
+              type="number"
               id="quantity"
               name="quantity"
               value={values.quantity}
@@ -135,7 +135,7 @@ function ReEnter() {
               target (postion)
             </label>
             <input
-              type="target"
+              type="number"
               id="target"
               name="target"
               value={values.target}
@@ -145,7 +145,7 @@ function ReEnter() {
               stop (postion)
             </label>
             <input
-              type="stop"
+              type="number"
               id="stop"
               name="stop"
               value={values.stop}
@@ -155,7 +155,7 @@ function ReEnter() {
               commissions
             </label>
             <input
-              type="fees"
+              type="number"
               id="fees"
               name="fees"
               value={values.fees}
@@ -165,17 +165,17 @@ function ReEnter() {
               taxes
             </label>
             <input
-              type="tax"
+              type="number"
               id="tax"
               name="tax"
               value={values.tax}
               onChange={handleChange}
             />
             <label className={styles.label} htmlFor="comment">
-              comment (position)
+              commentaire (position)
             </label>
             <input
-              type="comment"
+              type="text"
               id="comment"
               name="comment"
               value={values.comment}

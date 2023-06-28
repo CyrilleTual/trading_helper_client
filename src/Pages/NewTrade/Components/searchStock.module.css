@@ -1,0 +1,51 @@
+.search form {
+    margin: auto;
+    text-align: center;
+}
+
+.search table {
+  width: 480px;
+  margin: auto;
+  border-collapse: collapse;
+  border: 3px solid var(--color-bgTableaux);
+}
+
+.search th:first-of-type,
+.search td:first-of-type {
+  min-width: fit-content;
+}
+
+.search th:nth-of-type(2),
+.search td:nth-of-type(2) {
+  text-align: right;
+  overflow: hidden;
+}
+
+
+.search th:nth-of-type(3),
+.search td:nth-of-type(3)  {
+  width: 70px;
+  text-align: center;
+  overflow: hidden;
+}
+.search th:nth-of-type(4),
+.search td:nth-of-type(4) {
+  width: 20px;
+  text-align: center;
+}
+
+.search tr:nth-last-of-type(even) {
+  background-color: var(--color-bgTableaux);
+}
+
+.search td,
+.search th {
+  padding: 5px;
+  border: 3px solid var(--color-bgTableaux);
+}
+
+.search tbody tr:hover td {
+  cursor: pointer;
+  background-color: var(--color-2-dark);
+  color: var(--txt-color-light);
+}

@@ -1,10 +1,8 @@
 import styles from "./portTable.module.css"
 
 function PortTable({datas, baseCurrencie}) {
-
   return (
     <table className={styles.portTable}>
-      <caption>Tableau de bord</caption>
       <tbody>
         <tr>
           <td className={styles.col1}>+/- value latente :</td>

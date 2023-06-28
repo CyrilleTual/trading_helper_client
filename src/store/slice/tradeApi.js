@@ -7,7 +7,7 @@ export const tradeApi = createApi({
     baseUrl: baseTradeUrl,
     prepareHeaders: async (headers) => {
       // get auth token and append headers
-      const token = localStorage.getItem("auth");
+      const token = localStorage.getItem("auth42titi@");
       headers.set("x-access-token", token);
       return headers;
     },

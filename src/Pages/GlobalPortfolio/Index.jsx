@@ -15,8 +15,6 @@ function Global(){
   // set de la devise de base
   const baseCurrencie = "€"
 
-  console.log (styles.meterWidth)
-
   return (
     <>
       {isLoading ? (
