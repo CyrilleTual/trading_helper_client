@@ -7,26 +7,22 @@ import { useNavigate } from "react-router-dom";
 import BtnSubmit from "../../Components/UI/BtnSubmit";
 import BtnLink from "../../Components/UI/BtnLink";
 import logo from "../../assets/img/logo.jpg";
- 
-
 
 function SignIn() {
   const [inputs, setInputs] = useState({ email: "", pwd: "" });
 
-  // gestion du formulaire 
+  // gestion du formulaire
   const { email, pwd } = inputs;
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setInputs({ ...inputs, [name]: value });
   };
 
-
   // middlware pour le set de la state via le store
-  const [signUserIn] = useSignUserInMutation();
+  const [signUserIn, { error }] = useSignUserInMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
- 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -52,33 +48,41 @@ function SignIn() {
     <main className={styles.signin}>
       <img src={logo} alt="Logo" />
       <h1>Trading Helper</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">email :</label>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          value={email}
-          autoComplete="username"
-          onChange={handleInputChange}
-        />
 
-        <label htmlFor="pwd">password :</label>
-        <input
-          type="password"
-          name="pwd"
-          autoComplete="current-password"
-          id="pwd"
-          value={pwd}
-          onChange={handleInputChange}
-        />
-        <BtnSubmit value="LogIn" />
-      </form>
+      {!error && (
+        <>
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="email">email :</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              value={email}
+              autoComplete="username"
+              onChange={handleInputChange}
+            />
 
-      <p>
-        Pas de compte ? En créer un
-        <BtnLink link="/signUp" title="👉 ici 👈" />
-      </p>
+            <label htmlFor="pwd">password :</label>
+            <input
+              type="password"
+              name="pwd"
+              autoComplete="current-password"
+              id="pwd"
+              value={pwd}
+              onChange={handleInputChange}
+            />
+            <BtnSubmit value="LogIn" />
+          </form>
+          <p>
+            Pas de compte ? En créer un
+            <BtnLink link="/signUp" title="👉 ici 👈" />
+          </p>
+        </>
+      )}
+
+      {error && (
+        <div>Le site rencontre un problème. Veuillez nous en excuser.</div>
+      )}
     </main>
   );
 }

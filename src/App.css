@@ -13,6 +13,7 @@
 
 html {
   font-size: 62.5%;
+  height: 100%;
 }
 
 .container {
@@ -24,10 +25,11 @@ html {
 body {
   font-size: 1.6rem;
   margin: 0; /*enleve la marge autour de la page */
-
   line-height: 1.8;
-  height: 100vh;
+  height: 100%;
 }
+
+
 
 section {
   background-color: white;
@@ -84,4 +86,18 @@ img {
 .basicBtn a {
   color: var(--txt-color-light);
 }
- 
+
+/********** Pour avoir le footer en bas de page  ********/
+.page-wrapper{
+  display: block;
+  min-height: 100vh;
+	margin-bottom: -50px; 
+}
+.page-wrapper:after {
+  content: "";
+  display: block;
+} 
+.site-footer, .page-wrapper:after {
+	height: 50px; 
+}
+/*******************************************************/

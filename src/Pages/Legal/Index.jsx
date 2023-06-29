@@ -1,16 +1,14 @@
- 
-import { Link } from 'react-router-dom';
+import styles from "./legal.module.css";
+import { Link } from "react-router-dom";
 
 function Legal() {
   return (
-    <>
+    <main className={styles.legal}>
+      <h1>MENTIONS LÉGALES</h1>
       <div>
-        <h2>MENTIONS LÉGALES</h2>
         <p>
           Ce site est édité par TradingHelper. L’information communiquée sur ce
-          site est présentée à titre indicatif et général et a pour objet
-          principal la présentation des services proposés par notre agence de
-          communication.
+          site est présentée à titre indicatif et général.
         </p>
         <h3>CONCEPTION et GESTION ÉDITORIALE</h3>
         <p>
@@ -34,8 +32,8 @@ function Legal() {
         </p>
         <h3>TITULARITÉ DES DROITS</h3>
         <p>
-          Tous les éléments de ce site Internet (notamment les marques déposées,
-          noms de domaine, les textes, graphismes, logos, sons, photos,
+          Tous les éléments de ce site Internet (notamment les marques
+          déposées,noms de domaine, les textes graphismes, logos, sons, photos,
           animations et codes) sont la propriété des éditeurs de ce site, à
           l’exclusion des éléments émanant de vos partenaires ou de partenaires
           de TradingHelper. Toute reproduction et/ou représentation et/ou
@@ -277,10 +275,8 @@ function Legal() {
           du traitement de vos données. Pour exercer ces droits ou pour toute
           question sur le traitement de vos données par TradingHelper, vous
           pouvez nous contacter{" "}
-          <Link to="#">
-            par voie électronique en cliquant sur ce lien
-          </Link>{" "}
-          ou par courrier postal.
+          <Link to="#">par voie électronique en cliquant sur ce lien</Link> ou
+          par courrier postal.
         </p>
         <h4>DESTINATAIRES DES DONNÉES PERSONNELLES</h4>
         <p>
@@ -428,15 +424,11 @@ function Legal() {
         <p>
           Pour toute question relative à la présente Politique de
           Confidentialité, veuillez{" "}
-          {" "}
-          <Link to="#">
-            nous contacter en cliquant ici
-          </Link>{" "}
-           
+          <Link to="#">nous contacter en cliquant ici</Link>{" "}
         </p>
       </div>
-    </>
+    </main>
   );
 }
 
-export default Legal
+export default Legal;

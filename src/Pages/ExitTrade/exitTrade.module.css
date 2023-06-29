@@ -2,6 +2,13 @@
         width: 400px;
     margin: auto;
 }
+.exit h1{
+    
+    position: relative;
+    top :-90px;
+    white-space: nowrap;
+    margin-bottom: -40px;
+}
 .form {
     display: flex;
     flex-direction: row;

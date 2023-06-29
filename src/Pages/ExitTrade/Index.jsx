@@ -68,7 +68,7 @@ function ExitTrade() {
 
     try {
     const res = await exitProcess(datas);
-    console.log(res);
+
       // navigate("/");
     } catch (err) {
       console.log(err);
@@ -82,6 +82,7 @@ function ExitTrade() {
         <p>Loading</p>
       ) : (
         <>
+        <h1>Exit</h1>
           <p>Tu veux vendre {trade.title}? </p>
           <p>Le dernier cours est de {trade.lastQuote}</p>
           <p>Tu disposes de {trade.remains} titres en portefeuille</p>

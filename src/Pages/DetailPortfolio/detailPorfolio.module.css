@@ -1,8 +1,11 @@
  .detail h1{
-    position: fixed;
-    top :15px;
+    position: relative;
+    top :-90px;
     left: calc(50vw);
     transform: translateX(-50%);
+    white-space: nowrap;
+    margin-bottom: -40px;
+
 }
  
  

@@ -10,12 +10,14 @@ function Header() {
   
   return (
     <>
-      {islogged &&<header>
-        <nav>
-          <Nav />
-          <NavPorfolios />
-        </nav>
-      </header>}
+      {islogged &&
+        <header>
+          <nav>
+            <Nav />
+            <NavPorfolios />
+          </nav>
+        </header>
+      }
     </>
   );
 }
