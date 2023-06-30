@@ -12,9 +12,6 @@
     text-align: left;
 }
 
-
-
-
 .signin input {
     margin-bottom: 10px;
 }
@@ -26,6 +23,7 @@
 .signin a {
     display: inline;
     color: gray;
+    background: transparent;
     
 }
 

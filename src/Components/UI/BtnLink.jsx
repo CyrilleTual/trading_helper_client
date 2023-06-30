@@ -3,7 +3,7 @@
 
 function BtnLink({link, title}) {
   return (
-    <NavLink to={link}>
+    <NavLink className={styles.myBtn} to={link}>
       {title}
     </NavLink>
   )

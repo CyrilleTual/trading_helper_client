@@ -36,7 +36,7 @@ function Portfolio() {
           <PortTable datas={data} baseCurrencie={baseCurrencie} />
           {/* <NavLink to={`/portfolio/detail/${data.id}`}>Details</NavLink> */}
           <div className={styles.under_table}>
-            <span className="basicBtn">
+            <span>
               <BtnLink link={`/portfolio/detail/${data.id}`} title="Details" />
             </span>
           </div>

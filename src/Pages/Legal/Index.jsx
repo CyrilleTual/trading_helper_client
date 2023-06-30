@@ -1,3 +1,4 @@
+import BtnLink from "../../Components/UI/BtnLink";
 import styles from "./legal.module.css";
 import { Link } from "react-router-dom";
 
@@ -427,6 +428,8 @@ function Legal() {
           <Link to="#">nous contacter en cliquant ici</Link>{" "}
         </p>
       </div>
+      <div className={styles.center}><BtnLink link="/" title= "Acceuil"/></div>
+      
     </main>
   );
 }

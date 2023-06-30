@@ -7,7 +7,22 @@ input[type="submit"]
     padding: 10px;
     background-color: var(--color-1-light);
     border-radius: 10px;
-    color: var(--txt-color-light);
     text-transform: uppercase;
     font-weight: bold;
 } 
+
+.myBtn {
+    display: inline-block;
+    margin: auto;
+    padding: 10px;
+    background-color: var(--color-1-light);
+    border-radius: 10px;
+    color: var(--txt-color-dark);
+    text-transform: uppercase;
+    font-weight: bold;
+    
+}
+
+.myBtn:hover{
+    cursor: pointer;
+}

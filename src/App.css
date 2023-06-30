@@ -91,7 +91,7 @@ img {
 .page-wrapper{
   display: block;
   min-height: 100vh;
-	margin-bottom: -50px; 
+	margin-bottom: -70px; 
 }
 .page-wrapper:after {
   content: "";
@@ -101,3 +101,15 @@ img {
 	height: 50px; 
 }
 /*******************************************************/
+
+.blinck  {
+   animation-duration: 1.2s;
+   animation-name: blinck;
+   animation-iteration-count: 3;
+   transition: ease-in-out;
+}
+@keyframes blinck {
+  0%   { opacity:1; }
+  40%   {opacity:0; }
+  100% { opacity:1; }
+}

@@ -1,12 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import style from "./index.module.css";
 import { useSignUserUpMutation } from "../../store/slice/tradeApi";
- 
 
 function SignUp() {
-
   // middlware pour le set de la state via le store
-  const [signUserUp] = useSignUserUpMutation();
+  const [signUserUp, result] = useSignUserUpMutation();
 
   const [inputs, setInputs] = useState({
     email: "",
@@ -15,6 +13,8 @@ function SignUp() {
     confirmPwd: "",
     agree: false,
   });
+  const [formErrors, setFormErrors] = useState({});
+  const [isSubmit, setIsSubmit] = useState(false);
 
   // gestion du formulaire
   const { email, alias, pwd, confirmPwd, agree } = inputs;
@@ -26,29 +26,23 @@ function SignUp() {
     setInputs({ ...inputs, agree: !agree });
   };
 
-  const handleSignUp = async (e) => {
-    e.preventDefault();
-   
-    ///////////  attention les données brutes du formulaires sont à traiter pour envoyer
-    /// un json - verifier email - conformité des mots de passe et identiques + agree
+  /// fonction d'envoie
+
+  async function go(){
+
     const datas = {
-      email: inputs.email,
-      pwd: inputs.pwd,
-      alias: inputs.alias,
-    };
+    email: inputs.email,
+    pwd: inputs.pwd,
+    alias: inputs.alias,
+    }
+  
+    signUserUp(datas)
+    .unwrap()
+    .then((res) => console.log(result)) /// user bien créé
+    .catch((error)=>{
+    console.log(error)
+    })
 
-    // on envoie data au back
-
-    
-     try {
-        console.log(inputs);
-      const res = await signUserUp(datas); 
-      console.log(res) 
-       // navigate("/");
-     } catch (err) {
-       console.log(err);
-       //setMsg("problème d'identifiant");
-     }
 
     //    const res = await signup(inputs);
     //    if (res.status === 201) {
@@ -56,7 +50,59 @@ function SignUp() {
     //      navigate("/entry", { state: { type: "se connecter" } });
     //    }
     // else envoyer un message d'erreur (gérer coté back la réponse : erreur serveur, email déjà existant ..)
+    //}
+
+
+  }
+
+
+ 
+
+
+
+
+
+
+  // fonction de valisation du form retourne les erreurs
+  const validate = (inputs) => {
+    const errors = {};
+    const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i;
+    if (!inputs.email) {
+      errors.email = "Veuillez entrer votre email";
+    } else if (!regex.test(inputs.email)) {
+      errors.email = "Format email invalide";
+    }
+    if (!inputs.alias) {
+      errors.alias = "Veuillez entrer un nom utilisateur";
+    }
+    if (!inputs.pwd) {
+      errors.pwd = "Veuillez entrer votre mot de passe";
+    }
+    if (!inputs.confirmPwd) {
+      errors.confirmPwd = "Veuillez confirmer votre mot de passe";
+    } else if (inputs.pwd !== inputs.confirmPwd) {
+      errors.confirmPwd = "Attention erreur de confirmation";
+    }
+    if (inputs.agree !== true) {
+      errors.agree = "Veuillez accepter les conditions d'utilisation";
+    }
+    return errors;
   };
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    // validation des données
+    setFormErrors(validate(inputs));
+    // on set le flag qui sera testé dans le useEffect
+    setIsSubmit(true);
+  };
+
+  // on tente un envoie si tt est ok
+  useEffect(() => {
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
+      go();
+    }
+  }, [formErrors]);
 
   return (
     <main className={style.main}>
@@ -69,6 +115,7 @@ function SignUp() {
           value={email}
           onChange={handleInputChange}
         />
+        <p>{formErrors.email}</p>
 
         <label htmlFor="alias">username :</label>
         <input
@@ -78,6 +125,7 @@ function SignUp() {
           value={alias}
           onChange={handleInputChange}
         />
+        <p>{formErrors.alias}</p>
 
         <label htmlFor="pwd">password :</label>
         <input
@@ -87,6 +135,8 @@ function SignUp() {
           value={pwd}
           onChange={handleInputChange}
         />
+        <p>{formErrors.pwd}</p>
+
         <label htmlFor="confirmPwd"> confirm password :</label>
         <input
           type="password"
@@ -95,6 +145,8 @@ function SignUp() {
           value={confirmPwd}
           onChange={handleInputChange}
         />
+        <p>{formErrors.confirmPwd}</p>
+
         <label htmlFor="agree">I agree to Terms of Service </label>
         <input
           type="checkbox"
@@ -103,6 +155,8 @@ function SignUp() {
           checked={agree}
           onChange={handleAgreeChange}
         />
+        <p>{formErrors.agree}</p>
+
         <input type="submit" value="signUp" />
       </form>
     </main>
