@@ -14,6 +14,8 @@ export const tradeApi = createApi({
   }),
   tagTypes: ["Auth", "Portfolio", "GlobalDatas"],
   endpoints: (builder) => ({
+
+
     signUserIn: builder.mutation({
       query: (payload) => ({
         url: "/user/signin",
@@ -21,6 +23,9 @@ export const tradeApi = createApi({
         body: payload,
       }),
       providesTags: ["Auth"],
+      transformResponse: (response, meta, arg) =>
+        {
+          return { response:response, status:meta.response.status };}
     }),
 
     signUserUp: builder.mutation({

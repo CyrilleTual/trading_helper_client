@@ -1,7 +1,5 @@
-import React from "react";
 import { useParams } from "react-router-dom";
 import { useGetPortfolioDashboardByIdQuery } from "../../store/slice/tradeApi";
-import { NavLink } from "react-router-dom";
 import PerfMeter from "../../Components/PerfMeter/Index";
 import PortTable from "../../Components/PortTable";
 import styles from "./portfolio.module.css";
@@ -35,11 +33,13 @@ function Portfolio() {
 
           <PortTable datas={data} baseCurrencie={baseCurrencie} />
           {/* <NavLink to={`/portfolio/detail/${data.id}`}>Details</NavLink> */}
-          <div className={styles.under_table}>
+          { data.assets > 0 &&
+                <div className={styles.under_table}>
             <span>
               <BtnLink link={`/portfolio/detail/${data.id}`} title="Details" />
             </span>
           </div>
+          }
         </main>
       )}
     </>

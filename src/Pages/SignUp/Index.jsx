@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import style from "./index.module.css";
 import { useSignUserUpMutation } from "../../store/slice/tradeApi";
+import { useNavigate } from "react-router-dom";
 
 function SignUp() {
+
+  const navigate = useNavigate()
   // middlware pour le set de la state via le store
   const [signUserUp, result] = useSignUserUpMutation();
 
@@ -15,6 +18,7 @@ function SignUp() {
   });
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
+  const [myError, setMyError] = useState(null);
 
   // gestion du formulaire
   const { email, alias, pwd, confirmPwd, agree } = inputs;
@@ -38,30 +42,15 @@ function SignUp() {
   
     signUserUp(datas)
     .unwrap()
-    .then((res) => console.log(result)) /// user bien créé
+    .then((res) => navigate("/") )/// user bien créé
     .catch((error)=>{
-    console.log(error)
+      if (error.status === 422){
+        setInputs({ ...inputs, email: "" });
+        setMyError(error.status);
+      }
     })
 
-
-    //    const res = await signup(inputs);
-    //    if (res.status === 201) {
-    //      setInputs({ email: "", password: "" });
-    //      navigate("/entry", { state: { type: "se connecter" } });
-    //    }
-    // else envoyer un message d'erreur (gérer coté back la réponse : erreur serveur, email déjà existant ..)
-    //}
-
-
   }
-
-
- 
-
-
-
-
-
 
   // fonction de valisation du form retourne les erreurs
   const validate = (inputs) => {
@@ -106,6 +95,7 @@ function SignUp() {
 
   return (
     <main className={style.main}>
+      <p>{(myError===422 && <p>Un conpte existe déja pour cette adresse mail</p>)}</p>
       <form onSubmit={handleSignUp}>
         <label htmlFor="email">email :</label>
         <input

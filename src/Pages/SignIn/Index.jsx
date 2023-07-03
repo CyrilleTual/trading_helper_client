@@ -8,6 +8,8 @@ import BtnSubmit from "../../Components/UI/BtnSubmit";
 import BtnLink from "../../Components/UI/BtnLink";
 import logo from "../../assets/img/logo.jpg";
 
+
+
 function SignIn() {
   const [inputs, setInputs] = useState({ email: "", pwd: "" });
 
@@ -20,18 +22,19 @@ function SignIn() {
 
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
-  
+
   // middlware pour le set de la state via le store
-  const [signUserIn, result] = useSignUserInMutation();
+  const [signUserIn] = useSignUserInMutation();
+  const [myError, setMyError] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const error = result.error;
 
   // fonction de valisation du form retourne les erreurs
   const validate = (inputs) => {
     const errors = {};
-    const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i;
+    /* eslint-disable */
+    const regex =
+     /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
     if (!inputs.email) {
       errors.email = "Veuillez entrer votre email";
     } else if (!regex.test(inputs.email)) {
@@ -41,25 +44,26 @@ function SignIn() {
       errors.pwd = "Veuillez entrer votre mot de passe";
     }
     return errors;
+    /* eslint-enable */
   };
 
-function go() {
+  async function go() {
     signUserIn(inputs)
       .unwrap()
-      .then((res) => {
-        localStorage.setItem("auth42titi@", res.TOKEN);
+      .then(({ response }) => {
+        localStorage.setItem("auth42titi@", response.TOKEN);
         dispatch(
           signIn({
-            id: res.id,
-            alias: res.alias,
-            email: res.email,
-            role: res.role,
+            id: response.id,
+            alias: response.alias,
+            email: response.email,
+            role: response.role,
           })
         );
         navigate("/global");
       })
       .catch((error) => {
-        console.log(error.status);
+        setMyError(error.status);
       });
   }
 
@@ -72,57 +76,54 @@ function go() {
   };
 
   // on tente un envoie si tt est ok
+  /* eslint-disable */
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       go();
     }
   }, [formErrors]);
+  /* eslint-enable */
 
   return (
     <main className={styles.signin}>
       <img src={logo} alt="Logo" />
       <h1>Trading Helper</h1>
-      {error && error.status===401 &&
-           <p className="blinck">Probleme d'identification</p> 
-      }
-  
-      {((!error ||
-        (error && error.status=== 401)) && (
-          <>
-            <form onSubmit={handleSubmit}>
-              <label htmlFor="email">email :</label>
-              <input
-                type="email"
-                name="email"
-                id="email"
-                value={email}
-                autoComplete="username"
-                onChange={handleInputChange}
-              />
-              <p>{formErrors.email}</p>
+      {myError === 401 && <p className="blinck">Probleme d'identification</p>}
 
-              <label htmlFor="pwd">password :</label>
-              <input
-                type="password"
-                name="pwd"
-                autoComplete="current-password"
-                id="pwd"
-                value={pwd}
-                onChange={handleInputChange}
-              />
-              <p>{formErrors.pwd}</p>
-              <BtnSubmit value="LogIn" />
-            </form>
-            <p>
-              Pas de compte ? En créer un
-              <BtnLink link="/signUp" title="👉 ici 👈" />
-            </p>
-          </>
-        ))}
+      {(!myError || myError === 401) && (
+        <>
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="email">email :</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              value={email}
+              autoComplete="username"
+              onChange={handleInputChange}
+            />
+            <p>{formErrors.email}</p>
 
-      {error && error.status !== 401 && (
-        <div>Oups, un problème est survenu.... </div>
+            <label htmlFor="pwd">password :</label>
+            <input
+              type="password"
+              name="pwd"
+              autoComplete="current-password"
+              id="pwd"
+              value={pwd}
+              onChange={handleInputChange}
+            />
+            <p>{formErrors.pwd}</p>
+            <BtnSubmit value="LogIn" />
+          </form>
+          <p>
+            Pas de compte ? En créer un
+            <BtnLink link="/signUp" title="👉 ici 👈" />
+          </p>
+        </>
       )}
+
+      {myError !== 401 && <div>Oups, un problème est survenu.... </div>}
     </main>
   );
 }

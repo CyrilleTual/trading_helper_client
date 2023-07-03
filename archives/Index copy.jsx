@@ -11,7 +11,7 @@ import logo from "../../assets/img/logo.jpg";
 function SignIn() {
   const [inputs, setInputs] = useState({ email: "", pwd: "" });
 
-  // gestion du formulaire
+  // gestion du formulaire - bind des champs
   const { email, pwd } = inputs;
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -20,14 +20,17 @@ function SignIn() {
 
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
-  const [resp, setResp] = useState({});
-
+  
   // middlware pour le set de la state via le store
   const [signUserIn, result] = useSignUserInMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const error = result.error;
+  
+
+ 
+ 
 
   // fonction de valisation du form retourne les erreurs
   const validate = (inputs) => {
@@ -44,30 +47,25 @@ function SignIn() {
     return errors;
   };
 
-  async function go() {
-    try {
-
-      const res = await signUserIn(inputs); // envoyer des inputs "sains/nettoyés"
-
-
-      if (res.data.TOKEN) {
-        localStorage.setItem("auth42titi@", res.data.TOKEN);
+function go() {
+    signUserIn(inputs)
+      .unwrap()
+      .then((res) => {
+        localStorage.setItem("auth42titi@", res.TOKEN);
         dispatch(
           signIn({
-            id: res.data.id,
-            alias: res.data.alias,
-            email: res.data.email,
-            role: res.data.role,
+            id: res.id,
+            alias: res.alias,
+            email: res.email,
+            role: res.role,
           })
-        );
+        )
         navigate("/global");
-      }
+      })
       
-    } catch (err) {
-      console.log ("problème d'identification")
-      navigate("/");
-      console.log(err);
-    }
+      .catch((error) => {
+        console.log(error.status);
+      });
   }
 
   const handleSubmit = async (e) => {
@@ -89,41 +87,45 @@ function SignIn() {
     <main className={styles.signin}>
       <img src={logo} alt="Logo" />
       <h1>Trading Helper</h1>
+      {error && error.status===401 &&
+           <p className="blinck">Probleme d'identification</p> 
+      }
+  
+      {((!error ||
+        (error && error.status=== 401)) && (
+          <>
+            <form onSubmit={handleSubmit}>
+              <label htmlFor="email">email :</label>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                value={email}
+                autoComplete="username"
+                onChange={handleInputChange}
+              />
+              <p>{formErrors.email}</p>
 
-      {!error && (
-        <>
-          <form onSubmit={handleSubmit}>
-            <label htmlFor="email">email :</label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              value={email}
-              autoComplete="username"
-              onChange={handleInputChange}
-            />
-            <p>{formErrors.email}</p>
+              <label htmlFor="pwd">password :</label>
+              <input
+                type="password"
+                name="pwd"
+                autoComplete="current-password"
+                id="pwd"
+                value={pwd}
+                onChange={handleInputChange}
+              />
+              <p>{formErrors.pwd}</p>
+              <BtnSubmit value="LogIn" />
+            </form>
+            <p>
+              Pas de compte ? En créer un
+              <BtnLink link="/signUp" title="👉 ici 👈" />
+            </p>
+          </>
+        ))}
 
-            <label htmlFor="pwd">password :</label>
-            <input
-              type="password"
-              name="pwd"
-              autoComplete="current-password"
-              id="pwd"
-              value={pwd}
-              onChange={handleInputChange}
-            />
-            <p>{formErrors.pwd}</p>
-            <BtnSubmit value="LogIn" />
-          </form>
-          <p>
-            Pas de compte ? En créer un
-            <BtnLink link="/signUp" title="👉 ici 👈" />
-          </p>
-        </>
-      )}
-
-      {error && (
+      {error && error.status !== 401 && (
         <div>Oups, un problème est survenu.... </div>
       )}
     </main>
