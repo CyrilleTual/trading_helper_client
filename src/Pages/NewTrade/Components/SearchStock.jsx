@@ -3,6 +3,7 @@ import { useSearchStocksQuery } from "../../../store/slice/tradeApi";
 import styles from "./searchStock.module.css";
 
 function SearchStock({ selectedItem, setSelectedItem }) {
+
   const [stock, setstock] = useState({
     id: 0,
     title: "",
@@ -12,6 +13,7 @@ function SearchStock({ selectedItem, setSelectedItem }) {
   });
 
   const [skip, setSkip] = useState(true);
+
   const { data: searchResult, isSuccess: searchIsSuccess } =
     useSearchStocksQuery(stock.title, { skip });
 
@@ -20,11 +22,9 @@ function SearchStock({ selectedItem, setSelectedItem }) {
     e.target.value.length > 2 ? setSkip(false) : setSkip(true);
   };
 
-
-
   return (
     <div className={styles.search}>
-      <h2>Recherher d'intrument par son nom : </h2>
+      <h2>Recherhe d'instrument : </h2>
       <form>
         <label htmlFor="stock">votre recherche :  </label>
         <input

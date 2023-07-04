@@ -1,0 +1,62 @@
+.sign {
+    padding: 20px;
+    text-align: center;
+}
+
+.sign form {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    max-width: 300px;
+    margin: 10px auto;
+    text-align: left;
+     
+}
+
+.sign input:not([submit]) {
+    margin-bottom: 10px;
+    height: 25px;
+    padding: 2px;
+    position: relative;
+     
+}
+
+.sign input{
+    width: 300px;
+}
+
+.parentOfPwd{
+    position: relative;
+     width: 300px;
+}
+
+.eye {
+    position: absolute;
+    top:0;
+    right: 0px;
+    display: inline-block;
+    cursor: pointer;
+    width: 30px;
+    height: 25px;
+    margin-top: 2px;
+     
+}
+
+
+
+.sign p {
+    text-align: center;
+}
+
+
+
+.sign a {
+    display: inline;
+    color: gray;
+    background: transparent;
+    
+}
+
+.sign img {
+    width: 300px;
+}

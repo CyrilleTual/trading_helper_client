@@ -12,7 +12,6 @@ import styles from "./newTrade.module.css";
 import SearchStock from "./Components/SearchStock";
 import BtnCancel from "../../Components/UI/BtnCancel";
 import { useNavigate } from "react-router-dom";
-import ExistingTrade from "./Components/ExistingTrade";
 
 function NewTrade() {
   const navigate = useNavigate();
@@ -62,13 +61,11 @@ function NewTrade() {
     strategyId: 1,
     portfolioId: 1,
   });
-  const [datas, setDatas] = useState({});
-  const [existingTrade, setExistingTrade] = useState(false);
 
-
+  const datas = {};
 
   useEffect(() => {
-    if (!portfolioIsLoading && !stategiesIsLoading) {  // valeurs par defaut des listes déroulantes
+    if (!portfolioIsLoading && !stategiesIsLoading) {
       const toSet = portfolios[0].id;
       const toSet2 = strategies[0].id;
       setValues({ ...values, portfolioId: toSet, strategyId: toSet2 });
@@ -86,28 +83,20 @@ function NewTrade() {
       let { currency, currencyId } = portfolios.find(
         (portfolio) => +portfolio.id === +values.portfolioId
       );
+
       setCurrency(currency);
       setCurrencyId(currencyId);
     }
   }, [values.portfolioId]);
 
   const [skip, setSkip] = useState(true); // pour recherche des doublons
-  // rechercher d'un trade existant actif (même stock et même portfolio)
+  // rechercher d'un trade existant actif
   const { data, isSuccess } = useCheckIfActiveTradeQuery(
     { stockId: selectedItem.id, portfolioId: +values.portfolioId },
     { skip }
   );
 
-  // création effective du nouveau trade -> trade et enter 
- async function go (){
-   try {
-     const res = await newTrade(datas);
-     console.log(res); // on va sur le portefeuille : portfolioID
-     navigate(`/portfolio/detail/${datas.portfolio_id}`);
-   } catch (err) {
-     console.log(err);
-   }
- }
+
 
 
 
@@ -115,9 +104,9 @@ function NewTrade() {
     if (isSuccess) {
       if (data.length > 0) {
         console.log("trade exisant");
-        setExistingTrade(true)
       } else {
-        go();
+        console.log("ok");
+        go()
       }
     }
   }, [data, isSuccess]);
@@ -128,7 +117,7 @@ function NewTrade() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setDatas({...datas, 
+    const datas = {
       stock_id: selectedItem.id,
       price: +(+values.price).toFixed(2),
       target: +(+values.target).toFixed(2),
@@ -141,7 +130,8 @@ function NewTrade() {
       portfolio_id: +values.portfolioId,
       currency_id: currencyId,
       lastQuote: lastInfos.last,
-      beforeQuote: lastInfos.before,})
+      beforeQuote: lastInfos.before,
+    };
 
     // verification si le trade exite deja -> stockId / portfolio
     // on déclanche le middle ware existingActiveTrade
@@ -165,9 +155,7 @@ function NewTrade() {
   return (
     <main className={`container ${styles.newTrade}`}>
       <h1>Création d'un trade :</h1>
-      { existingTrade ?  <ExistingTrade/> :
-      <>
-       {portfolioIsLoading || stategiesIsLoading ? (
+      {portfolioIsLoading || stategiesIsLoading ? (
         <p>Loading</p>
       ) : (
         <div>
@@ -313,10 +301,6 @@ function NewTrade() {
           )}
         </div>
       )}
-      </>
-      
-      }
-     
     </main>
   );
 }

@@ -1,36 +1,41 @@
-.main {
-    padding: 20px;
+.signup {
+    composes: sign from "../SignIn/sign.module.css";
 }
 
-.main form {
-    display: flex;
-    flex-direction: column;
-    width: 70%;
-    max-width: 300px;
-    margin: 10px auto;
+.signup img{
+     margin: auto;
+     width: 300px;
 }
 
-
-.main input {
-    margin-bottom: 10px;
-}
-
-.main input[type="submit"]{
-    padding: 10px;
-    background-color: rgb(121, 173, 42);
-    border-radius: 10px;
-    color: #fff;
-    text-transform: uppercase;
-    font-weight: bold;
-
-}
-
-.main p {
+.signup p {
     text-align: center;
 }
 
-.main a {
+.signup a {
     display: inline;
     color: gray;
     
+}
+.signup input[type="checkbox"] {
+    width: 50px;
+}
+ 
+.labelCheck{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.space{
+    display: inline-block;
+    width: 20px;
+    vertical-align: middle;
+}
+
+.eye{
+    composes: eye from "../SignIn/sign.module.css";
+}
+
+.parentOfPwd {
+    composes: parentOfPwd from "../SignIn/sign.module.css";
 }

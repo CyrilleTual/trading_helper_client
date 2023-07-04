@@ -14,8 +14,6 @@ export const tradeApi = createApi({
   }),
   tagTypes: ["Auth", "Portfolio", "GlobalDatas"],
   endpoints: (builder) => ({
-
-
     signUserIn: builder.mutation({
       query: (payload) => ({
         url: "/user/signin",
@@ -23,9 +21,9 @@ export const tradeApi = createApi({
         body: payload,
       }),
       providesTags: ["Auth"],
-      transformResponse: (response, meta, arg) =>
-        {
-          return { response:response, status:meta.response.status };}
+      transformResponse: (response, meta, arg) => {
+        return { response: response, status: meta.response.status };
+      },
     }),
 
     signUserUp: builder.mutation({
@@ -63,6 +61,7 @@ export const tradeApi = createApi({
     // liste des strategies par user
     getStategiesByUserId: builder.query({
       query: (id) => `strategies/user/${id}`,
+      providesTags: ["strategy"],
     }),
 
     //recherhce des stocks
@@ -75,6 +74,13 @@ export const tradeApi = createApi({
       query: (item) => `/stock/last/${item.isin}&${item.place}`,
     }),
 
+    // le trade en cours pour un stock et un portfolio
+    checkIfActiveTrade: builder.query({
+      query: (params) =>
+        `/trade/checkIfActive/${params.stockId}&${params.portfolioId}`,
+      providesTags: ["CheckActive"],
+    }),
+
     // nouveau trade
     newTrade: builder.mutation({
       query: (payload) => ({
@@ -82,7 +88,7 @@ export const tradeApi = createApi({
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: ["GlobalDatas"],
+      invalidatesTags: ["GlobalDatas", "CheckActive"],
     }),
 
     // preparation exit / re-enter
@@ -97,7 +103,7 @@ export const tradeApi = createApi({
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: ["GlobalDatas"],
+      invalidatesTags: ["GlobalDatas", "CheckActive"],
     }),
 
     // reEnter Process
@@ -107,7 +113,7 @@ export const tradeApi = createApi({
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: ["GlobalDatas"],
+      invalidatesTags: ["GlobalDatas", "CheckActive"],
     }),
   }),
 });
@@ -126,5 +132,6 @@ export const {
   useExitProcessMutation,
   usePrepareQuery,
   useReEnterMutation,
+  useCheckIfActiveTradeQuery,
 
 } = tradeApi;

@@ -1,17 +1,28 @@
+import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import styles from "./index.module.css";
+import styles from "./sign.module.css";
 import { useSignUserInMutation } from "../../store/slice/tradeApi";
 import { signIn } from "../../store/slice/user";
 import { useNavigate } from "react-router-dom";
 import BtnSubmit from "../../Components/UI/BtnSubmit";
 import BtnLink from "../../Components/UI/BtnLink";
 import logo from "../../assets/img/logo.jpg";
-
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
 
 function SignIn() {
   const [inputs, setInputs] = useState({ email: "", pwd: "" });
+
+  const navigate = useNavigate();
+
+  // verifie si est loggé et redirige vers tableau de bord si oui
+  const islogged = useSelector((state) => state.user.isLogged);
+  useEffect(() => {
+    if (islogged) {
+      navigate("/global");
+    }
+  });
 
   // gestion du formulaire - bind des champs
   const { email, pwd } = inputs;
@@ -27,14 +38,26 @@ function SignIn() {
   const [signUserIn] = useSignUserInMutation();
   const [myError, setMyError] = useState(null);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+
+  // gestion de la visibilité du pwd
+  const [type, setType] = useState("password");
+  const [icon, setIcon] = useState(faEyeSlash);
+
+  const handleToggle = () => {
+    if (type === "password") {
+      setIcon(faEye);
+      setType("text");
+    } else {
+      setIcon(faEyeSlash);
+      setType("password");
+    }
+  };
 
   // fonction de valisation du form retourne les erreurs
   const validate = (inputs) => {
     const errors = {};
     /* eslint-disable */
-    const regex =
-     /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+    const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
     if (!inputs.email) {
       errors.email = "Veuillez entrer votre email";
     } else if (!regex.test(inputs.email)) {
@@ -85,7 +108,7 @@ function SignIn() {
   /* eslint-enable */
 
   return (
-    <main className={styles.signin}>
+    <main className={styles.sign}>
       <img src={logo} alt="Logo" />
       <h1>Trading Helper</h1>
       {myError === 401 && <p className="blinck">Probleme d'identification</p>}
@@ -105,14 +128,19 @@ function SignIn() {
             <p>{formErrors.email}</p>
 
             <label htmlFor="pwd">password :</label>
-            <input
-              type="password"
-              name="pwd"
-              autoComplete="current-password"
-              id="pwd"
-              value={pwd}
-              onChange={handleInputChange}
-            />
+            <div className={styles.parentOfPwd}>
+              <input
+                type={type}
+                name="pwd"
+                autoComplete="current-password"
+                id="pwd"
+                value={pwd}
+                onChange={handleInputChange}
+              />
+              <span className={styles.eye} onClick={handleToggle}>
+                <FontAwesomeIcon icon={icon} />
+              </span>
+            </div>
             <p>{formErrors.pwd}</p>
             <BtnSubmit value="LogIn" />
           </form>
@@ -123,7 +151,9 @@ function SignIn() {
         </>
       )}
 
-      {myError !== 401 && <div>Oups, un problème est survenu.... </div>}
+      {myError && myError !== 401 && (
+        <div> Oups, un problème est survenu.... </div>
+      )}
     </main>
   );
 }
