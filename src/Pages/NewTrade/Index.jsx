@@ -195,6 +195,8 @@ function NewTrade() {
     setSkip2(true);
   }
 
+ 
+
   return (
     <main className={`container ${styles.newTrade}`}>
       <h1>Création d'un trade :</h1>

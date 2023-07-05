@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import {
-  useGetPortfoliosByUserQuery,
-  useGetPortfolioDashboardByIdQuery,
-} from "../../store/slice/tradeApi";
+import { useGetPortfoliosByUserQuery } from "../../store/slice/tradeApi";
 import styles from "./managePortfolio.module.css";
+import Details from "./Components/Details";
+import BtnAction from "../../Components/UI/BtnAction";
+import Create from "./Components/Create";
+import Existing from "./Components/Existing";
 
 function ManagePortfolio() {
   const id = useSelector((state) => state.user.infos.id);
-
-  const baseCurrencie = "$";
 
   // liste des portfolios
   const {
@@ -18,32 +17,60 @@ function ManagePortfolio() {
     isError,
   } = useGetPortfoliosByUserQuery(id);
 
-  // on va cherhcher un portfolio particulier
+  const [manageExisting, setManageExisting] = useState(false);
+  const [create, setCreate] = useState(false);
 
-  const [skip, setSkip] = useState(true);
-  const [idCurrent, setIdCurrent] = useState(1);
+  const handleClickManage = () => {
+    setManageExisting(!manageExisting);
+    if (create) setCreate(false);
+  };
+  const handleClickCreate = () => {
+    setCreate(!create);
+    if (manageExisting) setManageExisting(false);
+  };
 
-  const { data: portfoliodetail } =
-    useGetPortfolioDashboardByIdQuery(idCurrent);
+  return (
+    <>
+      {isLoading ? (
+        <p>loading</p>
+      ) : (
+        <div>
+          <main>
+            <table className={styles.managePort}>
+              <thead>
+                <tr>
+                  <th>portefeuille</th>
+                  <th>versé</th>
+                  <th>exposition</th>
+                  <th>liquidités</th>
+                  <th>valorisation</th>
+                </tr>
+              </thead>
+              <tbody>
+                {portfolios.map((item, i) => (
+                  <Details key={i} portfolio={item} />
+                ))}
+              </tbody>
+            </table>
 
-  useEffect(() => {
-    setSkip(false);
-    for (const portfolio of portfolios) {
-      console.log(portfolio, portfolio.id);
-      setIdCurrent(portfolio.id);
-    }
-  }, [portfolios]);
+            <BtnAction
+              value={"Gérer un portefeuille existant"}
+              action={handleClickManage}
+            />
+            <BtnAction
+              value={"Créer un nouveau portefeuille"}
+              action={handleClickCreate}
+            />
 
-  const arrayDetailled = [];
-  useEffect(() => {
-    
-   console.log(portfoliodetail)
-
-  }, [idCurrent, portfoliodetail]);
-
-
-
-  return <>{isLoading ? <p>loading</p> : <div>toto</div>}</>;
+            {manageExisting && (
+              <Existing portfolios={portfolios} isLoading={isLoading} />
+            )}
+            {create && <Create />}
+          </main>
+        </div>
+      )}
+    </>
+  );
 }
 
 export default ManagePortfolio;

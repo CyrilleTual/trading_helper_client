@@ -1,135 +1,308 @@
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import styles from "./index.module.css";
-import { useSignUserInMutation } from "../../store/slice/tradeApi";
-import { signIn } from "../../store/slice/user";
+import React from "react";
+import { useSelector } from "react-redux";
+import {
+  useCheckIfActiveTradeQuery,
+  useGetPortfoliosByUserQuery,
+  useGetStategiesByUserIdQuery,
+  useLastQuoteQuery,
+  useNewTradeMutation,
+} from "../../store/slice/tradeApi";
+import { useState, useEffect } from "react";
+import styles from "./newTrade.module.css";
+import SearchStock from "./Components/SearchStock";
+import BtnCancel from "../../Components/UI/BtnCancel";
 import { useNavigate } from "react-router-dom";
-import BtnSubmit from "../../Components/UI/BtnSubmit";
-import BtnLink from "../../Components/UI/BtnLink";
-import logo from "../../assets/img/logo.jpg";
 
-function SignIn() {
-  const [inputs, setInputs] = useState({ email: "", pwd: "" });
-
-  // gestion du formulaire - bind des champs
-  const { email, pwd } = inputs;
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setInputs({ ...inputs, [name]: value });
-  };
-
-  const [formErrors, setFormErrors] = useState({});
-  const [isSubmit, setIsSubmit] = useState(false);
-  
-  // middlware pour le set de la state via le store
-  const [signUserIn, result] = useSignUserInMutation();
-  const dispatch = useDispatch();
+function NewTrade() {
   const navigate = useNavigate();
+  // un new trade va automatiquement créer une entrée
+  // pas de trade sans entrée
 
-  const error = result.error;
-  
+  // on va chercher la liste des portfolios de l'user
+  // const { id, alias } = useSelector((state) => ({
+  //   ...state.user.infos,
+  // }));
+  const id = useSelector((state) => state.user.infos.id);
+  const alias = useSelector((state) => state.user.infos.alias);
 
- 
- 
-
-  // fonction de valisation du form retourne les erreurs
-  const validate = (inputs) => {
-    const errors = {};
-    const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i;
-    if (!inputs.email) {
-      errors.email = "Veuillez entrer votre email";
-    } else if (!regex.test(inputs.email)) {
-      errors.email = "Format email invalide";
-    }
-    if (!inputs.pwd) {
-      errors.pwd = "Veuillez entrer votre mot de passe";
-    }
-    return errors;
+  // le titre selectionné
+  const initSelected = {
+    id: 0,
+    title: "",
+    isin: "",
+    place: "",
+    ticker: "",
   };
+  const [selectedItem, setSelectedItem] = useState(initSelected);
 
-function go() {
-    signUserIn(inputs)
-      .unwrap()
-      .then((res) => {
-        localStorage.setItem("auth42titi@", res.TOKEN);
-        dispatch(
-          signIn({
-            id: res.id,
-            alias: res.alias,
-            email: res.email,
-            role: res.role,
-          })
-        )
-        navigate("/global");
-      })
-      
-      .catch((error) => {
-        console.log(error.status);
-      });
-  }
+  // on va recupere la liste des portfolios de l'user ->
+  const { data: portfolios, isLoading: portfolioIsLoading } =
+    useGetPortfoliosByUserQuery(id);
+  // listes des strategies de l'user
+  const { data: strategies, isLoading: stategiesIsLoading } =
+    useGetStategiesByUserIdQuery(id);
+  // dernier cotation
+  const { data: lastInfos, isSuccess: lastIsSuccess } =
+    useLastQuoteQuery(selectedItem);
 
+  // nouveau trade
+  const [newTrade] = useNewTradeMutation();
+
+  const [currency, setCurrency] = useState("euro");
+  const [currencyId, setCurrencyId] = useState(1);
+  const [values, setValues] = useState({
+    price: 0,
+    target: 0,
+    stop: 0,
+    quantity: 0,
+    fees: 0,
+    tax: 0,
+    comment: "",
+    strategyId: 1,
+    portfolioId: 1,
+  });
+
+  const datas = {};
+
+  useEffect(() => {
+    if (!portfolioIsLoading && !stategiesIsLoading) {
+      const toSet = portfolios[0].id;
+      const toSet2 = strategies[0].id;
+      setValues({ ...values, portfolioId: toSet, strategyId: toSet2 });
+    }
+  }, [
+    selectedItem,
+    portfolioIsLoading,
+    stategiesIsLoading,
+    portfolios,
+    strategies,
+  ]);
+
+  useEffect(() => {
+    if (!portfolioIsLoading && !stategiesIsLoading) {
+      let { currency, currencyId } = portfolios.find(
+        (portfolio) => +portfolio.id === +values.portfolioId
+      );
+
+      setCurrency(currency);
+      setCurrencyId(currencyId);
+    }
+  }, [values.portfolioId]);
+
+  const [skip, setSkip] = useState(true); // pour recherche des doublons
+  // rechercher d'un trade existant actif
+  const { data, isSuccess } = useCheckIfActiveTradeQuery(
+    { stockId: selectedItem.id, portfolioId: +values.portfolioId },
+    { skip }
+  );
+
+
+
+
+
+  useEffect(() => {
+    if (isSuccess) {
+      if (data.length > 0) {
+        console.log("trade exisant");
+      } else {
+        console.log("ok");
+        go()
+      }
+    }
+  }, [data, isSuccess]);
+
+  ///// gestion du formulaire //////////////////////////////
+  const handleChange = (e) => {
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // on va checker les erreurs
-    setFormErrors(validate(inputs));
-    // on set le flag qui sera testé dans le useEffect
-    setIsSubmit(true);
+    const datas = {
+      stock_id: selectedItem.id,
+      price: +(+values.price).toFixed(2),
+      target: +(+values.target).toFixed(2),
+      stop: +(+values.stop).toFixed(2),
+      quantity: +(+values.quantity).toFixed(0),
+      fees: +(+values.fees).toFixed(3),
+      tax: +(+values.fees).toFixed(3),
+      comment: values.comment,
+      strategy_id: +values.strategyId,
+      portfolio_id: +values.portfolioId,
+      currency_id: currencyId,
+      lastQuote: lastInfos.last,
+      beforeQuote: lastInfos.before,
+    };
+
+    // verification si le trade exite deja -> stockId / portfolio
+    // on déclanche le middle ware existingActiveTrade
+    setSkip(false);
+
+    // try {
+    //   const res = await newTrade(datas);
+    //   console.log(res); // on va sur le portefeuille : portfolioID
+    //   navigate(`/portfolio/${datas.portfolio_id}`);
+    // } catch (err) {
+    //   console.log(err);
+    // }
   };
 
-  // on tente un envoie si tt est ok
-  useEffect(() => {
-    if (Object.keys(formErrors).length === 0 && isSubmit) {
-      go();
-    }
-  }, [formErrors]);
+  /////// cancel enter
+  function cancelEnter() {
+    setSelectedItem(initSelected);
+    setSkip(true)
+  }
 
   return (
-    <main className={styles.signin}>
-      <img src={logo} alt="Logo" />
-      <h1>Trading Helper</h1>
-      {error && error.status===401 &&
-           <p className="blinck">Probleme d'identification</p> 
-      }
-  
-      {((!error ||
-        (error && error.status=== 401)) && (
-          <>
-            <form onSubmit={handleSubmit}>
-              <label htmlFor="email">email :</label>
-              <input
-                type="email"
-                name="email"
-                id="email"
-                value={email}
-                autoComplete="username"
-                onChange={handleInputChange}
-              />
-              <p>{formErrors.email}</p>
+    <main className={`container ${styles.newTrade}`}>
+      <h1>Création d'un trade :</h1>
+      {portfolioIsLoading || stategiesIsLoading ? (
+        <p>Loading</p>
+      ) : (
+        <div>
+          <p>Bonjour {alias} tu es parti pour de nouvelles aventures ...</p>
+          {!selectedItem.id && (
+            <SearchStock
+              selectedItem={selectedItem}
+              setSelectedItem={setSelectedItem}
+            />
+          )}
 
-              <label htmlFor="pwd">password :</label>
-              <input
-                type="password"
-                name="pwd"
-                autoComplete="current-password"
-                id="pwd"
-                value={pwd}
-                onChange={handleInputChange}
-              />
-              <p>{formErrors.pwd}</p>
-              <BtnSubmit value="LogIn" />
-            </form>
-            <p>
-              Pas de compte ? En créer un
-              <BtnLink link="/signUp" title="👉 ici 👈" />
-            </p>
-          </>
-        ))}
+          {selectedItem.id !== 0 && (
+            <>
+              <p>
+                Vous avez selectionné {selectedItem.title}
+                {lastIsSuccess && lastInfos.last && (
+                  <span>, dernier cours : {lastInfos.last}</span>
+                )}
+              </p>
 
-      {error && error.status !== 401 && (
-        <div>Oups, un problème est survenu.... </div>
+              <div className={styles.form_enter}>
+                <form
+                  className={styles.form}
+                  onSubmit={handleSubmit}
+                  method="POST "
+                >
+                  <label className={styles.label} htmlFor="price">
+                    prix
+                  </label>
+                  <input
+                    type="number"
+                    id="price"
+                    name="price"
+                    min="0"
+                    value={values.price}
+                    onChange={handleChange}
+                  />
+                  <label className={styles.label} htmlFor="target">
+                    target
+                  </label>
+                  <input
+                    type="number"
+                    id="target"
+                    name="target"
+                    value={values.target}
+                    onChange={handleChange}
+                    min="0"
+                  />
+                  <label className={styles.label} htmlFor="stop">
+                    stop-loss
+                  </label>
+                  <input
+                    type="number"
+                    id="stop"
+                    name="stop"
+                    value={values.stop}
+                    onChange={handleChange}
+                  />
+                  <label className={styles.label} htmlFor="quantity">
+                    quantité
+                  </label>
+                  <input
+                    type="number"
+                    id="quantity"
+                    name="quantity"
+                    min="1"
+                    value={values.quantity}
+                    onChange={handleChange}
+                  />
+                  <label className={styles.label} htmlFor="fees">
+                    commissions
+                  </label>
+                  <input
+                    type="number"
+                    id="fees"
+                    name="fees"
+                    min="0"
+                    value={values.fees}
+                    onChange={handleChange}
+                  />
+                  <label className={styles.label} htmlFor="tax">
+                    taxes
+                  </label>
+                  <input
+                    type="number"
+                    id="tax"
+                    name="tax"
+                    min="0"
+                    value={values.tax}
+                    onChange={handleChange}
+                  />
+                  <label className={styles.label} htmlFor="comment">
+                    commentaires
+                  </label>
+                  <input
+                    type="text"
+                    id="comment"
+                    name="comment"
+                    value={values.comment}
+                    onChange={handleChange}
+                  />
+                  <label className={styles.label} htmlFor="portfolioId">
+                    Choisissez un portefeuille
+                  </label>
+                  <select
+                    onChange={handleChange}
+                    id="portfolioId"
+                    name="portfolioId"
+                    defaultValue={values.portfolioId}
+                  >
+                    {portfolios.map((portfolio, i) => (
+                      <option
+                        key={i}
+                        value={portfolio.id}
+                        // selected={portfolio.id === values.portfolioId ? true : false}
+                      >
+                        {portfolio.title}
+                      </option>
+                    ))}
+                  </select>
+                  <p>ce portefeuille est en {currency}</p>
+                  <label className={styles.label} htmlFor="strategyId">
+                    Choisissez une strategies
+                  </label>
+                  <select
+                    onChange={handleChange}
+                    id="strategyId"
+                    name="strategyId"
+                    defaultValue={values.strategyId}
+                  >
+                    {strategies.map((strategy, i) => (
+                      <option key={i} value={strategy.id}>
+                        {strategy.title}
+                      </option>
+                    ))}
+                  </select>
+                  <br />
+                  <input type="submit" value="Validation" />
+                  <BtnCancel value="Abandon" action={cancelEnter} />
+                </form>
+              </div>
+            </>
+          )}
+        </div>
       )}
     </main>
   );
 }
 
-export default SignIn;
+export default NewTrade;
