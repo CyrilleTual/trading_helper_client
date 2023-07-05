@@ -60,3 +60,17 @@
 .sign img {
     width: 300px;
 }
+
+.sign input[type="checkbox"] {
+    width: 50px;
+}
+.labelCheck{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.space{
+    display: inline-block;
+    width: 20px;
+    vertical-align: middle;
+}

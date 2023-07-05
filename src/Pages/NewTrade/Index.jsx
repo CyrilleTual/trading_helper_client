@@ -1,5 +1,5 @@
-import React from "react";
-import { useSelector } from "react-redux";
+
+import { useSelector, useDispatch } from "react-redux";
 import {
   useCheckIfActiveTradeQuery,
   useGetPortfoliosByUserQuery,
@@ -13,6 +13,8 @@ import SearchStock from "./Components/SearchStock";
 import BtnCancel from "../../Components/UI/BtnCancel";
 import { useNavigate } from "react-router-dom";
 import ExistingTrade from "./Components/ExistingTrade";
+import { signOut } from "../../store/slice/user";
+import { resetStorage } from "../../utils/tools";
 
 function NewTrade() {
   const navigate = useNavigate();
@@ -37,14 +39,29 @@ function NewTrade() {
   const [selectedItem, setSelectedItem] = useState(initSelected);
 
   // on va recupere la liste des portfolios de l'user ->
-  const { data: portfolios, isLoading: portfolioIsLoading } =
-    useGetPortfoliosByUserQuery(id);
+  const {
+    data: portfolios,
+    isLoading: portfolioIsLoading,
+    isError: isError1,
+  } = useGetPortfoliosByUserQuery(id);
   // listes des strategies de l'user
-  const { data: strategies, isLoading: stategiesIsLoading } =
-    useGetStategiesByUserIdQuery(id);
-  // dernier cotation
-  const { data: lastInfos, isSuccess: lastIsSuccess } =
-    useLastQuoteQuery(selectedItem);
+  const {
+    data: strategies,
+    isLoading: stategiesIsLoading,
+    isError: isError2,
+  } = useGetStategiesByUserIdQuery(id);
+
+  // derniere cotation le skip2 retarde la requete tant que pas de selection 
+  const [skip2, setSkip2] = useState(true);
+  useEffect(() => {
+    if(selectedItem.id !== 0) {
+          setSkip2(false)
+    }
+  }, [selectedItem]);
+  const { data: lastInfos, isSuccess: lastIsSuccess } = useLastQuoteQuery(
+    selectedItem,
+    { skip: skip2 }
+  );
 
   // nouveau trade
   const [newTrade] = useNewTradeMutation();
@@ -65,10 +82,9 @@ function NewTrade() {
   const [datas, setDatas] = useState({});
   const [existingTrade, setExistingTrade] = useState(false);
 
-
-
   useEffect(() => {
-    if (!portfolioIsLoading && !stategiesIsLoading) {  // valeurs par defaut des listes déroulantes
+    if (!portfolioIsLoading && !stategiesIsLoading && !isError1 && !isError2) {
+      // valeurs par defaut des listes déroulantes
       const toSet = portfolios[0].id;
       const toSet2 = strategies[0].id;
       setValues({ ...values, portfolioId: toSet, strategyId: toSet2 });
@@ -93,29 +109,43 @@ function NewTrade() {
 
   const [skip, setSkip] = useState(true); // pour recherche des doublons
   // rechercher d'un trade existant actif (même stock et même portfolio)
-  const { data, isSuccess } = useCheckIfActiveTradeQuery(
+  const {
+    data,
+    isSuccess,
+    isError: isError4,
+  } = useCheckIfActiveTradeQuery(
     { stockId: selectedItem.id, portfolioId: +values.portfolioId },
     { skip }
   );
 
-  // création effective du nouveau trade -> trade et enter 
- async function go (){
-   try {
-     const res = await newTrade(datas);
-     console.log(res); // on va sur le portefeuille : portfolioID
-     navigate(`/portfolio/detail/${datas.portfolio_id}`);
-   } catch (err) {
-     console.log(err);
-   }
- }
+  // gestion des erreurs / les requêtes
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (isError1 || isError2 || isError4) {
+      console.log(isError1, isError2, isError4);
+      resetStorage();
+      // on reset le state
+      dispatch(signOut());
+      navigate("/");
+    }
+  }, [isError1, isError2, isError4]);
 
-
+  // création effective du nouveau trade -> trade et enter
+  async function go() {
+    try {
+      const res = await newTrade(datas);
+      console.log(res); // on va sur le portefeuille : portfolioID
+      navigate(`/portfolio/detail/${datas.portfolio_id}`);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   useEffect(() => {
     if (isSuccess) {
       if (data.length > 0) {
         console.log("trade exisant");
-        setExistingTrade(true)
+        setExistingTrade(true);
       } else {
         go();
       }
@@ -128,7 +158,8 @@ function NewTrade() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setDatas({...datas, 
+    setDatas({
+      ...datas,
       stock_id: selectedItem.id,
       price: +(+values.price).toFixed(2),
       target: +(+values.target).toFixed(2),
@@ -141,7 +172,8 @@ function NewTrade() {
       portfolio_id: +values.portfolioId,
       currency_id: currencyId,
       lastQuote: lastInfos.last,
-      beforeQuote: lastInfos.before,})
+      beforeQuote: lastInfos.before,
+    });
 
     // verification si le trade exite deja -> stockId / portfolio
     // on déclanche le middle ware existingActiveTrade
@@ -159,164 +191,165 @@ function NewTrade() {
   /////// cancel enter
   function cancelEnter() {
     setSelectedItem(initSelected);
-    setSkip(true)
+    setSkip(true);
+    setSkip2(true);
   }
 
   return (
     <main className={`container ${styles.newTrade}`}>
       <h1>Création d'un trade :</h1>
-      { existingTrade ?  <ExistingTrade/> :
-      <>
-       {portfolioIsLoading || stategiesIsLoading ? (
-        <p>Loading</p>
+      {existingTrade ? (
+        <ExistingTrade />
       ) : (
-        <div>
-          <p>Bonjour {alias} tu es parti pour de nouvelles aventures ...</p>
-          {!selectedItem.id && (
-            <SearchStock
-              selectedItem={selectedItem}
-              setSelectedItem={setSelectedItem}
-            />
-          )}
+        <>
+          {portfolioIsLoading || stategiesIsLoading ? (
+            <p>Loading</p>
+          ) : (
+            <div>
+              <p>Bonjour {alias} tu es parti pour de nouvelles aventures ...</p>
+              {!selectedItem.id && (
+                <SearchStock
+                  selectedItem={selectedItem}
+                  setSelectedItem={setSelectedItem}
+                />
+              )}
 
-          {selectedItem.id !== 0 && (
-            <>
-              <p>
-                Vous avez selectionné {selectedItem.title}
-                {lastIsSuccess && lastInfos.last && (
-                  <span>, dernier cours : {lastInfos.last}</span>
-                )}
-              </p>
+              {selectedItem.id !== 0 && (
+                <>
+                  <p>
+                    Vous avez selectionné {selectedItem.title}
+                    {lastIsSuccess && lastInfos.last && (
+                      <span>, dernier cours : {lastInfos.last}</span>
+                    )}
+                  </p>
 
-              <div className={styles.form_enter}>
-                <form
-                  className={styles.form}
-                  onSubmit={handleSubmit}
-                  method="POST "
-                >
-                  <label className={styles.label} htmlFor="price">
-                    prix
-                  </label>
-                  <input
-                    type="number"
-                    id="price"
-                    name="price"
-                    min="0"
-                    value={values.price}
-                    onChange={handleChange}
-                  />
-                  <label className={styles.label} htmlFor="target">
-                    target
-                  </label>
-                  <input
-                    type="number"
-                    id="target"
-                    name="target"
-                    value={values.target}
-                    onChange={handleChange}
-                    min="0"
-                  />
-                  <label className={styles.label} htmlFor="stop">
-                    stop-loss
-                  </label>
-                  <input
-                    type="number"
-                    id="stop"
-                    name="stop"
-                    value={values.stop}
-                    onChange={handleChange}
-                  />
-                  <label className={styles.label} htmlFor="quantity">
-                    quantité
-                  </label>
-                  <input
-                    type="number"
-                    id="quantity"
-                    name="quantity"
-                    min="1"
-                    value={values.quantity}
-                    onChange={handleChange}
-                  />
-                  <label className={styles.label} htmlFor="fees">
-                    commissions
-                  </label>
-                  <input
-                    type="number"
-                    id="fees"
-                    name="fees"
-                    min="0"
-                    value={values.fees}
-                    onChange={handleChange}
-                  />
-                  <label className={styles.label} htmlFor="tax">
-                    taxes
-                  </label>
-                  <input
-                    type="number"
-                    id="tax"
-                    name="tax"
-                    min="0"
-                    value={values.tax}
-                    onChange={handleChange}
-                  />
-                  <label className={styles.label} htmlFor="comment">
-                    commentaires
-                  </label>
-                  <input
-                    type="text"
-                    id="comment"
-                    name="comment"
-                    value={values.comment}
-                    onChange={handleChange}
-                  />
-                  <label className={styles.label} htmlFor="portfolioId">
-                    Choisissez un portefeuille
-                  </label>
-                  <select
-                    onChange={handleChange}
-                    id="portfolioId"
-                    name="portfolioId"
-                    defaultValue={values.portfolioId}
-                  >
-                    {portfolios.map((portfolio, i) => (
-                      <option
-                        key={i}
-                        value={portfolio.id}
-                        // selected={portfolio.id === values.portfolioId ? true : false}
+                  <div className={styles.form_enter}>
+                    <form
+                      className={styles.form}
+                      onSubmit={handleSubmit}
+                      method="POST "
+                    >
+                      <label className={styles.label} htmlFor="price">
+                        prix
+                      </label>
+                      <input
+                        type="number"
+                        id="price"
+                        name="price"
+                        min="0"
+                        value={values.price}
+                        onChange={handleChange}
+                      />
+                      <label className={styles.label} htmlFor="target">
+                        target
+                      </label>
+                      <input
+                        type="number"
+                        id="target"
+                        name="target"
+                        value={values.target}
+                        onChange={handleChange}
+                        min="0"
+                      />
+                      <label className={styles.label} htmlFor="stop">
+                        stop-loss
+                      </label>
+                      <input
+                        type="number"
+                        id="stop"
+                        name="stop"
+                        value={values.stop}
+                        onChange={handleChange}
+                      />
+                      <label className={styles.label} htmlFor="quantity">
+                        quantité
+                      </label>
+                      <input
+                        type="number"
+                        id="quantity"
+                        name="quantity"
+                        min="1"
+                        value={values.quantity}
+                        onChange={handleChange}
+                      />
+                      <label className={styles.label} htmlFor="fees">
+                        commissions
+                      </label>
+                      <input
+                        type="number"
+                        id="fees"
+                        name="fees"
+                        min="0"
+                        value={values.fees}
+                        onChange={handleChange}
+                      />
+                      <label className={styles.label} htmlFor="tax">
+                        taxes
+                      </label>
+                      <input
+                        type="number"
+                        id="tax"
+                        name="tax"
+                        min="0"
+                        value={values.tax}
+                        onChange={handleChange}
+                      />
+                      <label className={styles.label} htmlFor="comment">
+                        commentaires
+                      </label>
+                      <input
+                        type="text"
+                        id="comment"
+                        name="comment"
+                        value={values.comment}
+                        onChange={handleChange}
+                      />
+                      <label className={styles.label} htmlFor="portfolioId">
+                        Choisissez un portefeuille
+                      </label>
+                      <select
+                        onChange={handleChange}
+                        id="portfolioId"
+                        name="portfolioId"
+                        defaultValue={values.portfolioId}
                       >
-                        {portfolio.title}
-                      </option>
-                    ))}
-                  </select>
-                  <p>ce portefeuille est en {currency}</p>
-                  <label className={styles.label} htmlFor="strategyId">
-                    Choisissez une strategies
-                  </label>
-                  <select
-                    onChange={handleChange}
-                    id="strategyId"
-                    name="strategyId"
-                    defaultValue={values.strategyId}
-                  >
-                    {strategies.map((strategy, i) => (
-                      <option key={i} value={strategy.id}>
-                        {strategy.title}
-                      </option>
-                    ))}
-                  </select>
-                  <br />
-                  <input type="submit" value="Validation" />
-                  <BtnCancel value="Abandon" action={cancelEnter} />
-                </form>
-              </div>
-            </>
+                        {portfolios.map((portfolio, i) => (
+                          <option
+                            key={i}
+                            value={portfolio.id}
+                            // selected={portfolio.id === values.portfolioId ? true : false}
+                          >
+                            {portfolio.title}
+                          </option>
+                        ))}
+                      </select>
+                      <p>ce portefeuille est en {currency}</p>
+                      <label className={styles.label} htmlFor="strategyId">
+                        Choisissez une strategies
+                      </label>
+                      <select
+                        onChange={handleChange}
+                        id="strategyId"
+                        name="strategyId"
+                        defaultValue={values.strategyId}
+                      >
+                        {strategies.map((strategy, i) => (
+                          <option key={i} value={strategy.id}>
+                            {strategy.title}
+                          </option>
+                        ))}
+                      </select>
+                      <br />
+                      <input type="submit" value="Validation" />
+                      <BtnCancel value="Abandon" action={cancelEnter} />
+                    </form>
+                  </div>
+                </>
+              )}
+            </div>
           )}
-        </div>
+        </>
       )}
-      </>
-      
-      }
-     
     </main>
   );
 }

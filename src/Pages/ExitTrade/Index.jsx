@@ -1,18 +1,39 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { usePrepareQuery, useExitProcessMutation } from "../../store/slice/tradeApi";
-import styles from "./exitTrade.module.css"
+import {
+  usePrepareQuery,
+  useExitProcessMutation,
+} from "../../store/slice/tradeApi";
+import { resetStorage } from "../../utils/tools";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { signOut } from "../../store/slice/user";
+import styles from "./exitTrade.module.css";
 
 function ExitTrade() {
   const { tradeId } = useParams();
 
   // va recupérer les infos du trade
-  const { data: trade, isLoading, isSuccess } = usePrepareQuery(tradeId);
+  const {
+    data: trade,
+    isLoading,
+    isSuccess,
+    isError,
+  } = usePrepareQuery(tradeId);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (isError) {
+      resetStorage();
+      dispatch(signOut());
+      navigate("/");
+    }
+  }, [isError]);
 
   // hook de création de sortie
   const [exitProcess] = useExitProcessMutation();
 
-  
   ///  disponible pour l'affichage : ( trade . qq chose)
   //   const {
   //   closureQuantity,
@@ -37,15 +58,15 @@ function ExitTrade() {
 
   ///// gestion du formulaire //////////////////////////////
 
-  /// to do -> verifier que l'on est bien sur le bon trade 
-  /// -> tradeId === trade.tradeId ? 
+  /// to do -> verifier que l'on est bien sur le bon trade
+  /// -> tradeId === trade.tradeId ?
   const [values, setValues] = useState({
     quantity: 0,
     price: 0,
     fees: 0,
     tax: 0,
     date: new Date().toISOString().split("T")[0],
-    comment: ""
+    comment: "",
   });
 
   const handleChange = (e) => {
@@ -67,7 +88,7 @@ function ExitTrade() {
     };
 
     try {
-    const res = await exitProcess(datas);
+      const res = await exitProcess(datas);
 
       // navigate("/");
     } catch (err) {
@@ -82,7 +103,7 @@ function ExitTrade() {
         <p>Loading</p>
       ) : (
         <>
-        <h1>Exit</h1>
+          <h1>Exit</h1>
           <p>Tu veux vendre {trade.title}? </p>
           <p>Le dernier cours est de {trade.lastQuote}</p>
           <p>Tu disposes de {trade.remains} titres en portefeuille</p>
@@ -98,7 +119,6 @@ function ExitTrade() {
               value={values.price}
               onChange={handleChange}
             />
-           
             <label className={styles.label} htmlFor="quantity">
               quantity
             </label>

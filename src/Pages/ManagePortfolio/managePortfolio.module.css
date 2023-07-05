@@ -1,0 +1,3 @@
+.managePort {
+    composes: portTable from "../../Components/PortTable/portTable.module.css"
+}

@@ -16,6 +16,7 @@ import Legal from "./Pages/Legal/Index";
 import Credits from "./Pages/Credits/Index";
 import Logged from "./helpers/Logged";
 import NotFound from "./Pages/NotFound";
+import ManagePortfolio from "./Pages/ManagePortfolio/Index";
 
 function App() {
   return (
@@ -33,6 +34,10 @@ function App() {
           <Route
             path="/portfolio/detail/:portfolioId"
             element={<Logged child={DetailPorfolio} />}
+          />
+          <Route
+            path="/portfolio/manage"
+            element={<Logged child={ManagePortfolio} />}
           />
           <Route path="/newTrade" element={<Logged child={NewTrade} />} />
           <Route

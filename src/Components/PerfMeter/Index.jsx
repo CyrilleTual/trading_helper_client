@@ -1,8 +1,7 @@
 import ReactSpeedometer from "react-d3-speedometer";
-import styles from "./perfmeter.module.css";
 
 function PerfMeter({ legend, min, max, perf, meterHeight, meterWidth }) {
-  // calcul de la position de l'aiguille
+  // calcul de la position de l'aiguille echelle de -500 -> +500 
   let value = 0;
   if (perf === 0) {
     value = 500;

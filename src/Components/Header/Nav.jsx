@@ -16,6 +16,8 @@ function Nav() {
   const handleLogOut = () => {
     // on efface le localStorage
    localStorage.removeItem("auth42titi@")
+   localStorage.removeItem("remember");
+
     // on reset le state
     dispatch(signOut());
   }
@@ -39,7 +41,10 @@ function Nav() {
           </NavLink>
         </li>
         <li className={styles.navbar_item}>
-          <NavLink className={`${styles.button} ${styles.navbar_link}`} to="/">
+          <NavLink
+            className={`${styles.button} ${styles.navbar_link}`}
+            to="/portfolio/manage"
+          >
             Manage Portfolios
           </NavLink>
         </li>
@@ -49,7 +54,11 @@ function Nav() {
           </NavLink>
         </li>
         <li className={styles.navbar_item}>
-          <NavLink className={`${styles.button} ${styles.navbar_link}`} onClick={handleLogOut} to="/">
+          <NavLink
+            className={`${styles.button} ${styles.navbar_link}`}
+            onClick={handleLogOut}
+            to="/"
+          >
             LogOut
           </NavLink>
         </li>

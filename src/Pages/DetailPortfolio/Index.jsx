@@ -1,11 +1,30 @@
 import { useParams, NavLink } from "react-router-dom";
 import styles from "./detailPorfolio.module.css";
 import { useGetDetailPortfolioByIdQuery } from "../../store/slice/tradeApi";
+import { useEffect } from "react";
+import { resetStorage } from "../../utils/tools";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { signOut } from "../../store/slice/user";
 
 function DetailPorfolio() {
   const { portfolioId } = useParams();
 
-  const { data, isLoading } = useGetDetailPortfolioByIdQuery(portfolioId);
+  const { data, isLoading, isError } =
+    useGetDetailPortfolioByIdQuery(portfolioId);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isError) {
+      resetStorage();
+      // on reset le state
+      dispatch(signOut());
+      navigate("/");
+    }
+  }, [isError]);
+
   let myLabels = [
     "trade N°",
     "support",
@@ -28,7 +47,7 @@ function DetailPorfolio() {
   ];
 
   let newArrayValues = [];
-  if (!isLoading) {
+  if (!isLoading && !isError) {
     // on prépare pour affichage de droite à gauche
     // pour chaque share
     let arrayValues = [];
@@ -71,66 +90,68 @@ function DetailPorfolio() {
       {isLoading ? (
         <p>Loading</p>
       ) : (
-        <main className={styles.detail}>
-          <h1>Trades actifs</h1>
-          <div className={styles.arraysContainer}>
-            <div className={styles.leftArray}>
-              {" "}
-              <table>
-                <tbody>
-                  {myLabels.map((element, i) => (
-                    <tr key={i}>
-                      <td>{element}</td>
+        !isError && (
+          <main className={styles.detail}>
+            <h1>Trades actifs</h1>
+            <div className={styles.arraysContainer}>
+              <div className={styles.leftArray}>
+                {" "}
+                <table>
+                  <tbody>
+                    {myLabels.map((element, i) => (
+                      <tr key={i}>
+                        <td>{element}</td>
+                      </tr>
+                    ))}
+                    <tr>
+                      <td>Renforcer ?</td>
                     </tr>
-                  ))}
-                  <tr>
-                    <td>Renforcer ?</td>
-                  </tr>
-                  <tr>
-                    <td>Alléger ?</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div className={styles.rightArray}>
-              <table>
-                <tbody>
-                  {newArrayValues.map((element, i) => (
-                    <tr key={i}>
-                      {element.map((elt, j) => (
-                        <td key={j}>{elt}</td>
+                    <tr>
+                      <td>Alléger ?</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className={styles.rightArray}>
+                <table>
+                  <tbody>
+                    {newArrayValues.map((element, i) => (
+                      <tr key={i}>
+                        {element.map((elt, j) => (
+                          <td key={j}>{elt}</td>
+                        ))}
+                      </tr>
+                    ))}
+                    <tr>
+                      {data.map((elt, j) => (
+                        <td key={j}>
+                          <NavLink
+                            className={styles.button}
+                            to={`/reEnter/${elt.tradeId}`}
+                          >
+                            Re-Enter
+                          </NavLink>
+                        </td>
                       ))}
                     </tr>
-                  ))}
-                  <tr>
-                    {data.map((elt, j) => (
-                      <td key={j}>
-                        <NavLink
-                          className={styles.button}
-                          to={`/reEnter/${elt.tradeId}`}
-                        >
-                          Re-Enter
-                        </NavLink>
-                      </td>
-                    ))}
-                  </tr>
-                  <tr>
-                    {data.map((elt, k) => (
-                      <td key={k}>
-                        <NavLink
-                          className={styles.button}
-                          to={`/exitTrade/${elt.tradeId}`}
-                        >
-                          Exit
-                        </NavLink>
-                      </td>
-                    ))}
-                  </tr>
-                </tbody>
-              </table>
+                    <tr>
+                      {data.map((elt, k) => (
+                        <td key={k}>
+                          <NavLink
+                            className={styles.button}
+                            to={`/exitTrade/${elt.tradeId}`}
+                          >
+                            Exit
+                          </NavLink>
+                        </td>
+                      ))}
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
-        </main>
+          </main>
+        )
       )}
     </>
   );

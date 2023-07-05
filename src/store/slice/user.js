@@ -8,7 +8,7 @@ const userSlice = createSlice({
       alias: "",
       email:"",
       id: null,
-      role:""
+      role:"",
     }, // infos sous forme d'objet : id, alias, email et role
     isLogged: false, // est log ou non 
   },
@@ -18,7 +18,12 @@ const userSlice = createSlice({
       state.isLogged = true;
     },
     signOut(state, action) {
-      state.infos = null;
+      state.infos = {
+        alias: "",
+        email: "",
+        id: null,
+        role: "",
+      };
       state.isLogged = false;
     },
   },

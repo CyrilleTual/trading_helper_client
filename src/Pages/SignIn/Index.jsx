@@ -12,9 +12,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
 
 function SignIn() {
-  const [inputs, setInputs] = useState({ email: "", pwd: "" });
+  const [inputs, setInputs] = useState({ email: "", pwd: "", remember: false });
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // verifie si est loggé et redirige vers tableau de bord si oui
   const islogged = useSelector((state) => state.user.isLogged);
@@ -22,13 +23,34 @@ function SignIn() {
     if (islogged) {
       navigate("/global");
     }
-  });
+  }, []);
+
+  // lors du chargement de la page on va voir si une cle remenber
+  // existe dans le local storage
+  useEffect(() => {
+    const rmemb = JSON.parse(localStorage.getItem("remember"));
+    if (rmemb) {
+      dispatch(
+        signIn({
+          id: rmemb.id,
+          alias: rmemb.alias,
+          email: rmemb.email,
+          role: rmemb.role,
+        })
+      );
+      navigate("/global");
+    }
+  }, []);
 
   // gestion du formulaire - bind des champs
-  const { email, pwd } = inputs;
+  const { email, pwd, remember } = inputs;
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setInputs({ ...inputs, [name]: value });
+  };
+
+  const handleRememberChange = () => {
+    setInputs({ ...inputs, remember: !remember });
   };
 
   const [formErrors, setFormErrors] = useState({});
@@ -36,8 +58,9 @@ function SignIn() {
 
   // middlware pour le set de la state via le store
   const [signUserIn] = useSignUserInMutation();
+
+  // gestion des erreurs du formulaire
   const [myError, setMyError] = useState(null);
-  const dispatch = useDispatch();
 
   // gestion de la visibilité du pwd
   const [type, setType] = useState("password");
@@ -75,6 +98,19 @@ function SignIn() {
       .unwrap()
       .then(({ response }) => {
         localStorage.setItem("auth42titi@", response.TOKEN);
+        if (remember) {
+          localStorage.setItem(
+            "remember",
+            JSON.stringify({
+              id: response.id,
+              alias: response.alias,
+              email: response.email,
+              role: response.role,
+              remember: true,
+            })
+          );
+        }
+
         dispatch(
           signIn({
             id: response.id,
@@ -142,6 +178,16 @@ function SignIn() {
               </span>
             </div>
             <p>{formErrors.pwd}</p>
+            <label className={styles.labelCheck} htmlFor="remember">
+              <input
+                type="checkbox"
+                name="remember"
+                id="remember"
+                checked={remember}
+                onChange={handleRememberChange}
+              />
+              <span className={styles.space}> </span> Rester identifié
+            </label>
             <BtnSubmit value="LogIn" />
           </form>
           <p>

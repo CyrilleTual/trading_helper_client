@@ -4,11 +4,28 @@ import PerfMeter from "../../Components/PerfMeter/Index";
 import PortTable from "../../Components/PortTable";
 import styles from "./portfolio.module.css";
 import BtnLink from "../../Components/UI/BtnLink";
+import { useEffect} from "react";
+import { resetStorage } from "../../utils/tools";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { signOut } from "../../store/slice/user";
 
 function Portfolio() {
   const { portfolioId } = useParams();
   // on va cherhcher un portfolio particulier
-  const { data, isLoading } = useGetPortfolioDashboardByIdQuery(portfolioId);
+  const { data, isLoading, isError } = useGetPortfolioDashboardByIdQuery(portfolioId);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect (()=>{
+    if (isError){
+          resetStorage();
+    // on reset le state
+    dispatch(signOut());
+    navigate("/");
+    }
+  },[isError])
 
   // set de la devise de base
   const baseCurrencie = "€";
@@ -17,7 +34,7 @@ function Portfolio() {
     <>
       {isLoading ? (
         <p>Loading</p>
-      ) : (
+      ) : ( !isError &&
         <main className={styles.portfolio}>
           <h1>Tableau de bord</h1>
           <div className={styles.meter_container}>

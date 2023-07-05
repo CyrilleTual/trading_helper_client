@@ -1,6 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+ 
 const baseTradeUrl = process.env.REACT_APP_TRADE_URL;
 
+
+ 
 export const tradeApi = createApi({
   reducerPath: "tradeApi",
   baseQuery: fetchBaseQuery({
