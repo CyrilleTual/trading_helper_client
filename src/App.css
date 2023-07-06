@@ -22,6 +22,11 @@ html {
   padding: 10px;
 }
 
+.tape{
+  margin-bottom: -50px;
+  font-size: 10px;
+}
+
 body {
   font-size: 1.6rem;
   margin: 0; /*enleve la marge autour de la page */

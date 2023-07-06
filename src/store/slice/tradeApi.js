@@ -17,6 +17,7 @@ export const tradeApi = createApi({
   }),
   tagTypes: ["Auth", "Portfolio", "GlobalDatas"],
   endpoints: (builder) => ({
+    // log d'une user existant
     signUserIn: builder.mutation({
       query: (payload) => ({
         url: "/user/signin",
@@ -29,6 +30,7 @@ export const tradeApi = createApi({
       },
     }),
 
+    // demande d'un nouvel utilisateur
     signUserUp: builder.mutation({
       query: (payload) => ({
         url: "/user/signup",
@@ -61,6 +63,16 @@ export const tradeApi = createApi({
       providesTags: ["GlobalDatas"],
     }),
 
+    // nouveau portfolio
+    newPortfolio: builder.mutation({
+      query: (payload) => ({
+        url: "/portfolio/new",
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["GlobalDatas", "Portfolio"],
+    }),
+
     // liste des strategies par user
     getStategiesByUserId: builder.query({
       query: (id) => `strategies/user/${id}`,
@@ -82,6 +94,12 @@ export const tradeApi = createApi({
       query: (params) =>
         `/trade/checkIfActive/${params.stockId}&${params.portfolioId}`,
       providesTags: ["CheckActive"],
+    }),
+
+    // devises disponibles
+    getCurrencies: builder.query({
+      query: () => `/currencies/`,
+      providesTags: ["Currencies"],
     }),
 
     // nouveau trade
@@ -136,5 +154,7 @@ export const {
   usePrepareQuery,
   useReEnterMutation,
   useCheckIfActiveTradeQuery,
+  useGetCurrenciesQuery,
+  useNewPortfolioMutation,
 
 } = tradeApi;

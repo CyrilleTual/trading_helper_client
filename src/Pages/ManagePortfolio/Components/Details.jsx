@@ -31,7 +31,7 @@ function Details({ portfolio }) {
   return (
     <>
       {isLoading ? (
-        <p>Loading</p>
+        <tr><td>Loading</td></tr>
       ) : (
         !isError && (
           <tr>

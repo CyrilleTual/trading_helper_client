@@ -35,8 +35,9 @@ function ManagePortfolio() {
         <p>loading</p>
       ) : (
         <div>
-          <main>
-            <table className={styles.managePort}>
+          <main className={styles.managePort}>
+            <h1>Gestion des portefeuilles</h1>
+            <table>
               <thead>
                 <tr>
                   <th>portefeuille</th>
@@ -54,18 +55,21 @@ function ManagePortfolio() {
             </table>
 
             <BtnAction
-              value={"Gérer un portefeuille existant"}
+              value={"Gérer existant"}
               action={handleClickManage}
             />
             <BtnAction
-              value={"Créer un nouveau portefeuille"}
+              value={"Créer  nouveau "}
               action={handleClickCreate}
             />
 
-            {manageExisting && (
+            {manageExisting && 
               <Existing portfolios={portfolios} isLoading={isLoading} />
-            )}
-            {create && <Create />}
+            }
+            {create && 
+              <Create setCreate={setCreate}/>
+            }
+            
           </main>
         </div>
       )}
