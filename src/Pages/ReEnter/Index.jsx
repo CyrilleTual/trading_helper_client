@@ -118,6 +118,8 @@ function ReEnter() {
               type="number"
               id="price"
               name="price"
+              min="0"
+              step="0.001"
               value={values.price}
               onChange={handleChange}
             />
@@ -128,6 +130,7 @@ function ReEnter() {
               type="number"
               id="quantity"
               name="quantity"
+              min="1"
               value={values.quantity}
               onChange={handleChange}
             />
@@ -138,6 +141,8 @@ function ReEnter() {
               type="number"
               id="target"
               name="target"
+              min="0"
+              step="0.001"
               value={values.target}
               onChange={handleChange}
             />
@@ -148,6 +153,8 @@ function ReEnter() {
               type="number"
               id="stop"
               name="stop"
+              min="0"
+              step="0.001"
               value={values.stop}
               onChange={handleChange}
             />
@@ -158,6 +165,8 @@ function ReEnter() {
               type="number"
               id="fees"
               name="fees"
+              min="0"
+              step="0.001"
               value={values.fees}
               onChange={handleChange}
             />
@@ -168,6 +177,8 @@ function ReEnter() {
               type="number"
               id="tax"
               name="tax"
+              min="0"
+              step="0.001"
               value={values.tax}
               onChange={handleChange}
             />

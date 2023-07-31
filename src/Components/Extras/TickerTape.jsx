@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, memo } from "react";
 
 function TickerTape() {
-  const contariner = useRef();
+  const container = useRef();
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -39,12 +39,12 @@ function TickerTape() {
         "displayMode": "adaptive",
         "locale": "fr"
       }`;
-    contariner.current.appendChild(script);
+    container.current.appendChild(script);
   }, []);
 
   return (
     
-      <aside className="tradingview-widget-container tape" ref={contariner}>
+      <aside className="tradingview-widget-container tape" ref={container}>
         <div className="tradingview-widget-container__widget"></div>
         <div className="tradingview-widget-copyright">
           {/* <a

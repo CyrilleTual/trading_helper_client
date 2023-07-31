@@ -88,9 +88,8 @@ function ExitTrade() {
     };
 
     try {
-      const res = await exitProcess(datas);
-
-      // navigate("/");
+      await exitProcess(datas);
+      navigate(-2);
     } catch (err) {
       console.log(err);
     }
@@ -104,9 +103,12 @@ function ExitTrade() {
       ) : (
         <>
           <h1>Exit</h1>
-          <p>Tu veux vendre {trade.title}? </p>
+          <p>
+            Dans le poretefeuille "{trade.portfolio}" tu veux vendre {trade.title}?{" "}
+          </p>
           <p>Le dernier cours est de {trade.lastQuote}</p>
           <p>Tu disposes de {trade.remains} titres en portefeuille</p>
+        
 
           <form className={styles.form} onSubmit={handleSubmit} method="POST ">
             <label className={styles.label} htmlFor="price">
@@ -116,6 +118,8 @@ function ExitTrade() {
               type="number"
               id="price"
               name="price"
+              min="0"
+              step="0.001"
               value={values.price}
               onChange={handleChange}
             />
@@ -126,6 +130,7 @@ function ExitTrade() {
               type="number"
               id="quantity"
               name="quantity"
+              min="1"
               value={values.quantity}
               onChange={handleChange}
             />
@@ -136,6 +141,8 @@ function ExitTrade() {
               type="number"
               id="fees"
               name="fees"
+              min="0"
+              step="0.001"
               value={values.fees}
               onChange={handleChange}
             />
@@ -146,6 +153,8 @@ function ExitTrade() {
               type="number"
               id="tax"
               name="tax"
+              min="0"
+              step="0.001"
               value={values.tax}
               onChange={handleChange}
             />

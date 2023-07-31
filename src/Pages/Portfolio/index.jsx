@@ -1,10 +1,10 @@
 import { useParams } from "react-router-dom";
-import { useGetPortfolioDashboardByIdQuery } from "../../store/slice/tradeApi";
+import { useGetPortfolioDashboardByIdQuery, useGetCurrenciesQuery } from "../../store/slice/tradeApi";
 import PerfMeter from "../../Components/PerfMeter/Index";
 import PortTable from "../../Components/PortTable";
 import styles from "./portfolio.module.css";
 import BtnLink from "../../Components/UI/BtnLink";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { resetStorage } from "../../utils/tools";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -12,10 +12,16 @@ import { signOut } from "../../store/slice/user";
 import TradingViewWidget from "../TradingViewWidget/Index"
 
 function Portfolio() {
+
   const { portfolioId } = useParams();
   // on va cherhcher un portfolio particulier
   const { data, isLoading, isError } =
     useGetPortfolioDashboardByIdQuery(portfolioId);
+  
+
+  const [baseCurrencie, setBaseCurrencie] = useState ("")  
+  // recup des infos sur les currrencies 
+  const { data: currencyInfos } = useGetCurrenciesQuery();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -29,15 +35,24 @@ function Portfolio() {
     }
   }, [isError]);
 
-  // set de la devise de base
-  const baseCurrencie = "€";
+
+  useEffect(() => {
+    if ( data && currencyInfos) {
+      const portfolioCurrencie = currencyInfos.find ( el => el.id === data.currencyId)
+       
+      setBaseCurrencie(portfolioCurrencie.symbol);
+      
+    }
+  }, [ data, currencyInfos]);
+ 
 
   return (
     <>
       {isLoading ? (
         <p>Loading</p>
       ) : (
-        !isError && (
+        !isError &&
+        baseCurrencie &&(
           <main className={styles.portfolio}>
             <h1>Tableau de bord</h1>
             <div className={styles.meter_container}>

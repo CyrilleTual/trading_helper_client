@@ -58,6 +58,7 @@ function NewTrade() {
           setSkip2(false)
     }
   }, [selectedItem]);
+
   const { data: lastInfos, isSuccess: lastIsSuccess } = useLastQuoteQuery(
     selectedItem,
     { skip: skip2 }
@@ -82,6 +83,7 @@ function NewTrade() {
   const [datas, setDatas] = useState({});
   const [existingTrade, setExistingTrade] = useState(false);
 
+  // gestion des listes déroulantes 
   useEffect(() => {
     if (!portfolioIsLoading && !stategiesIsLoading && !isError1 && !isError2) {
       // valeurs par defaut des listes déroulantes
@@ -221,7 +223,9 @@ function NewTrade() {
                   <p>
                     Vous avez selectionné {selectedItem.title}
                     {lastIsSuccess && lastInfos.last && (
-                      <span>, dernier cours : {lastInfos.last}</span>
+                      <span>
+                        , dernier cours : {lastInfos.last} {lastInfos.currency}
+                      </span>
                     )}
                   </p>
 
@@ -239,6 +243,7 @@ function NewTrade() {
                         id="price"
                         name="price"
                         min="0"
+                        step="0.001"
                         value={values.price}
                         onChange={handleChange}
                       />
@@ -252,6 +257,7 @@ function NewTrade() {
                         value={values.target}
                         onChange={handleChange}
                         min="0"
+                        step="0.001"
                       />
                       <label className={styles.label} htmlFor="stop">
                         stop-loss
@@ -262,6 +268,7 @@ function NewTrade() {
                         name="stop"
                         value={values.stop}
                         onChange={handleChange}
+                        step="0.001"
                       />
                       <label className={styles.label} htmlFor="quantity">
                         quantité
@@ -282,6 +289,7 @@ function NewTrade() {
                         id="fees"
                         name="fees"
                         min="0"
+                        step="0.001"
                         value={values.fees}
                         onChange={handleChange}
                       />
@@ -293,6 +301,7 @@ function NewTrade() {
                         id="tax"
                         name="tax"
                         min="0"
+                        step="0.001"
                         value={values.tax}
                         onChange={handleChange}
                       />
@@ -316,11 +325,7 @@ function NewTrade() {
                         defaultValue={values.portfolioId}
                       >
                         {portfolios.map((portfolio, i) => (
-                          <option
-                            key={i}
-                            value={portfolio.id}
-                            // selected={portfolio.id === values.portfolioId ? true : false}
-                          >
+                          <option key={i} value={portfolio.id}>
                             {portfolio.title}
                           </option>
                         ))}
