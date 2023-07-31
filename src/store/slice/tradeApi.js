@@ -45,7 +45,7 @@ export const tradeApi = createApi({
       providesTags: ["Portfolio"],
     }),
 
-    // la synthèses des portfolios
+    // la synthèses des portfolios pour un user
     getGlobalDashBoardByUser: builder.query({
       query: (id) => `/portfolio/dashboard/user/global/${id}`,
       providesTags: ["GlobalDatas"],
