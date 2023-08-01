@@ -20,7 +20,7 @@ function Portfolio() {
   
 
   const [baseCurrencie, setBaseCurrencie] = useState ("")  
-  // recup des infos sur les currrencies 
+  // recup des infos sur les currrencies (toutes)
   const { data: currencyInfos } = useGetCurrenciesQuery();
 
   const navigate = useNavigate();
@@ -35,13 +35,11 @@ function Portfolio() {
     }
   }, [isError]);
 
-
+  // set de la currency
   useEffect(() => {
     if ( data && currencyInfos) {
       const portfolioCurrencie = currencyInfos.find ( el => el.id === data.currencyId)
-       
       setBaseCurrencie(portfolioCurrencie.symbol);
-      
     }
   }, [ data, currencyInfos]);
  
@@ -59,7 +57,7 @@ function Portfolio() {
               <PerfMeter
                 legend="Trades actifs"
                 min={data.perfIfStopeed}
-                max={data.potential}
+                max={data.potential+data.currentPv}
                 perf={data.currentPv}
                 meterWidth={styles.meterWidth}
                 meterHeight={styles.meterHeight}

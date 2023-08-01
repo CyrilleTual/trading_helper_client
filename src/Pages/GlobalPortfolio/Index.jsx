@@ -48,7 +48,8 @@ function Global() {
                 <PerfMeter
                   legend="Trades actifs"
                   min={global.perfIfStopeed}
-                  max={global.potential}
+                  //max={global.potential}
+                  max={global.potential + global.currentPv}
                   perf={global.currentPv}
                   meterWidth={styles.meterWidth}
                   meterHeight={styles.meterHeight}

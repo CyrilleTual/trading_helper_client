@@ -1,6 +1,7 @@
 import ReactSpeedometer from "react-d3-speedometer";
 
 function PerfMeter({ legend, min, max, perf, meterHeight, meterWidth }) {
+
   // calcul de la position de l'aiguille echelle de -500 -> +500 
   let value = 0;
   if (perf === 0) {
@@ -10,6 +11,8 @@ function PerfMeter({ legend, min, max, perf, meterHeight, meterWidth }) {
   } else if (perf < 0) {
     value = 500 - (perf / min) * 500;
   }
+
+ 
 
   function segmentValueFormatter(value) {
     if (value < 200) {
@@ -50,6 +53,7 @@ function PerfMeter({ legend, min, max, perf, meterHeight, meterWidth }) {
         needleHeightRatio={0.7}
         segments={5}
         segmentValueFormatter={segmentValueFormatter}
+        forceRender={true}
       />
     </div>
   );
