@@ -56,8 +56,8 @@ function Portfolio() {
             <div className={styles.meter_container}>
               <PerfMeter
                 legend="Trades actifs"
-                min={data.perfIfStopeed}
-                max={data.potential+data.currentPv}
+                min={(data.perfIfStopeed).toFixed(0)}
+                max={(data.potential+data.currentPv).toFixed(0)}
                 perf={data.currentPv}
                 meterWidth={styles.meterWidth}
                 meterHeight={styles.meterHeight}

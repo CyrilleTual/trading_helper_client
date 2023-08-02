@@ -69,7 +69,7 @@ function PortTable({datas, baseCurrencie}) {
           <td>
             {datas.totalPerf} {baseCurrencie}
           </td>
-          <td>{datas.totalPerfPc}</td>
+          <td>{datas.totalPerfPc} %</td>
         </tr>
       </tbody>
     </table>
