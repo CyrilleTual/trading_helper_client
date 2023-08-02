@@ -23,6 +23,7 @@ function DetailPorfolio() {
       dispatch(signOut());
       navigate("/");
     }
+  // eslint-disable-next-line
   }, [isError]);
 
   let myLabels = [

@@ -18,7 +18,7 @@ import Logged from "./helpers/Logged";
 import NotFound from "./Pages/NotFound";
 import ManagePortfolio from "./Pages/ManagePortfolio/Index";
 import TickerTape from "./Components/Extras/TickerTape";
-import TickerWidget from "./Components/Extras/TickerWidget";
+
 
 function App() {
   return (

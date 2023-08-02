@@ -7,13 +7,19 @@ function Credits() {
       <div>
         <p>
           les icones sont piquées sur{" "}
-          <a href="https://fr.vecteezy.com/vecteur-libre/money">Vecteezy</a>
+          <a
+            href="https://fr.vecteezy.com/vecteur-libre/money"
+            rel="noopener nofollow noreferrer"
+            target="_blank"
+          >
+            Vecteezy
+          </a>
         </p>
         <p>
           Le ticker-tape est fouri par{" "}
           <a
             href="https://fr.tradingview.com/"
-            rel="noopener nofollow"
+            rel="noopener nofollow noreferrer"
             target="_blank"
           >
             TradingView

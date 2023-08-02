@@ -13,8 +13,7 @@ function ManagePortfolio() {
   // liste des portfolios
   const {
     data: portfolios,
-    isLoading,
-    isError,
+    isLoading
   } = useGetPortfoliosByUserQuery(id);
 
   const [manageExisting, setManageExisting] = useState(false);

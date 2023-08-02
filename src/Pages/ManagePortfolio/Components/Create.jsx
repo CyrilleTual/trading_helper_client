@@ -2,16 +2,16 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import styles from "./create.module.css";
 import { useGetCurrenciesQuery, useNewPortfolioMutation } from "../../../store/slice/tradeApi";
-import { useNavigate } from "react-router-dom";
+
 
 function Create({setCreate}) {
-  const navigate = useNavigate();
+
   // id user
   const userId = useSelector((state) => state.user.infos.id);
   // recup des devises
 
   //const currencies = [{ id:1, title:"un"}]
-  const { data: currencies, isSuccess, isError } = useGetCurrenciesQuery();
+  const { data: currencies, isSuccess } = useGetCurrenciesQuery();
 
   // newportfolio 
 
@@ -35,6 +35,7 @@ function Create({setCreate}) {
       const toset = currencies[0].id;
       setValues({ ...values, currencyId: toset });
     }
+  // eslint-disable-next-line
   }, [currencies]);
 
   const handleChange = (e) => {

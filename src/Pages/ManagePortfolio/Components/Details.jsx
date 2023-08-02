@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { signOut } from "../../../store/slice/user";
 import { resetStorage } from "../../../utils/tools";
 import { useGetPortfolioDashboardByIdQuery } from "../../../store/slice/tradeApi";
-import styles from "./details.module.css";
+
 
 function Details({ portfolio }) {
   // on va cherhcher un portfolio particulier
@@ -23,6 +23,7 @@ function Details({ portfolio }) {
       dispatch(signOut());
       navigate("/");
     }
+  // eslint-disable-next-line
   }, [isError]);
 
   // set de la devise de base

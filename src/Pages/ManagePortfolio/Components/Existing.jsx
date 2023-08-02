@@ -2,53 +2,47 @@ import React, { useEffect, useState } from "react";
 
 import styles from "../managePortfolio.module.css";
 
-function Existing({portfolios, isLoading}) {
+function Existing({ portfolios, isLoading }) {
+  // formulaire
+  const [currency, setCurrency] = useState("");
 
-      // formulaire
-    const [currency, setCurrency] = useState("euro");
-    const [currencyId, setCurrencyId] = useState(1);
+  const [values, setValues] = useState({
+    portfolioId: 1,
+    action: null,
+    amout: 0,
+  });
 
-    const [values, setValues] = useState({
-      portfolioId: 1,
-      action: null,
-      amout: 0,
-    });
+  const actions = [
+    { id: 0, title: "Choisissez" },
+    { id: 1, title: "ajouter des fonds" },
+    { id: 2, title: "retirer des fonds" },
+    { id: 3, title: "désactiver un compte" },
+  ];
 
-    const actions = [{id:0, title: "Choisissez"},
-              {id:1, title: "ajouter des fonds"}, 
-              {id:2,title:"retirer des fonds"},
-              {id:3,title:"désactiver un compte"}]
+  // set des devises
 
-    // set des devises
+  useEffect(() => {
+    if (!isLoading) {
+      let { currency } = portfolios.find(
+        (portfolio) => +portfolio.id === +values.portfolioId
+      );
+      setCurrency(currency);
+    }
+  // eslint-disable-next-line
+  }, [values.portfolioId]);
 
-     useEffect(() => {
-       if (!isLoading) {
-         let { currency, currencyId } = portfolios.find(
-           (portfolio) => +portfolio.id === +values.portfolioId
-         );
-         setCurrency(currency);
-         setCurrencyId(currencyId);
-       }
-     }, [values.portfolioId]);
+  useEffect(() => {
+    if (!isLoading) {
+      // valeurs par defaut des listes déroulantes
+      const toSet = portfolios[0].id;
+      setValues({ ...values, portfolioId: toSet });
+    }
+  // eslint-disable-next-line
+  }, [isLoading]);
 
-    useEffect(() => {
-      if (!isLoading ) {
-        // valeurs par defaut des listes déroulantes
-        const toSet = portfolios[0].id;
-        setValues({ ...values, portfolioId: toSet });
-      }
-    }, [
-      isLoading,
-    ]);
-
-      const handleChange = (e) => {
-        setValues({ ...values, [e.target.name]: e.target.value });
-      };
-
-
-
-
-
+  const handleChange = (e) => {
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
 
   return (
     <div>
@@ -108,4 +102,4 @@ function Existing({portfolios, isLoading}) {
   );
 }
 
-export default Existing
+export default Existing;

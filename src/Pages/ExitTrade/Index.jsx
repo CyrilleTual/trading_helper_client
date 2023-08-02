@@ -16,7 +16,6 @@ function ExitTrade() {
   // va recupérer les infos du trade
   const {
     data: trade,
-    isLoading,
     isSuccess,
     isError,
   } = usePrepareQuery(tradeId);
@@ -29,6 +28,7 @@ function ExitTrade() {
       dispatch(signOut());
       navigate("/");
     }
+  // eslint-disable-next-line
   }, [isError]);
 
   // hook de création de sortie

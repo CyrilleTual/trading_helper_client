@@ -91,6 +91,7 @@ function NewTrade() {
       const toSet2 = strategies[0].id;
       setValues({ ...values, portfolioId: toSet, strategyId: toSet2 });
     }
+  // eslint-disable-next-line
   }, [
     selectedItem,
     portfolioIsLoading,
@@ -107,6 +108,7 @@ function NewTrade() {
       setCurrency(currency);
       setCurrencyId(currencyId);
     }
+    // eslint-disable-next-line
   }, [values.portfolioId]);
 
   const [skip, setSkip] = useState(true); // pour recherche des doublons
@@ -130,6 +132,7 @@ function NewTrade() {
       dispatch(signOut());
       navigate("/");
     }
+    // eslint-disable-next-line
   }, [isError1, isError2, isError4]);
 
   // création effective du nouveau trade -> trade et enter
@@ -152,6 +155,7 @@ function NewTrade() {
         go();
       }
     }
+    // eslint-disable-next-line
   }, [data, isSuccess]);
 
   ///// gestion du formulaire //////////////////////////////
