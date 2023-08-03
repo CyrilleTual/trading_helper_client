@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux";
 import { signOut } from "../../store/slice/user";
 
 function Global() {
+
   // on recupère l'idduuser depuis le store -> id
   const id = useSelector((state) => state.user.infos.id);
 

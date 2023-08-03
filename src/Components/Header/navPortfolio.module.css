@@ -4,15 +4,14 @@
   font: bold 15px Arial;
   text-decoration: none;
   height: 100%;
-  
-   
- 
+  white-space: nowrap;
   border-left: 10px black;
-  
 } 
 
 .navPortfolios{
   background-color: var(--color-bgTableaux);
+  width: 360px;
+  overflow-y: hidden;
   display: flex;
   align-items: center;
   justify-content: center;

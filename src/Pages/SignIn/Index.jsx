@@ -10,23 +10,36 @@ import BtnLink from "../../Components/UI/BtnLink";
 import logo from "../../assets/img/logo.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
+import Modal from "../../Components/Modal/Index";
+ 
 
 function SignIn() {
   const [inputs, setInputs] = useState({ email: "", pwd: "", remember: false });
 
+  const [rememberMe, setRememberMe] = useState (false); 
+  const [display, setDisplay] = useState(""); 
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  // après log et fonction passée au modal 
+  const goOn  = () => {
+    navigate("/global");
+  };
 
   // verifie si est loggé et redirige vers tableau de bord si oui
   const islogged = useSelector((state) => state.user.isLogged);
   useEffect(() => {
     if (islogged) {
-      navigate("/global");
+      goOn();
     }
+  // eslint-disable-next-line
   }, []);
 
+
+
   // lors du chargement de la page on va voir si une cle remenber
-  // existe dans le local storage
+  // existe dans le local storage si oui -> log automatique
   useEffect(() => {
     const rmemb = JSON.parse(localStorage.getItem("remember"));
     if (rmemb) {
@@ -38,8 +51,15 @@ function SignIn() {
           role: rmemb.role,
         })
       );
-      navigate("/global");
+
+      // déclenche le modal -> information que l'on est loggé
+      setRememberMe(true);
+      setDisplay(rmemb.email);
+      setInputs({ ...inputs, remember: !remember }); // pour cohérence
+
+      // c'est la fermeture du modal qui déclanche la poursuite de la navigation
     }
+  // eslint-disable-next-line
   }, []);
 
   // gestion du formulaire - bind des champs
@@ -65,7 +85,6 @@ function SignIn() {
   // gestion de la visibilité du pwd
   const [type, setType] = useState("password");
   const [icon, setIcon] = useState(faEyeSlash);
-
   const handleToggle = () => {
     if (type === "password") {
       setIcon(faEye);
@@ -134,7 +153,7 @@ function SignIn() {
     setIsSubmit(true);
   };
 
-  // on tente un envoie si tt est ok
+  // on tente un envoi si tt est ok
   /* eslint-disable */
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
@@ -143,8 +162,25 @@ function SignIn() {
   }, [formErrors]);
   /* eslint-enable */
 
+
+
   return (
     <main className={styles.sign}>
+
+      {/**** modal d'avertissement si remember  *******/}
+      {rememberMe && display && (
+        <Modal
+          display={
+            <p>
+              Vous êtes connecté en tant que :<br />
+              {display}
+            </p>
+          }
+          action={goOn}
+        />
+      )}
+      {/********************************************/}
+
       <img src={logo} alt="Logo" />
       <h1>Trading Helper</h1>
       {myError === 401 && <p className="blinck">Probleme d'identification</p>}

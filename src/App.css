@@ -97,7 +97,11 @@ img {
   display: block;
   min-height: 100vh;
 	margin-bottom: -70px; 
+  overflow-x: scroll;
 }
+
+
+
 .page-wrapper:after {
   content: "";
   display: block;
@@ -105,8 +109,9 @@ img {
 .site-footer, .page-wrapper:after {
 	height: 50px; 
 }
-/*******************************************************/
 
+
+/******* Pour faire clignotter un texte (err)   ********/
 .blinck  {
    animation-duration: 1.2s;
    animation-name: blinck;
@@ -117,4 +122,10 @@ img {
   0%   { opacity:1; }
   40%   {opacity:0; }
   100% { opacity:1; }
+}
+
+
+/********** Pour bloquer le scroll vertical   ********/
+.blockedY {
+    overflow-y: hidden;
 }

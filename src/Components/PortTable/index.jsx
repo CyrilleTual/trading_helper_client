@@ -1,6 +1,6 @@
-import styles from "./portTable.module.css"
+import styles from "./portTable.module.css";
 
-function PortTable({datas, baseCurrencie}) {
+function PortTable({ datas, baseCurrencie }) {
   return (
     <table className={styles.portTable}>
       <tbody>
@@ -19,7 +19,7 @@ function PortTable({datas, baseCurrencie}) {
           <td>{datas.dailyVariationPc}%</td>
         </tr>
         <tr>
-          <td>Potentiel position ouvertes :</td>
+          <td>Potentiel :</td>
           <td>
             {datas.potential} {baseCurrencie}
           </td>
@@ -76,4 +76,4 @@ function PortTable({datas, baseCurrencie}) {
   );
 }
 
-export default PortTable
+export default PortTable;
