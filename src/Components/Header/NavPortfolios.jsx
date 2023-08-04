@@ -17,38 +17,24 @@ function NavPorfolios() {
       {isLoading ? (
         <p>loading</p>
       ) : (
-        <div className={styles.navPortfolios}>
-          <NavLink
-            to="/global"
-            className={`${styles.button}`}
-            style={({ isActive }) =>
-              isActive
-                ? {
-                    color: "#fff",
-                    background: "#696969",
-                  }
-                : { color: "#545e6f", background: "#f0f0f0" }
-            }
-          >
-            Summary
-          </NavLink>
-          {portfolios.map((portfolio, i) => (
-            <NavLink
-              key={i}
-              className={styles.button}
-              to={`/portfolio/${portfolio.id}`}
-              style={({ isActive }) =>
-                isActive
-                  ? {
-                      color: "#fff",
-                      background: "#696969",
-                    }
-                  : { color: "#545e6f", background: "#f0f0f0" }
-              }
-            >
-              {portfolio.title}
+        <div className={styles.navPortfoliosContainer}>
+          <div className={styles.navPortfolios}>
+             
+            <NavLink className={styles.button} to="/global">
+              Summary
             </NavLink>
-          ))}
+
+            {portfolios.map((portfolio, i) => (
+              <NavLink
+                key={i}
+                className={styles.button}
+                to={`/portfolio/${portfolio.id}`}
+              >
+                {portfolio.title}
+              </NavLink>
+            ))}
+            
+          </div>
         </div>
       )}
     </>

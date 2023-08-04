@@ -8,18 +8,15 @@
   border-left: 10px black;
 } 
 
-.navPortfoliosContainer {
+.navPortfolios{
   background-color: var(--color-bgTableaux);
   width: 100%;
-  border-top: rgba(0, 0, 0, 0.234) 1px solid;
-  border-bottom: rgba(0, 0, 0, 0.294) 1px solid; 
   overflow-y: auto;
-}
-
-.navPortfolios{
-  width: fit-content;
-  margin: auto;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: rgba(0, 0, 0, 0.234) 1px solid;
+  border-bottom: rgba(0, 0, 0, 0.294) 1px solid;
   min-height: 30px;
 }
 
