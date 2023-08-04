@@ -24,7 +24,7 @@ function App() {
   return (
     <div>
       <div className="page-wrapper">
-        <TickerTape/>
+        <TickerTape />
         <Header />
         <Routes>
           <Route path="/" element={<SignIn />} />
@@ -35,7 +35,7 @@ function App() {
             element={<Logged child={Portfolio} />}
           />
           <Route
-            path="/portfolio/detail/:portfolioId"
+            path="/portfolio/:portfolioId/detail"
             element={<Logged child={DetailPorfolio} />}
           />
           <Route
@@ -44,11 +44,11 @@ function App() {
           />
           <Route path="/newTrade" element={<Logged child={NewTrade} />} />
           <Route
-            path="/exitTrade/:tradeId"
+            path="/portfolio/:portfolioId/exitTrade/:tradeId"
             element={<Logged child={ExitTrade} />}
           />
           <Route
-            path="/reEnter/:tradeId"
+            path="/reEnter/portfolio/:portfolioId/stock/:tradeId"
             element={<Logged child={ReEnter} />}
           />
           <Route path="/legal" element={<Legal />} />

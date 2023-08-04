@@ -16,6 +16,11 @@ function NavPorfolios() {
   // extract pathname from location
   const { pathname } = useLocation();
 
+  console.log (pathname)
+  
+
+  console.log(["/global"].includes(pathname));
+
   return (
     <>
       {isLoading ? (
@@ -37,12 +42,12 @@ function NavPorfolios() {
             {portfolios.map((portfolio, i) => (
               <NavLink
                 key={i + 1}
-                className={
-                  ( pathname.indexOf(`/portfolio/${portfolio.id}/`) !== -1 )
+                className={({ isActive }) =>
+                  isActive
                     ? `${styles.button} ${styles.active}`
                     : `${styles.button}`
                 }
-                to={`/portfolio/${portfolio.id}/`}
+                to={`/portfolio/${portfolio.id}`}
               >
                 {portfolio.title}
               </NavLink>

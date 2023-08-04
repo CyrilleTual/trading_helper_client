@@ -123,24 +123,26 @@ function DetailPorfolio() {
                         ))}
                       </tr>
                     ))}
+
                     <tr>
                       {data.map((elt, j) => (
                         <td key={j}>
                           <NavLink
                             className={styles.button}
-                            to={`/reEnter/${elt.tradeId}`}
+                            to={`/reEnter/portfolio/${portfolioId}/stock/${elt.tradeId}`}
                           >
                             Re-Enter
                           </NavLink>
                         </td>
                       ))}
                     </tr>
+
                     <tr>
                       {data.map((elt, k) => (
                         <td key={k}>
                           <NavLink
                             className={styles.button}
-                            to={`/exitTrade/${elt.tradeId}`}
+                            to={`/portfolio/${portfolioId}/exitTrade/${elt.tradeId}`}
                           >
                             Exit
                           </NavLink>

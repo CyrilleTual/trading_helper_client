@@ -50,14 +50,14 @@ function Portfolio() {
         <p>Loading</p>
       ) : (
         !isError &&
-        baseCurrencie &&(
+        baseCurrencie && (
           <main className={styles.portfolio}>
             <h1>Tableau de bord</h1>
             <div className={styles.meter_container}>
               <PerfMeter
                 legend="Trades actifs"
-                min={(data.perfIfStopeed).toFixed(0)}
-                max={(data.potential+data.currentPv).toFixed(0)}
+                min={data.perfIfStopeed.toFixed(0)}
+                max={(data.potential + data.currentPv).toFixed(0)}
                 perf={data.currentPv}
                 meterWidth={styles.meterWidth}
                 meterHeight={styles.meterHeight}
@@ -73,7 +73,7 @@ function Portfolio() {
                 </div> */}
                 <span>
                   <BtnLink
-                    link={`/portfolio/detail/${data.id}`}
+                    link={`/portfolio/${data.id}/detail`}
                     title="Details"
                   />
                 </span>

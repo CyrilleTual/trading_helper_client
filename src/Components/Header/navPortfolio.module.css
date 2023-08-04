@@ -1,13 +1,3 @@
-.button {
-  font-size: 25px;
-  padding: 5px 10px;
-  font: bold 15px Arial;
-  text-decoration: none;
-  height: 100%;
-  white-space: nowrap;
-  border-left: 10px black;
-} 
-
 .navPortfoliosContainer {
   background-color: var(--color-bgTableaux);
   width: 100%;
@@ -23,7 +13,17 @@
   min-height: 30px;
 }
 
-.isActive{
-  color: "#fff" !important;
-  background-color: "#7600dc" !important;
+.button {
+  font-size: 25px;
+  padding: 5px 10px;
+  font: bold 15px Arial;
+  text-decoration: none;
+  height: 100%;
+  white-space: nowrap;
+  color: #545e6f;
+  background: #f0f0f0;
+} 
+.active{
+  color: #fff;
+  background: #696969;
 }
