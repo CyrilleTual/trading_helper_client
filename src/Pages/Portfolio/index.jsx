@@ -9,7 +9,8 @@ import { resetStorage } from "../../utils/tools";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signOut } from "../../store/slice/user";
-import TradingViewWidget from "../TradingViewWidget/Index"
+import { Loading } from "../../Components/Loading/Index";
+ 
 
 function Portfolio() {
 
@@ -33,6 +34,7 @@ function Portfolio() {
       dispatch(signOut());
       navigate("/");
     }
+  // eslint-disable-next-line
   }, [isError]);
 
   // set de la currency
@@ -47,7 +49,7 @@ function Portfolio() {
   return (
     <>
       {isLoading ? (
-        <p>Loading</p>
+        <Loading/>
       ) : (
         !isError &&
         baseCurrencie && (

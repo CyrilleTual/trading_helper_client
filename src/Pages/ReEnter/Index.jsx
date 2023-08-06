@@ -2,18 +2,18 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { usePrepareQuery, useReEnterMutation } from "../../store/slice/tradeApi";
 import styles from "./reEnter.module.css";
+import { Loading } from "../../Components/Loading/Index";
  
 
 function ReEnter() {
   const { tradeId } = useParams();
 
   // va recupérer les infos du trade
-  const { data: trade, isLoading, isSuccess } = usePrepareQuery(tradeId);
+  const { data: trade, isSuccess } = usePrepareQuery(tradeId);
 
   // hook de création de la reEnter
   const [reEnter] = useReEnterMutation()
 
- 
 
   ///  disponible pour l'affichage : ( trade . qq chose)
   //   const {
@@ -51,8 +51,14 @@ function ReEnter() {
   ///// gestion du formulaire //////////////////////////////
   useEffect(() => {
     if (isSuccess) {
-      setValues({ ...values, target: trade.target, stop: trade.stop, comment:trade.comment });
+      setValues({
+        ...values,
+        target: trade.target,
+        stop: trade.stop,
+        comment: trade.comment,
+      });
     }
+  // eslint-disable-next-line
   }, [trade]);
 
   /// to do -> verifier que l'on est bien sur le bon trade
@@ -80,10 +86,9 @@ function ReEnter() {
     };
 
     try {
-      console.log("datas à traiter", datas);
       const resp = await reEnter(datas);
       console.log(resp);
-      navigate (`/portfolio/detail/${trade.portfolio_id}`);
+      navigate (`/portfolio/${trade.portfolio_id}/detail`);
     } catch (err) {
       console.log(err);
     }
@@ -92,7 +97,7 @@ function ReEnter() {
   return (
     <>
       {!isSuccess ? (
-        <p>Loading</p>
+        <Loading/>
       ) : (
         <main className={styles.re_enter}>
           <h1>Re-enter</h1>

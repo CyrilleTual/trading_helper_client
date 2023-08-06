@@ -6,6 +6,7 @@ import { resetStorage } from "../../utils/tools";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signOut } from "../../store/slice/user";
+import { Loading } from "../../Components/Loading/Index";
 
 function DetailPorfolio() {
   const { portfolioId } = useParams();
@@ -89,7 +90,7 @@ function DetailPorfolio() {
   return (
     <>
       {isLoading ? (
-        <p>Loading</p>
+        <Loading/>
       ) : (
         !isError && (
           <main className={styles.detail}>

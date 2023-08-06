@@ -8,6 +8,7 @@ import { resetStorage } from "../../utils/tools";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signOut } from "../../store/slice/user";
+import { Loading } from "../../Components/Loading/Index";
 
 function Global() {
 
@@ -45,7 +46,7 @@ function Global() {
   return (
     <>
       {isLoading ? (
-        <p>Loading</p>
+        <Loading/>
       ) : (
         !isError && (
           <>

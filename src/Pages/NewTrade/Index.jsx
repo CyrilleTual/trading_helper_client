@@ -22,9 +22,6 @@ function NewTrade() {
   // pas de trade sans entrée
 
   // on va chercher la liste des portfolios de l'user
-  // const { id, alias } = useSelector((state) => ({
-  //   ...state.user.infos,
-  // }));
   const id = useSelector((state) => state.user.infos.id);
   const alias = useSelector((state) => state.user.infos.alias);
 
@@ -38,12 +35,13 @@ function NewTrade() {
   };
   const [selectedItem, setSelectedItem] = useState(initSelected);
 
-  // on va recupere la liste des portfolios de l'user ->
+  // liste des portfolios de l'user  
   const {
     data: portfolios,
     isLoading: portfolioIsLoading,
     isError: isError1,
   } = useGetPortfoliosByUserQuery(id);
+
   // listes des strategies de l'user
   const {
     data: strategies,
@@ -51,7 +49,7 @@ function NewTrade() {
     isError: isError2,
   } = useGetStategiesByUserIdQuery(id);
 
-  // derniere cotation le skip2 retarde la requete tant que pas de selection 
+  // derniere cotation (skip2 retarde la requete tant que pas de selection) 
   const [skip2, setSkip2] = useState(true);
   useEffect(() => {
     if(selectedItem.id !== 0) {
@@ -66,10 +64,10 @@ function NewTrade() {
 
   // nouveau trade
   const [newTrade] = useNewTradeMutation();
-
   const [currency, setCurrency] = useState("euro");
   const [currencyId, setCurrencyId] = useState(1);
-  const [values, setValues] = useState({
+
+  const initValues = {
     price: 0,
     target: 0,
     stop: 0,
@@ -79,7 +77,11 @@ function NewTrade() {
     comment: "",
     strategyId: 1,
     portfolioId: 1,
-  });
+    position: "long"
+  }
+
+
+  const [values, setValues] = useState(initValues);
   const [datas, setDatas] = useState({});
   const [existingTrade, setExistingTrade] = useState(false);
 
@@ -138,9 +140,9 @@ function NewTrade() {
   // création effective du nouveau trade -> trade et enter
   async function go() {
     try {
-      const res = await newTrade(datas);
-      console.log(res); // on va sur le portefeuille : portfolioID
-      navigate(`/portfolio/detail/${datas.portfolio_id}`);
+      await newTrade(datas);
+      // on va sur le portefeuille : portfolioID
+      navigate(`/portfolio/${datas.portfolio_id}/detail`);
     } catch (err) {
       console.log(err);
     }
@@ -176,6 +178,7 @@ function NewTrade() {
       comment: values.comment,
       strategy_id: +values.strategyId,
       portfolio_id: +values.portfolioId,
+      position: values.position,
       currency_id: currencyId,
       lastQuote: lastInfos.last,
       beforeQuote: lastInfos.before,
@@ -197,6 +200,7 @@ function NewTrade() {
   /////// cancel enter
   function cancelEnter() {
     setSelectedItem(initSelected);
+    setValues(initValues);
     setSkip(true);
     setSkip2(true);
   }
@@ -335,6 +339,20 @@ function NewTrade() {
                         ))}
                       </select>
                       <p>ce portefeuille est en {currency}</p>
+
+                      <label className={styles.label} htmlFor="position">
+                        type de trade
+                      </label>
+                      <select
+                        onChange={handleChange}
+                        id="position"
+                        name="position"
+                        defaultValue="long"
+                      >
+                        <option value="long">long</option>
+                        <option value="short">short</option>
+                      </select>
+
                       <label className={styles.label} htmlFor="strategyId">
                         Choisissez une strategies
                       </label>
