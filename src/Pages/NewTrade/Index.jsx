@@ -1,4 +1,3 @@
-
 import { useSelector, useDispatch } from "react-redux";
 import {
   useCheckIfActiveTradeQuery,
@@ -37,7 +36,7 @@ function NewTrade() {
   const [selectedItem, setSelectedItem] = useState(initSelected);
   const [reset, setReset] = useState(false);
 
-  // liste des portfolios de l'user  
+  // liste des portfolios de l'user
   const {
     data: portfolios,
     isLoading: portfolioIsLoading,
@@ -52,11 +51,11 @@ function NewTrade() {
     isError: isError2,
   } = useGetStategiesByUserIdQuery(id);
 
-  // derniere cotation (skip2 retarde la requete tant que pas de selection) 
+  // derniere cotation (skip2 retarde la requete tant que pas de selection)
   const [skip2, setSkip2] = useState(true);
   useEffect(() => {
-    if(selectedItem.id !== 0) {
-          setSkip2(false)
+    if (selectedItem.id !== 0) {
+      setSkip2(false);
     }
   }, [selectedItem]);
 
@@ -68,6 +67,7 @@ function NewTrade() {
   // nouveau trade
   const [newTrade] = useNewTradeMutation();
   const [currency, setCurrency] = useState("euro");
+  const [currencySymbol, setCurrencySymbol] = useState("€");
   const [currencyId, setCurrencyId] = useState(1);
 
   const initValues = {
@@ -80,39 +80,45 @@ function NewTrade() {
     comment: "",
     strategyId: 1,
     portfolioId: 1,
-    position: "long"
-  }
+    position: "long",
+  };
 
   const [values, setValues] = useState(initValues);
   const [datas, setDatas] = useState({});
   const [existingTrade, setExistingTrade] = useState(false);
 
-  // gestion des listes déroulantes 
+  // gestion des listes déroulantes
   useEffect(() => {
     if (!portfolioIsLoading && !stategiesIsLoading && !isError1 && !isError2) {
       // valeurs par defaut des listes déroulantes
+
       const toSet = portfolios[0].id;
       const toSet2 = strategies[0].id;
-      setValues({ ...values, position: 'long', portfolioId: toSet, strategyId: toSet2 });
+      setValues({
+        ...values,
+        position: "long",
+        portfolioId: toSet,
+        strategyId: toSet2,
+      });
     }
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, [
     selectedItem,
     portfolioIsLoading,
     stategiesIsLoading,
     portfolios,
     strategies,
-    reset
+    reset,
   ]);
 
   useEffect(() => {
     if (!portfolioIsLoading && !stategiesIsLoading && isSuccess1) {
-
-      let { currency, currencyId } = portfolios.find(
+      let { currency, currencyId, symbol } = portfolios.find(
         (portfolio) => +portfolio.id === +values.portfolioId
       );
       setCurrency(currency);
       setCurrencyId(currencyId);
+      setCurrencySymbol(symbol);
     }
     // eslint-disable-next-line
   }, [values.portfolioId]);
@@ -143,12 +149,21 @@ function NewTrade() {
 
   // création effective du nouveau trade -> trade et enter
   async function go() {
-    try {
-      await newTrade(datas);
-      // on va sur le portefeuille : portfolioID
-      navigate(`/portfolio/${datas.portfolio_id}/detail`);
-    } catch (err) {
-      console.log(err);
+    if (lastInfos.currency !== currencySymbol) {
+      console.log("erreur de conncordance currencies ", datas);
+      cancelEnter();
+      return;
+    } else {
+      console.log("ok", datas);
+
+      return;
+      try {
+        await newTrade(datas);
+        // on va sur le portefeuille : portfolioID
+        navigate(`/portfolio/${datas.portfolio_id}/detail`);
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
 
@@ -191,25 +206,25 @@ function NewTrade() {
     // verification si le trade exite deja -> stockId / portfolio
     // on déclanche le middle ware existingActiveTrade
     setSkip(false);
-
   };
 
   /////// cancel enter
   function cancelEnter() {
     setSelectedItem(initSelected);
-    setValues({ ...values, price: 0,
-    target: 0,
-    stop: 0,
-    quantity: 0,
-    fees: 0,
-    tax: 0,
-    comment: "" });
+    setValues({
+      ...values,
+      price: 0,
+      target: 0,
+      stop: 0,
+      quantity: 0,
+      fees: 0,
+      tax: 0,
+      comment: "",
+    });
     setReset(!reset);
     setSkip(true);
     setSkip2(true);
   }
-
- 
 
   return (
     <main className={`container ${styles.newTrade}`}>
@@ -229,7 +244,7 @@ function NewTrade() {
                 />
               )}
 
-              {selectedItem.id !== 0 && (
+              {selectedItem.id !== 0 && portfolios && (
                 <>
                   <p>
                     Vous avez selectionné {selectedItem.title}
@@ -255,7 +270,7 @@ function NewTrade() {
                         name="price"
                         min="0"
                         step="0.001"
-                        value={values.price}
+                        value={`${values.price}`}
                         onChange={handleChange}
                         autoFocus
                       />
@@ -336,14 +351,21 @@ function NewTrade() {
                         name="portfolioId"
                         defaultValue={values.portfolioId}
                       >
-                        {portfolios.map((portfolio, i) => (
-                          <option key={i} value={portfolio.id}>
-                            {portfolio.title}
-                            {`  ( `}
-                            {currency}
-                            {` )`}
-                          </option>
-                        ))}
+                        {lastIsSuccess && lastInfos.last ? (
+                          portfolios.map((portfolio, i) =>
+                            portfolio.symbol === lastInfos.currency ? (
+                          
+                                <option key={i} value={portfolio.id}>
+                                  {portfolio.title}
+                                </option>
+                            
+                            ) : (
+                              ""
+                            )
+                          )
+                        ) : (
+                          <option value="error">Loading....</option>
+                        )}
                       </select>
 
                       <label className={styles.label} htmlFor="position">
