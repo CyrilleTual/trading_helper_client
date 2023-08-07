@@ -1,24 +1,41 @@
 .search form {
     margin: auto;
     text-align: center;
+    font-size: larger;
+}
+
+.search input {
+  padding: 5px;
+  border-radius: 10px;
 }
 
 .search table {
-  width: 480px;
+  table-layout: fixed;
+  width: 100%;
+  max-width: 480px;
   margin: auto;
   border-collapse: collapse;
   border: 3px solid var(--color-bgTableaux);
+  
+}
+
+.search tbody{
+  width: 100vw;
 }
 
 .search th:first-of-type,
 .search td:first-of-type {
-  min-width: fit-content;
-}
+   width: 132px;
+    
+} 
 
 .search th:nth-of-type(2),
 .search td:nth-of-type(2) {
-  text-align: right;
+  text-align: center;
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
+       
 }
 
 
@@ -30,7 +47,7 @@
 }
 .search th:nth-of-type(4),
 .search td:nth-of-type(4) {
-  width: 20px;
+  width: 50px;
   text-align: center;
 }
 
@@ -40,7 +57,7 @@
 
 .search td,
 .search th {
-  padding: 5px;
+  padding: 5px 2px;
   border: 3px solid var(--color-bgTableaux);
 }
 

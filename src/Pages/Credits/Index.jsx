@@ -15,6 +15,11 @@ function Credits() {
             Vecteezy
           </a>
         </p>
+
+        <a href="https://www.flaticon.com/free-icons/plus" title="plus icons">
+          Plus icons created by Vectors Market - Flaticon
+        </a>
+
         <p>
           Le ticker-tape est fouri par{" "}
           <a

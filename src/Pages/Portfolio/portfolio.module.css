@@ -25,8 +25,6 @@ Pour le svg) */
     margin-bottom: -40px;
 }
 
-
-
 :export {
     meterWidth: var(--metW);
     meterHeight: var(--metH);
@@ -41,15 +39,11 @@ Pour le svg) */
 }
 
 .under_table{
-    display: block;
-    margin-top: 20px;
+    margin-top: 10px;
     text-align: center;
 }
 
-.tradingViewContainer{
-    margin: auto;
-
-    width: 400px;
-    height:400px;
-
+.under_table a {
+    width: 250px;
 }
+ 

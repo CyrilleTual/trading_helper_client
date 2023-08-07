@@ -11,17 +11,14 @@
     margin-bottom: -40px;
 }
 
-.form_enter{
-
-    margin: auto;
-}
 
 
 .form_enter {
     display: flex;
     flex-direction: row;
-    width: 80%;
-    width: 400px;
+    width: 100%;
+    min-width: 300px;
+    max-width: 400px;
     margin:auto;
     flex-wrap: wrap;
     align-items: baseline;
@@ -29,22 +26,30 @@
 }
 
 .label {
-    margin-top: 10px;
+    margin-top: 6px;
     display: inline-block;
-    width: 200px;
+     width: 45%;
     text-align: right;
-    padding-right: 30px;
+    padding-right: 20px;
      
 }
 
-.form_enter input {
+.form_enter input,
+.form_enter select {
     display: inline-block;
-    width: 100px;
+    width: 45%;
+     max-width: 80px;
+    border-radius: 10px;
+    padding: 4px;
     text-align: right;
 }
+.form_enter select,
+.form_enter input[type="text"] {
+     max-width: 180px; 
+}
 
-.form_enter input[type="submit"]{
-    
+.form_enter input[type="submit"],
+.form_enter input[type="select"]{
     margin: auto ;
     margin-top: 30px;
 }

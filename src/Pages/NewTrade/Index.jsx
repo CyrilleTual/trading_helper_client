@@ -15,13 +15,14 @@ import { useNavigate } from "react-router-dom";
 import ExistingTrade from "./Components/ExistingTrade";
 import { signOut } from "../../store/slice/user";
 import { resetStorage } from "../../utils/tools";
+import { Loading } from "../../Components/Loading/Index";
 
 function NewTrade() {
   const navigate = useNavigate();
   // un new trade va automatiquement créer une entrée
   // pas de trade sans entrée
 
-  // on va chercher la liste des portfolios de l'user
+  // on va chercher la liste des portfolios de l'user dans le state
   const id = useSelector((state) => state.user.infos.id);
   const alias = useSelector((state) => state.user.infos.alias);
 
@@ -34,11 +35,13 @@ function NewTrade() {
     ticker: "",
   };
   const [selectedItem, setSelectedItem] = useState(initSelected);
+  const [reset, setReset] = useState(false);
 
   // liste des portfolios de l'user  
   const {
     data: portfolios,
     isLoading: portfolioIsLoading,
+    isSuccess: isSuccess1,
     isError: isError1,
   } = useGetPortfoliosByUserQuery(id);
 
@@ -80,7 +83,6 @@ function NewTrade() {
     position: "long"
   }
 
-
   const [values, setValues] = useState(initValues);
   const [datas, setDatas] = useState({});
   const [existingTrade, setExistingTrade] = useState(false);
@@ -91,7 +93,7 @@ function NewTrade() {
       // valeurs par defaut des listes déroulantes
       const toSet = portfolios[0].id;
       const toSet2 = strategies[0].id;
-      setValues({ ...values, portfolioId: toSet, strategyId: toSet2 });
+      setValues({ ...values, position: 'long', portfolioId: toSet, strategyId: toSet2 });
     }
   // eslint-disable-next-line
   }, [
@@ -100,10 +102,12 @@ function NewTrade() {
     stategiesIsLoading,
     portfolios,
     strategies,
+    reset
   ]);
 
   useEffect(() => {
-    if (!portfolioIsLoading && !stategiesIsLoading) {
+    if (!portfolioIsLoading && !stategiesIsLoading && isSuccess1) {
+
       let { currency, currencyId } = portfolios.find(
         (portfolio) => +portfolio.id === +values.portfolioId
       );
@@ -188,19 +192,19 @@ function NewTrade() {
     // on déclanche le middle ware existingActiveTrade
     setSkip(false);
 
-    // try {
-    //   const res = await newTrade(datas);
-    //   console.log(res); // on va sur le portefeuille : portfolioID
-    //   navigate(`/portfolio/${datas.portfolio_id}`);
-    // } catch (err) {
-    //   console.log(err);
-    // }
   };
 
   /////// cancel enter
   function cancelEnter() {
     setSelectedItem(initSelected);
-    setValues(initValues);
+    setValues({ ...values, price: 0,
+    target: 0,
+    stop: 0,
+    quantity: 0,
+    fees: 0,
+    tax: 0,
+    comment: "" });
+    setReset(!reset);
     setSkip(true);
     setSkip2(true);
   }
@@ -215,10 +219,9 @@ function NewTrade() {
       ) : (
         <>
           {portfolioIsLoading || stategiesIsLoading ? (
-            <p>Loading</p>
+            <Loading />
           ) : (
             <div>
-              <p>Bonjour {alias} tu es parti pour de nouvelles aventures ...</p>
               {!selectedItem.id && (
                 <SearchStock
                   selectedItem={selectedItem}
@@ -254,6 +257,7 @@ function NewTrade() {
                         step="0.001"
                         value={values.price}
                         onChange={handleChange}
+                        autoFocus
                       />
                       <label className={styles.label} htmlFor="target">
                         target
@@ -324,7 +328,7 @@ function NewTrade() {
                         onChange={handleChange}
                       />
                       <label className={styles.label} htmlFor="portfolioId">
-                        Choisissez un portefeuille
+                        portefeuille
                       </label>
                       <select
                         onChange={handleChange}
@@ -335,10 +339,12 @@ function NewTrade() {
                         {portfolios.map((portfolio, i) => (
                           <option key={i} value={portfolio.id}>
                             {portfolio.title}
+                            {`  ( `}
+                            {currency}
+                            {` )`}
                           </option>
                         ))}
                       </select>
-                      <p>ce portefeuille est en {currency}</p>
 
                       <label className={styles.label} htmlFor="position">
                         type de trade
@@ -354,7 +360,7 @@ function NewTrade() {
                       </select>
 
                       <label className={styles.label} htmlFor="strategyId">
-                        Choisissez une strategies
+                        strategies
                       </label>
                       <select
                         onChange={handleChange}

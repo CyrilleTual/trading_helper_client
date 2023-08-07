@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-
 import styles from "../managePortfolio.module.css";
 
 function Existing({ portfolios, isLoading }) {
+
   // formulaire
   const [currency, setCurrency] = useState("");
 
   const [values, setValues] = useState({
-    portfolioId: 1,
+    portfolioId: null,
     action: null,
     amout: 0,
   });
@@ -19,10 +19,21 @@ function Existing({ portfolios, isLoading }) {
     { id: 3, title: "désactiver un compte" },
   ];
 
-  // set des devises
-
+  // set du portif de base
   useEffect(() => {
-    if (!isLoading) {
+    if (portfolios) {
+      const toSet = portfolios[0].id;
+      setValues({
+        ...values,
+        portfolioId: toSet,
+      });
+    }
+  },[portfolios]);
+
+
+  // set des devises sur choix liste déroulante
+  useEffect(() => {
+    if (!isLoading && values.portfolioId!==null) {
       let { currency } = portfolios.find(
         (portfolio) => +portfolio.id === +values.portfolioId
       );

@@ -14,17 +14,22 @@ input[type="submit"]
 .myBtn {
     display: inline-block;
     margin: auto;
+    width: auto;
     padding: 10px;
     background-color: var(--color-1-light);
-    border-radius: 10px;
     color: var(--txt-color-dark);
     text-transform: uppercase;
-    font-weight: bold;
-    
+    font-weight: bold; 
+    overflow: hidden;
+    border-radius: 30px;
+    border: solid rgba(0, 0, 0, 0.446) 1px;
+    padding: 4px;
 }
 
 .myBtn:hover{
     cursor: pointer;
+     border: solid black 2px;
+    padding: 3px;
 }
 
 .cancel{

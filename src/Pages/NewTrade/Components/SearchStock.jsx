@@ -24,7 +24,7 @@ function SearchStock({ selectedItem, setSelectedItem }) {
 
   return (
     <div className={styles.search}>
-      <h2>Recherhe d'instrument : </h2>
+      <h2>Sélection d'instrument : </h2>
       <form>
         <label htmlFor="stock">votre recherche :  </label>
         <input
@@ -34,6 +34,7 @@ function SearchStock({ selectedItem, setSelectedItem }) {
           placeholder="minimum 3 caractères"
           value={stock.title}
           onChange={handleInputChange}
+          autoFocus
         />
       </form>
       {searchIsSuccess  && searchResult.length===0 &&

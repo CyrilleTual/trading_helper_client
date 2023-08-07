@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signOut } from "../../store/slice/user";
 import { Loading } from "../../Components/Loading/Index";
+import { ReactComponent as Minus } from "../../assets/img/minus.svg";
+import { ReactComponent as Plus } from "../../assets/img/plus.svg";
 
 function DetailPorfolio() {
   const { portfolioId } = useParams();
@@ -90,7 +92,7 @@ function DetailPorfolio() {
   return (
     <>
       {isLoading ? (
-        <Loading/>
+        <Loading />
       ) : (
         !isError && (
           <main className={styles.detail}>
@@ -129,10 +131,10 @@ function DetailPorfolio() {
                       {data.map((elt, j) => (
                         <td key={j}>
                           <NavLink
-                            className={styles.button}
+                            className={` ${styles.action}`}
                             to={`/reEnter/portfolio/${portfolioId}/stock/${elt.tradeId}`}
                           >
-                            Re-Enter
+                            <Plus className={styles.plus}/>
                           </NavLink>
                         </td>
                       ))}
@@ -142,10 +144,10 @@ function DetailPorfolio() {
                       {data.map((elt, k) => (
                         <td key={k}>
                           <NavLink
-                            className={styles.button}
+                            className={`${styles.moins} ${styles.action}`}
                             to={`/portfolio/${portfolioId}/exitTrade/${elt.tradeId}`}
                           >
-                            Exit
+                            <Minus className={styles.moins}/>
                           </NavLink>
                         </td>
                       ))}
