@@ -1,21 +1,11 @@
 input:hover{
      cursor: pointer;
 }
-
-input[type="submit"]
-{
-    padding: 10px;
-    background-color: var(--color-1-light);
-    border-radius: 10px;
-    text-transform: uppercase;
-    font-weight: bold;
-} 
-
+ 
 .myBtn {
     display: inline-block;
     margin: auto;
     width: auto;
-    padding: 10px;
     background-color: var(--color-1-light);
     color: var(--txt-color-dark);
     text-transform: uppercase;
@@ -30,6 +20,12 @@ input[type="submit"]
     cursor: pointer;
      border: solid black 2px;
     padding: 3px;
+ 
+}
+
+input[type="submit"]
+{
+    background-color: var(--color-1-light);
 }
 
 .cancel{

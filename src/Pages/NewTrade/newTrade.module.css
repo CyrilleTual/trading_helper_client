@@ -11,6 +11,10 @@
     margin-bottom: -40px;
 }
 
+.noWrap{
+    white-space: nowrap;
+}
+
 
 
 .form_enter {
@@ -34,22 +38,42 @@
      
 }
 
-.form_enter input,
+.form_enter input[type="number"],
+.form_enter input[type="text"],
+.form_enter textarea,
 .form_enter select {
     display: inline-block;
     width: 45%;
-     max-width: 120px;
+    max-width: 120px;
     border-radius: 10px;
     padding: 4px;
     text-align: right;
+    border: 1px solid black;
 }
-.form_enter select,
+.form_enter textarea{
+    margin-top: 6px;
+    text-align: left;
+    width: 90%;
+    max-width: 90%;
+    resize: none;
+}
+
+
+.form_enter select{
+     max-width: 180px; 
+    text-align-last: center;
+    -moz-text-align-last: center;}
+ 
 .form_enter input[type="text"] {
      max-width: 180px; 
 }
-
-.form_enter input[type="submit"],
-.form_enter input[type="select"]{
-    margin: auto ;
-    margin-top: 30px;
+.form input[type="button"],
+.form input[type="submit"]{
+    margin: 15px;
+    padding: 10px;
+}
+.form input[type="button"]:hover,
+.form input[type="submit"]:hover{
+    padding: 9px;
+    scale: 1.1;
 }

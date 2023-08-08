@@ -15,6 +15,7 @@ import ExistingTrade from "./Components/ExistingTrade";
 import { signOut } from "../../store/slice/user";
 import { resetStorage } from "../../utils/tools";
 import { Loading } from "../../Components/Loading/Index";
+import BtnSubmit from "../../Components/UI/BtnSubmit";
 
 function NewTrade() {
   const navigate = useNavigate();
@@ -249,9 +250,12 @@ function NewTrade() {
                   <p>
                     Vous avez selectionné {selectedItem.title}
                     {lastIsSuccess && lastInfos.last && (
-                      <span>
-                        , dernier cours : {lastInfos.last} {lastInfos.currency}
-                      </span>
+                      <>
+                        ,{` `}
+                        <span className={styles.noWrap}>
+                          dernier cours : {lastInfos.last} {lastInfos.currency}
+                        </span>
+                      </>
                     )}
                   </p>
 
@@ -332,16 +336,23 @@ function NewTrade() {
                         value={values.tax}
                         onChange={handleChange}
                       />
-                      <label className={styles.label} htmlFor="comment">
-                        commentaires
-                      </label>
-                      <input
+
+                      {/* <input
                         type="text"
                         id="comment"
                         name="comment"
                         value={values.comment}
                         onChange={handleChange}
+                      /> */}
+                      <textarea
+                        id="comment"
+                        name="comment"
+                        value={values.comment}
+                        onChange={handleChange}
+                        placeholder="Ajouter ici un commentaire"
+                        rows="2"
                       />
+
                       <label className={styles.label} htmlFor="portfolioId">
                         portefeuille
                       </label>
@@ -354,11 +365,9 @@ function NewTrade() {
                         {lastIsSuccess && lastInfos.last ? (
                           portfolios.map((portfolio, i) =>
                             portfolio.symbol === lastInfos.currency ? (
-                          
-                                <option key={i} value={portfolio.id}>
-                                  {portfolio.title}
-                                </option>
-                            
+                              <option key={i} value={portfolio.id}>
+                                {portfolio.title}
+                              </option>
                             ) : (
                               ""
                             )
@@ -397,8 +406,8 @@ function NewTrade() {
                         ))}
                       </select>
                       <br />
-                      <input type="submit" value="Validation" />
                       <BtnCancel value="Abandon" action={cancelEnter} />
+                      <BtnSubmit value="Validation" />
                     </form>
                   </div>
                 </>
