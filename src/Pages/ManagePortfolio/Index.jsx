@@ -11,10 +11,7 @@ function ManagePortfolio() {
   const id = useSelector((state) => state.user.infos.id);
 
   // liste des portfolios
-  const {
-    data: portfolios,
-    isLoading
-  } = useGetPortfoliosByUserQuery(id);
+  const { data: portfolios, isLoading } = useGetPortfoliosByUserQuery(id);
 
   const [manageExisting, setManageExisting] = useState(false);
   const [create, setCreate] = useState(false);
@@ -53,22 +50,19 @@ function ManagePortfolio() {
               </tbody>
             </table>
 
-            <BtnAction
-              value={"Gérer existant"}
-              action={handleClickManage}
-            />
-            <BtnAction
-              value={"Créer  nouveau "}
-              action={handleClickCreate}
-            />
+            <div className={styles.wrapper}>
 
-            {manageExisting && 
-              <Existing portfolios={portfolios} isLoading={isLoading} />
-            }
-            {create && 
-              <Create setCreate={setCreate}/>
-            }
-            
+              <div className={styles.btns}>
+                <BtnAction value={"Gérer existant"} action={handleClickManage} />
+                <BtnAction value={"Créer  nouveau "} action={handleClickCreate} />
+              </div>
+
+              {manageExisting && (
+                <Existing portfolios={portfolios} isLoading={isLoading} />
+              )}
+              {create && <Create setCreate={setCreate} />}
+
+            </div>
           </main>
         </div>
       )}

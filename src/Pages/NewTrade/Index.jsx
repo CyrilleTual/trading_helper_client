@@ -151,13 +151,9 @@ function NewTrade() {
   // création effective du nouveau trade -> trade et enter
   async function go() {
     if (lastInfos.currency !== currencySymbol) {
-      console.log("erreur de conncordance currencies ", datas);
       cancelEnter();
       return;
     } else {
-      console.log("ok", datas);
-
-      return;
       try {
         await newTrade(datas);
         // on va sur le portefeuille : portfolioID

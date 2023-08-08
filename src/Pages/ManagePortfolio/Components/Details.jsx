@@ -1,9 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signOut } from "../../../store/slice/user";
 import { resetStorage } from "../../../utils/tools";
-import { useGetPortfolioDashboardByIdQuery } from "../../../store/slice/tradeApi";
+import {
+  useGetPortfolioDashboardByIdQuery,
+  useGetCurrenciesQuery
+} from "../../../store/slice/tradeApi";
 
 
 function Details({ portfolio }) {
@@ -23,25 +26,43 @@ function Details({ portfolio }) {
       dispatch(signOut());
       navigate("/");
     }
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, [isError]);
 
   // set de la devise de base
-  const baseCurrencie = "€";
+  const [baseCurrencie, setBaseCurrencie] = useState("");
+  // recup des infos sur les currrencies (toutes)
+  const { data: currencyInfos } = useGetCurrenciesQuery();
+  // set de la currency
+  useEffect(() => {
+    if (data && currencyInfos) {
+      const portfolioCurrencie = currencyInfos.find(
+        (el) => el.id === data.currencyId
+      );
+      setBaseCurrencie(portfolioCurrencie.symbol);
+    }
+  }, [data, currencyInfos]);
+
+ 
+
+
+
 
   return (
     <>
       {isLoading ? (
-        <tr><td>Loading</td></tr>
+        <tr>
+          <td>Loading</td>
+        </tr>
       ) : (
         !isError && (
           <tr>
             <td>{portfolio.title}</td>
             <td>
-              {data.initCredit} {baseCurrencie}
+              {+data.initCredit} {baseCurrencie}
             </td>
             <td>
-              {data.assets} {baseCurrencie}
+              {data.assets.toFixed(0)} {baseCurrencie}
             </td>
             <td>
               {data.cash} {baseCurrencie}

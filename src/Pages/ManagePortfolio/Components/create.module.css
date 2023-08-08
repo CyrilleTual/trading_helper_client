@@ -1,0 +1,23 @@
+.form_create {
+    composes: form_existing from "./existing.module.css"
+}
+
+.input_wrap {
+    composes: from select_wrap from "./existing.module.css"
+}
+.input_wrap_initAmout{
+    width: 45%;
+    display: flex;
+}
+
+.input_wrap_initAmout input[type="number"] {
+    width: calc(90% - 75px ) !important;
+}
+.input_wrap_initAmout select {
+    width: 60px !important; 
+    margin-left: 2px;
+}
+
+.btns {
+    composes: btns from "../managePortfolio.module.css";
+} 
