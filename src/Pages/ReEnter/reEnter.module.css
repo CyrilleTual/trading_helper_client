@@ -4,39 +4,13 @@
 }
 
 .re_enter h1{
-    
     position: relative;
     top :-90px;
     white-space: nowrap;
     margin-bottom: -40px;
 }
 
-
-.form {
-    display: flex;
-    flex-direction: row;
-    width: 80%;
-    margin:auto;
-    flex-wrap: wrap;
-    align-items: baseline;
-   
+.form_reEnter {
+    composes: form_enter from "../NewTrade/newTrade.module.css"
 }
-
-.label {
-    margin-top: 10px;
-    display: inline-block;
-    width: 200px;
-     
-}
-
-.re_enter input {
-    display: inline-block;
-    width: 100px;
-    text-align: right;
-}
-
-.re_enter input[type="submit"]{
-    
-    margin: auto ;
-    margin-top: 30px;
-}
+ 

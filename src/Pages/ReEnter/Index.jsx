@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { usePrepareQuery, useReEnterMutation } from "../../store/slice/tradeApi";
 import styles from "./reEnter.module.css";
 import { Loading } from "../../Components/Loading/Index";
+import BtnSubmit from "../../Components/UI/BtnSubmit";
+import BtnCancel from "../../Components/UI/BtnCancel";
  
 
 function ReEnter() {
@@ -12,8 +14,7 @@ function ReEnter() {
   const { data: trade, isSuccess } = usePrepareQuery(tradeId);
 
   // hook de création de la reEnter
-  const [reEnter] = useReEnterMutation()
-
+  const [reEnter] = useReEnterMutation();
 
   ///  disponible pour l'affichage : ( trade . qq chose)
   //   const {
@@ -58,7 +59,7 @@ function ReEnter() {
         comment: trade.comment,
       });
     }
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, [trade]);
 
   /// to do -> verifier que l'on est bien sur le bon trade
@@ -68,7 +69,7 @@ function ReEnter() {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
-  const navigate =useNavigate();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -88,16 +89,21 @@ function ReEnter() {
     try {
       const resp = await reEnter(datas);
       console.log(resp);
-      navigate (`/portfolio/${trade.portfolio_id}/detail`);
+      navigate(`/portfolio/${trade.portfolio_id}/detail`);
     } catch (err) {
       console.log(err);
     }
   };
 
+  /////// cancel enter
+  function cancelEnter() {
+    console.log ("toDo Fonction cancel")
+  }
+
   return (
     <>
       {!isSuccess ? (
-        <Loading/>
+        <Loading />
       ) : (
         <main className={styles.re_enter}>
           <h1>Re-enter</h1>
@@ -115,7 +121,11 @@ function ReEnter() {
             </p>
           </div>
 
-          <form className={styles.form} onSubmit={handleSubmit} method="POST ">
+          <form
+            className={styles.form_reEnter}
+            onSubmit={handleSubmit}
+            method="POST "
+          >
             <label className={styles.label} htmlFor="price">
               niveau d'entrée:
             </label>
@@ -207,8 +217,11 @@ function ReEnter() {
               value={values.date}
               onChange={handleChange}
             ></input>
-            <br />
-            <input type="submit" value="Validation" /> <br />
+
+            <div className={styles.full_width}>
+              <BtnCancel value="Abandon" action={cancelEnter} />
+              <BtnSubmit value="Validation" />
+            </div>
           </form>
         </main>
       )}
