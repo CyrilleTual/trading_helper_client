@@ -58,7 +58,7 @@ function ManagePortfolio() {
               </div>
 
               {manageExisting && (
-                <Existing portfolios={portfolios} isLoading={isLoading} />
+                <Existing portfolios={portfolios} isLoading={isLoading} setManageExisting={setManageExisting} />
               )}
               {create && <Create setCreate={setCreate} />}
 

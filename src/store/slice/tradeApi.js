@@ -45,6 +45,15 @@ export const tradeApi = createApi({
       providesTags: ["Portfolio"],
     }),
 
+    // passage en idle d'un portfolio
+    idlePortfolio: builder.mutation({
+      query: (id) => ({
+        url: `/portfolio/${id}/idle`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["GlobalDatas", "Portfolio"],
+    }),
+
     // la synthèses des portfolios pour un user
     getGlobalDashBoardByUser: builder.query({
       query: (id) => `/portfolio/dashboard/user/global/${id}`,
@@ -137,6 +146,16 @@ export const tradeApi = createApi({
       }),
       invalidatesTags: ["GlobalDatas", "CheckActive", "Prepare"],
     }),
+
+    // mouvement de fonds -> deposit
+    depositFunds: builder.mutation({
+      query: (payload) => ({
+        url: "/portfolio/deposit",
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["GlobalDatas", "Prepare"],
+    }),
   }),
 });
 
@@ -157,5 +176,7 @@ export const {
   useCheckIfActiveTradeQuery,
   useGetCurrenciesQuery,
   useNewPortfolioMutation,
+  useDepositFundsMutation,
+  useIdlePortfolioMutation,
 
 } = tradeApi;

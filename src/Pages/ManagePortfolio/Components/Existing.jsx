@@ -1,17 +1,30 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  useDepositFundsMutation,
+  useIdlePortfolioMutation,
+} from "../../../store/slice/tradeApi.js";
 import styles from "./existing.module.css";
 import BtnCancel from "../../../Components/UI/BtnCancel";
 import BtnSubmit from "../../../Components/UI/BtnSubmit";
 
-function Existing({ portfolios, isLoading }) {
+function Existing({ portfolios, isLoading, setManageExisting }) {
+  const navigate = useNavigate();
+
   // formulaire
   const [currency, setCurrency] = useState("");
 
-  const [values, setValues] = useState({
+  // pour créer un deposit
+  const [deposit, { isError : depositError}] = useDepositFundsMutation();
+  // pour passer portfolio en idle:
+  const [idlePortfolio, {data, isError}] = useIdlePortfolioMutation();
+
+  const initValues = {
     portfolioId: null,
     action: null,
-    amout: 0,
-  });
+    amount: 0,
+  };
+  const [values, setValues] = useState(initValues);
 
   const actions = [
     { id: 0, title: "choisissez" },
@@ -20,10 +33,10 @@ function Existing({ portfolios, isLoading }) {
     { id: 3, title: "désactiver" },
   ];
 
-  // set du portif de base
+  // set du portif de base -> le premier des portfolios
   useEffect(() => {
     if (portfolios) {
-      const toSet = portfolios[0].id;
+      const toSet = +portfolios[0].id;
       setValues({
         ...values,
         portfolioId: toSet,
@@ -52,17 +65,42 @@ function Existing({ portfolios, isLoading }) {
   }, [isLoading]);
 
   const handleChange = (e) => {
-    setValues({ ...values, [e.target.name]: e.target.value });
+    setValues({ ...values, [e.target.name]: +e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+ 
+    if (+values.action === 1 || +values.action === 2) {
+      try {
+        const res = await deposit(values);
+        console.log(res);
+        console.log(depositError);
+        navigate(`/portfolio/manage`);
+      } catch (err) {
+        console.log(depositError);
+      }
+    }else if (+values.action === 3 ){
+      try {
+        idlePortfolio(+values.portfolioId);
+        console.log(data.msg);
+        navigate(`/portfolio/manage`);
+      } catch (err) {
+        console.log(isError);
+      }
+      
+    }
   };
 
   const cancel = () => {
-    console.log("action canceled");
+    setValues(initValues);
+    setManageExisting(false);
   };
 
   return (
     <div className={styles.existing}>
       <h2>Agir sur portefeuille existant</h2>
-      <form className={styles.form_existing} action="">
+      <form className={styles.form_existing} onSubmit={handleSubmit}>
         <label htmlFor="portfolioId">portefeuille</label>
         <div className={styles.select_wrap}>
           <select
@@ -94,7 +132,7 @@ function Existing({ portfolios, isLoading }) {
             defaultValue={values.action}
           >
             {actions.map((action, i) => (
-              <option key={i} value={action.id}>
+              <option key={i} value={+action.id}>
                 {action.title}
               </option>
             ))}
@@ -103,16 +141,16 @@ function Existing({ portfolios, isLoading }) {
 
         {(+values.action === 1 || +values.action === 2) && (
           <>
-            <label className={styles.label} htmlFor="amout">
+            <label className={styles.label} htmlFor="amount">
               {+values.action === 1 && <p>montant à verser</p>}
               {+values.action === 2 && <p>montant à retirer</p>}
             </label>
             <div className={styles.select_wrap}>
               <input
                 type="number"
-                id="amout"
-                name="amout"
-                value={values.amout}
+                id="amount"
+                name="amount"
+                value={values.amount}
                 onChange={handleChange}
                 min="0"
               />
@@ -120,7 +158,7 @@ function Existing({ portfolios, isLoading }) {
           </>
         )}
 
-        {+values.action === 3 || +values.amout > 0 ? (
+        {+values.action === 3 || +values.amount > 0 ? (
           <div className={styles.btns}>
             <BtnCancel value="Abandon" action={cancel} />
             <BtnSubmit value="Validation" />
