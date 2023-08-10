@@ -54,9 +54,8 @@ function NewTrade() {
   const [selectedItem, setSelectedItem] = useState(initSelected);
   // derniere cotation (skip2 retarde la requete tant que pas de selection)
   const [skip2, setSkip2] = useState(true);
- 
 
-  // quand le titre est selectionné -> recherhche des infos du titre 
+  // quand le titre est selectionné -> recherhche des infos du titre
   useEffect(() => {
     if (selectedItem.id !== 0) {
       setSkip2(false);
@@ -70,18 +69,16 @@ function NewTrade() {
     isError: lastIsError,
   } = useLastQuoteQuery(selectedItem, { skip: skip2 });
 
-
-
-// exemple de lastInfos : ////////////////////////
-// before :  37.645
-// currency :  "€"
-// id : 27
-// isin : "FR0000131906"
-// last  : 38.17
-// place : "p"
-// ticker : "RNO"
-// title : "Renault"
-//////////////////////////////////////////////////
+  // exemple de lastInfos : ////////////////////////
+  // before :  37.645
+  // currency :  "€"
+  // id : 27
+  // isin : "FR0000131906"
+  // last  : 38.17
+  // place : "p"
+  // ticker : "RNO"
+  // title : "Renault"
+  //////////////////////////////////////////////////
 
   // nouveau trade
   const [newTrade] = useNewTradeMutation();
@@ -101,10 +98,8 @@ function NewTrade() {
     strategyId: 1,
     portfolioId: 1,
     position: "long",
-   
   };
   const [values, setValues] = useState(initValues);
-
 
   const [datas, setDatas] = useState({});
   const [existingTrade, setExistingTrade] = useState(false);
@@ -131,8 +126,6 @@ function NewTrade() {
     strategies,
     reset,
   ]);
-
- 
 
   useEffect(() => {
     if (!portfolioIsLoading && !stategiesIsLoading && isSuccess1) {
@@ -247,7 +240,7 @@ function NewTrade() {
     setSkip2(true);
   }
 
-  // toDo : transformer les champs de saisie en type texte quand pas de focus pour utiliser Intl
+  // toDo : transformer les champs de saisie number en type texte quand pas de focus pour utiliser Intl
   // if (lastIsSuccess && lastInfos.last && !lastIsFetching){
   //     let test = (new Intl.NumberFormat("fr-FR", { style: "currency", currency: `${currencyAbbr}` }).format(values.price));
   // }
@@ -275,14 +268,18 @@ function NewTrade() {
     cancelEnter();
   };
 
-  const sureQuoteExist = () => {
+  const quoteExist = () => {
     if (lastInfos) {
-      if(lastInfos.currency === undefined){
-        return false
-      }else{ return true}
-    }return true
-  }
- 
+      if (lastInfos.currency === undefined) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+    return true;
+  };
+
+
 
   return (
     <>
@@ -291,7 +288,7 @@ function NewTrade() {
       ) : (
         <main className={`container ${styles.newTrade}`}>
           <h1>Création d'un trade :</h1>
-          {!sureQuoteExist() && !lastIsFetching && (
+          {!quoteExist() && !lastIsFetching && (
             <Modal
               display={
                 <>
@@ -342,6 +339,31 @@ function NewTrade() {
                           onSubmit={handleSubmit}
                           method="POST "
                         >
+                          <div className={styles.wrapper_radios}>
+                            type de trade:
+                            <label>
+                              <input
+                                type="radio"
+                                name="position"
+                                value="long"
+                                checked={values.position === "long"}
+                                onChange={handleChange}
+                              />
+                              {`  `}
+                              long
+                            </label>
+                            <label>
+                              <input
+                                type="radio"
+                                name="position"
+                                value="short"
+                                checked={values.position === "short"}
+                                onChange={handleChange}
+                              />
+                              {`  `}
+                              short
+                            </label>
+                          </div>
                           <label className={styles.label_wrap} htmlFor="target">
                             objectif
                           </label>
@@ -479,7 +501,7 @@ function NewTrade() {
                             </select>
                           </div>
 
-                          <label htmlFor="position">type de trade</label>
+                          {/* <label htmlFor="position">type de trade</label>
                           <div className={styles.input_wrapLong}>
                             <select
                               onChange={handleChange}
@@ -490,7 +512,7 @@ function NewTrade() {
                               <option value="long">long</option>
                               <option value="short">short</option>
                             </select>
-                          </div>
+                          </div> */}
 
                           <label htmlFor="strategyId">strategies</label>
                           <div className={styles.input_wrapLong}>

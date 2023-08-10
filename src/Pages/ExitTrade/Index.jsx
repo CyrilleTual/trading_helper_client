@@ -9,16 +9,15 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signOut } from "../../store/slice/user";
 import styles from "./exitTrade.module.css";
+import BtnSubmit from "../../Components/UI/BtnSubmit";
+import BtnCancel from "../../Components/UI/BtnCancel";
+import { Loading } from "../../Components/Loading/Index";
 
 function ExitTrade() {
   const { tradeId } = useParams();
 
   // va recupérer les infos du trade
-  const {
-    data: trade,
-    isSuccess,
-    isError,
-  } = usePrepareQuery(tradeId);
+  const { data: trade, isSuccess, isError } = usePrepareQuery(tradeId);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -28,7 +27,7 @@ function ExitTrade() {
       dispatch(signOut());
       navigate("/");
     }
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, [isError]);
 
   // hook de création de sortie
@@ -95,91 +94,122 @@ function ExitTrade() {
     }
   };
 
+  const cancelExit = () => {
+    navigate(`/portfolio/${trade.portfolio_id}/detail`);
+  };
+
   //*******************************************************
   return (
     <main className={styles.exit}>
       {!isSuccess ? (
-        <p>Loading</p>
+        <Loading />
       ) : (
         <>
           <h1>Exit</h1>
           <p>
-            Dans le poretefeuille "{trade.portfolio}" tu veux vendre {trade.title}?{" "}
+            Dans le poretefeuille "{trade.portfolio}" tu veux vendre{" "}
+            {trade.title}?{" "}
           </p>
           <p>Le dernier cours est de {trade.lastQuote}</p>
           <p>Tu disposes de {trade.remains} titres en portefeuille</p>
-        
 
-          <form className={styles.form} onSubmit={handleSubmit} method="POST ">
+          <form
+            className={styles.form_exit}
+            onSubmit={handleSubmit}
+            method="POST "
+          >
             <label className={styles.label} htmlFor="price">
               Price
             </label>
-            <input
-              type="number"
-              id="price"
-              name="price"
-              min="0"
-              step="0.001"
-              value={values.price}
-              onChange={handleChange}
-            />
+            <div className={styles.input_wrap}>
+              <input
+                type="number"
+                id="price"
+                name="price"
+                min="0"
+                step="0.001"
+                value={values.price}
+                onChange={handleChange}
+                autoFocus
+              />
+            </div>
+
             <label className={styles.label} htmlFor="quantity">
               quantity
             </label>
-            <input
-              type="number"
-              id="quantity"
-              name="quantity"
-              min="1"
-              value={values.quantity}
-              onChange={handleChange}
-            />
+            <div className={styles.input_wrap}>
+              <input
+                type="number"
+                id="quantity"
+                name="quantity"
+                min="1"
+                value={values.quantity}
+                onChange={handleChange}
+              />
+            </div>
+
             <label className={styles.label} htmlFor="fees">
               fees
             </label>
-            <input
-              type="number"
-              id="fees"
-              name="fees"
-              min="0"
-              step="0.001"
-              value={values.fees}
-              onChange={handleChange}
-            />
+            <div className={styles.input_wrap}>
+              <input
+                type="number"
+                id="fees"
+                name="fees"
+                min="0"
+                step="0.001"
+                value={values.fees}
+                onChange={handleChange}
+              />
+            </div>
+
             <label className={styles.label} htmlFor="tax">
               tax
             </label>
-            <input
-              type="number"
-              id="tax"
-              name="tax"
-              min="0"
-              step="0.001"
-              value={values.tax}
-              onChange={handleChange}
-            />
+            <div className={styles.input_wrap}>
+              <input
+                type="number"
+                id="tax"
+                name="tax"
+                min="0"
+                step="0.001"
+                value={values.tax}
+                onChange={handleChange}
+              />
+            </div>
+
             <label className={styles.label} htmlFor="comment">
               comment
             </label>
-            <input
-              type="text"
-              id="comment"
-              name="comment"
-              value={values.comment}
-              onChange={handleChange}
-            />
+            <div className={styles.input_wrap}>
+              {" "}
+              <input
+                type="text"
+                id="comment"
+                name="comment"
+                value={values.comment}
+                onChange={handleChange}
+              />
+            </div>
+
             <label className={styles.label} htmlFor="date">
               date
             </label>
-            <input
-              type="date"
-              id="date"
-              name="date"
-              value={values.date}
-              onChange={handleChange}
-            ></input>
-            <br />
-            <input type="submit" value="Validation" /> <br />
+            <div className={styles.input_wrap}>
+              {" "}
+              <input
+                type="date"
+                id="date"
+                name="date"
+                value={values.date}
+                onChange={handleChange}
+              ></input>
+            </div>
+
+            <div className={styles.full_width}>
+              <BtnCancel value="Abandon" action={cancelExit} />
+              <BtnSubmit value="Validation" />
+            </div>
           </form>
         </>
       )}

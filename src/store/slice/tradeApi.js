@@ -54,7 +54,7 @@ export const tradeApi = createApi({
     // le dashboard d'un portfolio particulier par id de portfolio
     getPortfolioDashboardById: builder.query({
       query: (id) => `/portfolio/dashboard/${id}`,
-      providesTags: ["GlobalDatas"],
+      providesTags: ["GlobalDatas", "PortfolioByUser"],
     }),
 
     // le détail d'un portefeuille par id de portefeuille
@@ -115,6 +115,7 @@ export const tradeApi = createApi({
     // preparation exit / re-enter
     prepare: builder.query({
       query: (id) => `/trade/prepare/${id}`,
+      providesTags: ["Prepare"],
     }),
 
     // exit Process
@@ -124,7 +125,7 @@ export const tradeApi = createApi({
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: ["GlobalDatas", "CheckActive"],
+      invalidatesTags: ["GlobalDatas", "CheckActive", "Prepare"],
     }),
 
     // reEnter Process
@@ -134,7 +135,7 @@ export const tradeApi = createApi({
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: ["GlobalDatas", "CheckActive"],
+      invalidatesTags: ["GlobalDatas", "CheckActive", "Prepare"],
     }),
   }),
 });

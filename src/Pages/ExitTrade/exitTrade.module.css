@@ -1,39 +1,20 @@
 .exit{
-        width: 400px;
+    width: 300px;
     margin: auto;
 }
 .exit h1{
-    
     position: relative;
     top :-90px;
     white-space: nowrap;
     margin-bottom: -40px;
 }
-.form {
-    display: flex;
-    flex-direction: row;
-    width: 80%;
-    margin:auto;
-    flex-wrap: wrap;
-    align-items: baseline;
-   
+ 
+.form_exit {
+    composes: form_enter from "../NewTrade/newTrade.module.css"
+}
+.input_wrap {
+  display: block;
+  width: 45%;
+  text-align: left;
 }
 
-.label {
-    margin-top: 10px;
-    display: inline-block;
-    width: 200px;
-     
-}
-
-.exit input {
-    display: inline-block;
-    width: 100px;
-    text-align: right;
-}
-
-.exit input[type="submit"]{
-    
-    margin: auto ;
-    margin-top: 30px;
-}

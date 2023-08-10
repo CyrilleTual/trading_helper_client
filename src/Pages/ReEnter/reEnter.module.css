@@ -14,3 +14,8 @@
     composes: form_enter from "../NewTrade/newTrade.module.css"
 }
  
+.input_wrap, .input_wrapLong {
+  display: block;
+  width: 45%;
+  text-align: left;
+}
