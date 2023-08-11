@@ -20,7 +20,7 @@ export const tradeApi = createApi({
     // log d'une user existant
     signUserIn: builder.mutation({
       query: (payload) => ({
-        url: "/user/signin",
+        url: "/users/signin",
         method: "POST",
         body: payload,
       }),
@@ -33,7 +33,7 @@ export const tradeApi = createApi({
     // demande d'un nouvel utilisateur
     signUserUp: builder.mutation({
       query: (payload) => ({
-        url: "/user/signup",
+        url: "/users/signup",
         method: "POST",
         body: payload,
       }),
@@ -41,14 +41,14 @@ export const tradeApi = createApi({
 
     // la liste des portfolios pour un user
     getPortfoliosByUser: builder.query({
-      query: (id) => `/portfolio/user/${id}`,
+      query: (id) => `/portfolios/user/${id}`,
       providesTags: ["Portfolio"],
     }),
 
     // passage en idle d'un portfolio
     idlePortfolio: builder.mutation({
       query: (id) => ({
-        url: `/portfolio/${id}/idle`,
+        url: `/portfolios/${id}/idle`,
         method: "PUT",
       }),
       invalidatesTags: ["GlobalDatas", "Portfolio"],
@@ -56,26 +56,26 @@ export const tradeApi = createApi({
 
     // la synthèses des portfolios pour un user
     getGlobalDashBoardByUser: builder.query({
-      query: (id) => `/portfolio/dashboard/user/global/${id}`,
+      query: (id) => `/portfolios/dashboard/user/${id}`,
       providesTags: ["GlobalDatas"],
     }),
 
     // le dashboard d'un portfolio particulier par id de portfolio
     getPortfolioDashboardById: builder.query({
-      query: (id) => `/portfolio/dashboard/${id}`,
+      query: (id) => `/portfolios/${id}/dashboard`,
       providesTags: ["GlobalDatas", "PortfolioByUser"],
     }),
 
     // le détail d'un portefeuille par id de portefeuille
     getDetailPortfolioById: builder.query({
-      query: (id) => `/portfolio/details/${id}`,
+      query: (id) => `/portfolios/${id}/details`,
       providesTags: ["GlobalDatas"],
     }),
 
     // nouveau portfolio
     newPortfolio: builder.mutation({
       query: (payload) => ({
-        url: "/portfolio/new",
+        url: "/portfolios/new",
         method: "POST",
         body: payload,
       }),
@@ -90,18 +90,18 @@ export const tradeApi = createApi({
 
     //recherhce des stocks
     searchStocks: builder.query({
-      query: (title) => `/stock/find/${title}`,
+      query: (title) => `/stocks/${title}/find`,
     }),
 
     //dernier cours d'un stock
     lastQuote: builder.query({
-      query: (item) => `/stock/last/${item.isin}&${item.place}`,
+      query: (item) => `/stocks/${item.isin}&${item.place}/last`,
     }),
 
     // le trade en cours pour un stock et un portfolio
     checkIfActiveTrade: builder.query({
       query: (params) =>
-        `/trade/checkIfActive/${params.stockId}&${params.portfolioId}`,
+        `/trades/checkIfActive/${params.stockId}&${params.portfolioId}`,
       providesTags: ["CheckActive"],
     }),
 
@@ -123,14 +123,14 @@ export const tradeApi = createApi({
 
     // preparation exit / re-enter
     prepare: builder.query({
-      query: (id) => `/trade/prepare/${id}`,
+      query: (id) => `/trades/${id}/prepare`,
       providesTags: ["Prepare"],
     }),
 
     // exit Process
     exitProcess: builder.mutation({
       query: (payload) => ({
-        url: `/trade/exitProcess`,
+        url: `/trades/exitProcess`,
         method: "POST",
         body: payload,
       }),
@@ -140,7 +140,7 @@ export const tradeApi = createApi({
     // reEnter Process
     reEnter: builder.mutation({
       query: (payload) => ({
-        url: `/trade/reEnter`,
+        url: `/trades/reEnter`,
         method: "POST",
         body: payload,
       }),
