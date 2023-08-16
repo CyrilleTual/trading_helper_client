@@ -1,20 +1,21 @@
+import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { useLogByRememberQuery, useSignUserInMutation } from "../../store/slice/tradeApi";
+import { useDispatch } from "react-redux";
+import styles from "./sign.module.css";
+import { useSignUserInMutation } from "../../store/slice/tradeApi";
 import { signIn } from "../../store/slice/user";
+import { useNavigate } from "react-router-dom";
 import BtnSubmit from "../../Components/UI/BtnSubmit";
 import BtnLink from "../../Components/UI/BtnLink";
 import logo from "../../assets/img/logo.jpg";
-import Modal from "../../Components/Modal/Index";
-import styles from "./sign.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
+import Modal from "../../Components/Modal/Index";
  
-// Composant de connexion d'un utilisateur déja enregistré
-function SignIn() {
 
+function SignIn() {
   const [inputs, setInputs] = useState({ email: "", pwd: "", remember: false });
+
   const [rememberMe, setRememberMe] = useState (false); 
   const [display, setDisplay] = useState(""); 
 
@@ -35,40 +36,31 @@ function SignIn() {
     // eslint-disable-next-line
   }, []);
 
-  // Vérifie la validité du token et recupères les informations utilisateur
-  const [skip, setSkip] = useState(true); // attend que l'on ai bien un remember pour action
-  const { data, isError } = useLogByRememberQuery(null,{skip,});
+
 
   // lors du chargement de la page on va voir si une cle remenber
   // existe dans le local storage si oui -> log automatique
   useEffect(() => {
     const rmemb = JSON.parse(localStorage.getItem("remember"));
     if (rmemb) {
-      setSkip(false)
-    }
-    // eslint-disable-next-line
-  }, []);
-
-  // log automatique 
-  useEffect(() => {
-    if (data && !isError) {
       dispatch(
         signIn({
-          id: data.response.id,
-          alias: data.response.alias,
-          email: data.response.email,
-          role: data.response.role,
+          id: rmemb.id,
+          alias: rmemb.alias,
+          email: rmemb.email,
+          role: rmemb.role,
         })
       );
+
       // déclenche le modal -> information que l'on est loggé
       setRememberMe(true);
-      setDisplay(data.response.email);
+      setDisplay(rmemb.email);
       setInputs({ ...inputs, remember: !remember }); // pour cohérence
-    }if (isError) {
-    navigate("/");
+
+      // c'est la fermeture du modal qui déclanche la poursuite de la navigation
     }
-    //c'est la fermeture du modal qui déclanche la poursuite de la navigatio
-  },[data, isError])
+  // eslint-disable-next-line
+  }, []);
 
   // gestion du formulaire - bind des champs
   const { email, pwd, remember } = inputs;
@@ -120,10 +112,8 @@ function SignIn() {
     /* eslint-enable */
   };
 
-
-  // Fonction appelée après soumission du formulaire en l'absence d'erreur
   async function go() {
-    signUserIn(inputs) // Appel de la mutation pour la connexion de l'utilisateur
+    signUserIn(inputs)
       .unwrap()
       .then(({ response }) => {
         localStorage.setItem("auth42titi@", response.TOKEN);
@@ -131,6 +121,10 @@ function SignIn() {
           localStorage.setItem(
             "remember",
             JSON.stringify({
+              id: response.id,
+              alias: response.alias,
+              email: response.email,
+              role: response.role,
               remember: true,
             })
           );

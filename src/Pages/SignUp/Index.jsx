@@ -22,7 +22,7 @@ function SignUp() {
   // middlware pour le set de la state via le store
   const [signUserUp, result] = useSignUserUpMutation();
 
-  const [inputs, setInputs] = useState({
+    const [inputs, setInputs] = useState({
     email: "",
     alias: "",
     pwd: "",
@@ -136,9 +136,27 @@ function SignUp() {
 
   return (
     <main className={style.signup}>
+      {/**** modal d'avertissement si remember  *******
+      {displayModalOk && (
+        <Modal
+          display={
+            <p>
+              Votre demande de création de compte est bien prise en compte.{" "}
+              <br />
+              Vous allez recevoir un mail vous précisant le fonctionnement de
+              notre application dès l'activation de votre accès. <br />
+              Vous pourrez alors vous connecter.
+              <br />
+              A très vite 👋
+            </p>
+          }
+          action={goOn}
+        />
+      )}
+      {/********************************************/}
       <img src={logo} alt="Logo" />
       <h1>Creation de compte</h1>
-      <p>
+      <p> 
         {myError === 422 && (
           <p>Un conpte existe déja pour cette adresse mail</p>
         )}

@@ -4,6 +4,7 @@ import styles from "./nav.module.css";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signOut } from "../../store/slice/user";
+ 
 
 function Nav() {
   const [showLinks, setShowLinks] = useState(false);
@@ -17,6 +18,10 @@ function Nav() {
     // on efface le localStorage
    localStorage.removeItem("auth42titi@")
    localStorage.removeItem("remember");
+
+ 
+  
+   
 
     // on reset le state
     dispatch(signOut());

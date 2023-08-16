@@ -30,6 +30,15 @@ export const tradeApi = createApi({
       },
     }),
 
+    // autolog par remember d'un utilisateur
+    logByRemember: builder.query({
+      query: () => `users/logByRemenber`,
+      providesTags: ["Auth"],
+      transformResponse: (response, meta, arg) => {
+        return { response: response, status: meta.response.status };
+      },
+    }),
+
     // demande d'un nouvel utilisateur
     signUserUp: builder.mutation({
       query: (payload) => ({
@@ -178,5 +187,6 @@ export const {
   useNewPortfolioMutation,
   useDepositFundsMutation,
   useIdlePortfolioMutation,
+  useLogByRememberQuery,
 
 } = tradeApi;
