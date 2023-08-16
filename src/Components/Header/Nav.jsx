@@ -4,6 +4,7 @@ import styles from "./nav.module.css";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signOut } from "../../store/slice/user";
+import { resetStorage } from "../../utils/tools"
  
 
 function Nav() {
@@ -16,16 +17,10 @@ function Nav() {
 
   const handleLogOut = () => {
     // on efface le localStorage
-   localStorage.removeItem("auth42titi@")
-   localStorage.removeItem("remember");
-
- 
-  
-   
-
+    resetStorage();
     // on reset le state
     dispatch(signOut());
-  }
+  };
 
   return (
     <div

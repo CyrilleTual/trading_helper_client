@@ -4,12 +4,18 @@ import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
 import { useSignUserUpMutation } from "../../store/slice/tradeApi";
+import Modal from "../../Components/Modal/Index"
 import style from "./index.module.css";
 import logo from "../../assets/img/logo.jpg";
 import BtnLink from "../../Components/UI/BtnLink";
 
+// Composant de demande de création de compte
 function SignUp() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+
+  // Pour modal de consfirmation
+  const [displayModalOk, setDisplayModalOk] = useState(false);
+  const goOn = () => navigate("/global");
 
   // Vérifie si l'utilisateur est connecté et redirige vers le tableau de bord en cas de connexion active
   const islogged = useSelector((state) => state.user.isLogged);
@@ -17,12 +23,12 @@ function SignUp() {
     if (islogged) {
       navigate("/global");
     }
-  });
+  }, [islogged]);
 
   // middlware pour le set de la state via le store
   const [signUserUp, result] = useSignUserUpMutation();
 
-    const [inputs, setInputs] = useState({
+  const [inputs, setInputs] = useState({
     email: "",
     alias: "",
     pwd: "",
@@ -80,7 +86,7 @@ function SignUp() {
 
     signUserUp(datas)
       .unwrap()
-      .then((res) => navigate("/")) /// user bien créé
+      .then(() => setDisplayModalOk(true) )
       .catch((error) => {
         if (error.status === 422) {
           setInputs({ ...inputs, email: "" });
@@ -136,7 +142,7 @@ function SignUp() {
 
   return (
     <main className={style.signup}>
-      {/**** modal d'avertissement si remember  *******
+      {/**** modal d'avertissement si remember  *******/}
       {displayModalOk && (
         <Modal
           display={
@@ -156,7 +162,7 @@ function SignUp() {
       {/********************************************/}
       <img src={logo} alt="Logo" />
       <h1>Creation de compte</h1>
-      <p> 
+      <p>
         {myError === 422 && (
           <p>Un conpte existe déja pour cette adresse mail</p>
         )}
