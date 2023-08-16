@@ -24,14 +24,22 @@ function App() {
   return (
     <div>
       <div className="page-wrapper">
- 
-          <TickerTape />
-    
+
+        <TickerTape />
         <Header />
         <Routes>
-          <Route path="/" element={<SignIn />} />
-          <Route path="/signUp" element={<SignUp />} />
-          <Route path="/global" element={<Logged child={Global} />} />
+          <Route 
+            path="/" 
+            element={<SignIn />} 
+          />
+          <Route 
+            path="/signUp" 
+            element={<SignUp />} 
+          />
+          <Route 
+            path="/global" 
+            element={<Logged child={Global} />} 
+          />
           <Route
             path="/portfolio/:portfolioId"
             element={<Logged child={Portfolio} />}
@@ -44,7 +52,9 @@ function App() {
             path="/portfolio/manage"
             element={<Logged child={ManagePortfolio} />}
           />
-          <Route path="/newTrade" element={<Logged child={NewTrade} />} />
+          <Route 
+            path="/newTrade" 
+            element={<Logged child={NewTrade} />} />
           <Route
             path="/portfolio/:portfolioId/exitTrade/:tradeId"
             element={<Logged child={ExitTrade} />}
@@ -53,10 +63,20 @@ function App() {
             path="/reEnter/portfolio/:portfolioId/stock/:tradeId"
             element={<Logged child={ReEnter} />}
           />
-          <Route path="/legal" element={<Legal />} />
-          <Route path="/credits" element={<Credits />} />
-          <Route path="*" element={<NotFound />} />
+          <Route 
+            path="/legal" 
+            element={<Legal />} 
+          />
+          <Route 
+            path="/credits" 
+            element={<Credits />} 
+          />
+          <Route 
+            path="*" 
+            element={<NotFound />} 
+          />
         </Routes>
+        
       </div>
       <Footer />
     </div>

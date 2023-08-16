@@ -114,7 +114,7 @@ export const tradeApi = createApi({
     // nouveau trade
     newTrade: builder.mutation({
       query: (payload) => ({
-        url: "/trade/newEntry",
+        url: "/trades/newEntry",
         method: "POST",
         body: payload,
       }),
@@ -150,7 +150,7 @@ export const tradeApi = createApi({
     // mouvement de fonds -> deposit
     depositFunds: builder.mutation({
       query: (payload) => ({
-        url: "/portfolio/deposit",
+        url: "/portfolios/deposit",
         method: "POST",
         body: payload,
       }),

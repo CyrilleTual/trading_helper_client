@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,15 +11,15 @@ import BtnLink from "../../Components/UI/BtnLink";
 function SignUp() {
   const navigate = useNavigate();
 
-  // Vérifie si l'utilisateur est connecté et redirige vers le tableau de bord en cas de connexion active
-  const islogged = useSelector((state) => state.user.isLogged);
+  // Vérifie si l'utilisateur est connecté et redirige vers le tableau de bord en cas de connexion
+  const isLogged = useSelector((state) => state.user.isLogged);
   useEffect(() => {
-    if (islogged) {
+    if (isLogged) {
       navigate("/global");
     }
-  });
+  }, [isLogged]);
 
-  // middlware pour le set de la state via le store
+  // Middleware pour la mutation de création de compte via le store
   const [signUserUp, result] = useSignUserUpMutation();
 
   const [inputs, setInputs] = useState({
@@ -33,12 +33,13 @@ function SignUp() {
   const [isSubmit, setIsSubmit] = useState(false);
   const [myError, setMyError] = useState(null);
 
-  // Gestion de la visibilité du mot de passe (champs pwd et pwd confirm)
+  // Gestion de la visibilité du mot de passe
   const [type, setType] = useState("password");
   const [type2, setType2] = useState("password");
   const [icon, setIcon] = useState(faEyeSlash);
   const [icon2, setIcon2] = useState(faEyeSlash);
-  // Fonction pour basculer la visibilité du mot de passe et changer l'icone associée
+
+  // Fonction pour basculer la visibilité du mot de passe
   const handleToggle = (position) => {
     if (position === "first") {
       if (type === "password") {
@@ -70,17 +71,18 @@ function SignUp() {
     setInputs({ ...inputs, agree: !agree });
   };
 
-  /// fonction d'envoi du formulaire
-  async function go() {
-    const datas = {
+  /// Fonction d'envoi du formulaire
+
+  async function handleSubmit() {
+    const dataToSend = {
       email: inputs.email,
       pwd: inputs.pwd,
       alias: inputs.alias,
     };
 
-    signUserUp(datas)
+    signUserUp(dataToSend)
       .unwrap()
-      .then((res) => navigate("/")) /// user bien créé
+      .then((res) => navigate("/")) // Utilisateur créé avec succès
       .catch((error) => {
         if (error.status === 422) {
           setInputs({ ...inputs, email: "" });
@@ -92,17 +94,17 @@ function SignUp() {
       });
   }
 
-  // Fonction de valisation du formulaire retourne les erreurs
-  const validate = (inputs) => {
+  // Fonction de validation du formulaire, retourne les erreurs
+  const validateForm = (inputs) => {
     const errors = {};
-    const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i;
+    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i;
     if (!inputs.email) {
-      errors.email = "Veuillez entrer votre email";
-    } else if (!regex.test(inputs.email)) {
-      errors.email = "Format email invalide";
+      errors.email = "Veuillez entrer votre adresse email";
+    } else if (!emailRegex.test(inputs.email)) {
+      errors.email = "Format de l'adresse email invalide";
     }
     if (!inputs.alias) {
-      errors.alias = "Veuillez entrer un nom utilisateur";
+      errors.alias = "Veuillez entrer un nom d'utilisateur";
     }
     if (!inputs.pwd) {
       errors.pwd = "Veuillez entrer votre mot de passe";
@@ -110,7 +112,7 @@ function SignUp() {
     if (!inputs.confirmPwd) {
       errors.confirmPwd = "Veuillez confirmer votre mot de passe";
     } else if (inputs.pwd !== inputs.confirmPwd) {
-      errors.confirmPwd = "Attention erreur de confirmation";
+      errors.confirmPwd = "Attention, les mots de passe ne correspondent pas";
     }
     if (inputs.agree !== true) {
       errors.agree = "Veuillez accepter les conditions d'utilisation";
@@ -121,33 +123,33 @@ function SignUp() {
   // Gestion de la soumission du formulaire
   const handleSignUp = async (e) => {
     e.preventDefault();
-    // on set le flag qui sera testé dans le useEffect
+    // Définir le drapeau qui sera vérifié dans le useEffect
     setIsSubmit(true);
-    // validation des données
-    setFormErrors(validate(inputs));
+    // Valider les données du formulaire
+    setFormErrors(validateForm(inputs));
   };
 
   // Tenter d'envoyer le formulaire si tout est correct
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
-      go();
+      handleSubmit();
     }
-  }, [formErrors]);
+  }, [formErrors, isSubmit]);
 
   return (
     <main className={style.signup}>
       <img src={logo} alt="Logo" />
-      <h1>Creation de compte</h1>
+      <h1>Création de compte</h1>
       <p>
         {myError === 422 && (
-          <p>Un conpte existe déja pour cette adresse mail</p>
+          <p>Un compte existe déjà avec cette adresse e-mail</p>
         )}
         {myError === 500 && (
           <p>Une erreur est survenue lors de la création de votre compte</p>
         )}
       </p>
       <form onSubmit={handleSignUp}>
-        <label htmlFor="email">email :</label>
+        <label htmlFor="email">Adresse email :</label>
         <input
           type="email"
           name="email"
@@ -157,7 +159,7 @@ function SignUp() {
         />
         <p>{formErrors.email}</p>
 
-        <label htmlFor="alias">username :</label>
+        <label htmlFor="alias">Nom d'utilisateur :</label>
         <input
           type="text"
           name="alias"
@@ -168,7 +170,7 @@ function SignUp() {
         />
         <p>{formErrors.alias}</p>
 
-        <label htmlFor="pwd">password :</label>
+        <label htmlFor="pwd">Mot de passe :</label>
         <div className={style.parentOfPwd}>
           <input
             type={type}
@@ -182,9 +184,9 @@ function SignUp() {
             <FontAwesomeIcon icon={icon} />
           </span>
         </div>
-
         <p>{formErrors.pwd}</p>
-        <label htmlFor="confirmPwd"> confirm password :</label>
+        
+        <label htmlFor="confirmPwd">Confirmez le mot de passe :</label>
         <div className={style.parentOfPwd}>
           <input
             type={type2}
@@ -197,7 +199,6 @@ function SignUp() {
             <FontAwesomeIcon icon={icon2} />
           </span>
         </div>
-
         <p>{formErrors.confirmPwd}</p>
 
         <label className={style.labelCheck} htmlFor="agree">
@@ -208,14 +209,14 @@ function SignUp() {
             checked={agree}
             onChange={handleAgreeChange}
           />
-          <span className={style.space}> </span> I agree to Terms of Service
+          <span className={style.space}> </span> J'accepte les Conditions d'utilisation
         </label>
         <p>{formErrors.agree}</p>
 
-        <input type="submit" value="signUp" />
+        <input type="submit" value="S'inscrire" />
       </form>
       <p>
-        <BtnLink link="/" title="Acceuil" />
+        <BtnLink link="/" title="Accueil" />
       </p>
     </main>
   );

@@ -88,7 +88,7 @@ function ExitTrade() {
 
     try {
       await exitProcess(datas);
-      navigate(-2);
+      navigate(`/portfolio/${trade.portfolio_id}/detail`);
     } catch (err) {
       console.log(err);
     }
