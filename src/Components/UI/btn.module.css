@@ -7,20 +7,21 @@ input:hover{
     margin: auto;
     width: auto;
     background-color: var(--color-1-light);
-    color: var(--txt-color-dark);
+    font-family: var(--btn-font);
+    color: var(--txt-color-dark2);
     text-transform: uppercase;
-    font-weight: bold; 
+    /* font-weight: bold;   */
+    letter-spacing: 0.5px;
     overflow: hidden;
     border-radius: 30px;
     border: solid rgba(0, 0, 0, 0.446) 1px;
-    padding: 4px;
+    padding: 4px 10px 4px 10px ;
 }
-
 .myBtn:hover{
     cursor: pointer;
-     border: solid black 2px;
-    padding: 3px;
- 
+    border: solid black 2px;
+    color: var(--txt-color-dark);
+    padding: 3px 9px 3px 9px ;
 }
 
 input[type="submit"]

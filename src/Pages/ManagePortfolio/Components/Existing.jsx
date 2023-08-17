@@ -74,8 +74,6 @@ function Existing({ portfolios, isLoading, setManageExisting }) {
     if (+values.action === 1 || +values.action === 2) {
       try {
         const res = await deposit(values);
-        console.log(res);
-        console.log(depositError);
         navigate(`/portfolio/manage`);
       } catch (err) {
         console.log(depositError);

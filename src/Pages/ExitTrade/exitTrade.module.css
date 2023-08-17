@@ -2,13 +2,13 @@
     width: 300px;
     margin: auto;
 }
-.exit h1{
+/* .exit h1{
     position: relative;
     top :-90px;
     white-space: nowrap;
     margin-bottom: -40px;
 }
- 
+  */
 .form_exit {
     composes: form_enter from "../NewTrade/newTrade.module.css"
 }

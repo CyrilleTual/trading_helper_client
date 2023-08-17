@@ -1,4 +1,7 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { signOut } from "../../store/slice/user";
 import {
   useCheckIfActiveTradeQuery,
   useGetPortfoliosByUserQuery,
@@ -6,36 +9,32 @@ import {
   useLastQuoteQuery,
   useNewTradeMutation,
 } from "../../store/slice/tradeApi";
-import { useState, useEffect } from "react";
-import styles from "./newTrade.module.css";
 import SearchStock from "./Components/SearchStock";
-import BtnCancel from "../../Components/UI/BtnCancel";
-import { useNavigate } from "react-router-dom";
 import ExistingTrade from "./Components/ExistingTrade";
-import { signOut } from "../../store/slice/user";
-import { resetStorage } from "../../utils/tools";
-import { Loading } from "../../Components/Loading/Index";
 import BtnSubmit from "../../Components/UI/BtnSubmit";
+import BtnCancel from "../../Components/UI/BtnCancel";
 import Modal from "../../Components/Modal/Index";
+import { Loading } from "../../Components/Loading/Index";
+import { resetStorage } from "../../utils/tools";
+import styles from "./newTrade.module.css";
 
 function NewTrade() {
   const navigate = useNavigate();
+  const [reset, setReset] = useState(false);
 
   // un new trade va automatiquement créer une entrée
   // pas de trade sans entrée
 
-  const [reset, setReset] = useState(false);
-
-  // on va chercher les paramètres de l'user  //////////////////////
+  // Recherche les paramètres de l'utilisateur ////////////////////
   const id = useSelector((state) => state.user.infos.id);
-  // liste des portfolios
+  // liste des portfolios de l'utilisateur
   const {
     data: portfolios,
     isLoading: portfolioIsLoading,
     isSuccess: isSuccess1,
     isError: isError1,
   } = useGetPortfoliosByUserQuery(id);
-  // listes des strategies
+  // listes des strategies de l'utilisateur
   const {
     data: strategies,
     isLoading: stategiesIsLoading,
@@ -54,7 +53,6 @@ function NewTrade() {
   const [selectedItem, setSelectedItem] = useState(initSelected);
   // derniere cotation (skip2 retarde la requete tant que pas de selection)
   const [skip2, setSkip2] = useState(true);
-
   // quand le titre est selectionné -> recherhche des infos du titre
   useEffect(() => {
     if (selectedItem.id !== 0) {
@@ -66,10 +64,20 @@ function NewTrade() {
     data: lastInfos,
     isFetching: lastIsFetching,
     isSuccess: lastIsSuccess,
-    isError: lastIsError,
   } = useLastQuoteQuery(selectedItem, { skip: skip2 });
 
-  // exemple de lastInfos : ////////////////////////
+  const quoteExist = () => {
+    if (lastInfos) {
+      if (lastInfos.currency === undefined) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+    return true;
+  };
+
+  // exemple de lastInfos : ///////////////////////////////////////
   // before :  37.645
   // currency :  "€"
   // id : 27
@@ -78,14 +86,16 @@ function NewTrade() {
   // place : "p"
   // ticker : "RNO"
   // title : "Renault"
-  //////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
 
-  // nouveau trade
+  // nouveau trade ////////////////////////////////////////////////
   const [newTrade] = useNewTradeMutation();
-  const [currency, setCurrency] = useState(null);
-  const [currencySymbol, setCurrencySymbol] = useState("€");
-  const [currencyAbbr, setCurrencyAbbr] = useState(null);
-  const [currencyId, setCurrencyId] = useState(1);
+
+  const [tradeCurrency, setTradeCurrency] = useState({
+    symbol: "€",
+    abbr: null,
+    id: 1,
+  });
 
   const initValues = {
     price: 0,
@@ -103,22 +113,73 @@ function NewTrade() {
 
   const [datas, setDatas] = useState({});
   const [existingTrade, setExistingTrade] = useState(false);
+  if (portfolios && strategies) {
+  }
+
+  // gère l'existance d'au moins un portefeuille ///////////////
+  const [ noPortfolio, setNoportfolio] = useState(false);
+
+  useEffect(() => {
+    if (quoteExist() &&  portfolios && portfolios.length === 0) {
+      setNoportfolio(true);
+    }
+  }, [lastInfos, portfolios]);
+
+  function goCreatePortfolio() {
+    cancelEnter();
+    navigate("/portfolio/manage");
+  }
+
+  // gère l'existance d'un portefeuille dans la bonne devise
+  const [noPortfolioGoodCurrency, setNoportfolioGoodCurrency] = useState(false);
+  useEffect(() => {
+    if (
+      quoteExist() &&
+      lastInfos &&
+      portfolios &&
+      portfolios.length > 0 &&
+      !portfolios.find((portfolio) => portfolio.symbol === lastInfos.currency)
+    ) {
+      setNoportfolioGoodCurrency(true);
+    }
+  }, [lastInfos, portfolios]);
 
   // gestion des listes déroulantes
   useEffect(() => {
-    if (!portfolioIsLoading && !stategiesIsLoading && !isError1 && !isError2) {
-      // valeurs par defaut des listes déroulantes
-      const toSet = portfolios[0].id;
-      const toSet2 = strategies[0].id;
-      setValues({
-        ...values,
-        position: "long",
-        portfolioId: toSet,
-        strategyId: toSet2,
-      });
+    // teste l'existance d'au moins un portefeuille avec la devise du stock sellectionné
+    if (
+      (lastInfos && portfolios && portfolios.length === 0) ||
+      !(
+        lastInfos &&
+        portfolios.length > 0 &&
+        portfolios.find((portfolio) => portfolio.symbol === lastInfos.currency)
+      )
+    ) {
+    } else {
+      if (
+        lastInfos &&
+        quoteExist() &&
+        portfolios.length > 0 &&
+        !portfolioIsLoading &&
+        !stategiesIsLoading &&
+        !isError1 &&
+        !isError2
+      ) {
+        // valeurs par defaut des listes déroulantes
+        setValues({
+          ...values,
+          position: "long",
+          portfolioId: portfolios.find(
+            (portfolio) => portfolio.symbol === lastInfos.currency
+          ).id, // premier portfolio dans la bonne devise,
+          strategyId: strategies[0].id,
+        });
+      }
     }
+
     // eslint-disable-next-line
   }, [
+    lastInfos,
     selectedItem,
     portfolioIsLoading,
     stategiesIsLoading,
@@ -128,14 +189,21 @@ function NewTrade() {
   ]);
 
   useEffect(() => {
-    if (!portfolioIsLoading && !stategiesIsLoading && isSuccess1) {
-      let { currency, currencyId, symbol, abbr } = portfolios.find(
+    if (
+      portfolios &&
+      portfolios.length > 0 &&
+      !!portfolios.find((portfolio) => +portfolio.id === +values.portfolioId) &&
+      isSuccess1
+    ) {
+      let { currencyId, symbol, abbr } = portfolios.find(
         (portfolio) => +portfolio.id === +values.portfolioId
       );
-      setCurrency(currency);
-      setCurrencyId(currencyId);
-      setCurrencySymbol(symbol);
-      setCurrencyAbbr(abbr);
+      setTradeCurrency({
+        ...tradeCurrency,
+        id: currencyId,
+        symbol: symbol,
+        abbr: abbr,
+      });
     }
     // eslint-disable-next-line
   }, [values.portfolioId, portfolios]);
@@ -166,7 +234,7 @@ function NewTrade() {
 
   // création effective du nouveau trade -> trade et enter
   async function go() {
-    if (lastInfos.currency !== currencySymbol) {
+    if (lastInfos.currency !== tradeCurrency.symbol) {
       cancelEnter();
       return;
     } else {
@@ -211,7 +279,7 @@ function NewTrade() {
       strategy_id: +values.strategyId,
       portfolio_id: +values.portfolioId,
       position: values.position,
-      currency_id: currencyId,
+      currency_id: tradeCurrency.id,
       lastQuote: lastInfos.last,
       beforeQuote: lastInfos.before,
     });
@@ -234,10 +302,10 @@ function NewTrade() {
       tax: 0,
       comment: "",
     });
-    setCurrency(null);
     setReset(!reset);
     setSkip(true);
     setSkip2(true);
+    setNoportfolio(false);
   }
 
   // toDo : transformer les champs de saisie number en type texte quand pas de focus pour utiliser Intl
@@ -268,19 +336,6 @@ function NewTrade() {
     cancelEnter();
   };
 
-  const quoteExist = () => {
-    if (lastInfos) {
-      if (lastInfos.currency === undefined) {
-        return false;
-      } else {
-        return true;
-      }
-    }
-    return true;
-  };
-
-
-
   return (
     <>
       {portfolioIsLoading || stategiesIsLoading || lastIsFetching ? (
@@ -291,16 +346,34 @@ function NewTrade() {
           {!quoteExist() && !lastIsFetching && (
             <Modal
               display={
-                <>
-                  <p>
-                    {" "}
-                    Nous ne parvenons pas à obtenir une valorisation de cet
-                    actif
-                  </p>
-                  <p> Trade impossible </p>
-                </>
+                <p>
+                  Nous ne parvenons pas à obtenir une valorisation de cet actif{" "}
+                  <br />
+                  Trade impossible
+                </p>
               }
               action={goOn}
+            />
+          )}
+          {noPortfolio && (
+            <Modal
+              display={
+                <p>
+                  Vous devez créer un portefeuille avant de prendre position.
+                </p>
+              }
+              action={goCreatePortfolio}
+            />
+          )}
+          {noPortfolioGoodCurrency && (
+            <Modal
+              display={
+                <p>
+                  Vous devez créer un portefeuille en {lastInfos.currency} pour
+                  pouvoir prendre position sur cet Actif.
+                </p>
+              }
+              action={goCreatePortfolio}
             />
           )}
           {existingTrade ? (

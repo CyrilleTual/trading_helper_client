@@ -3,6 +3,13 @@
     text-align: center;
 }
 
+.sign h1 {
+  
+    top : -60px;
+     
+
+} 
+
 .sign form {
     display: flex;
     flex-direction: column;

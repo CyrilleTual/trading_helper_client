@@ -9,7 +9,7 @@ function Logged({ child }) {
   const dispatch = useDispatch();
 
   const [isAuthorized, setIsAuthorized] = useState(false);
-  const Child = child; // pour reconnaissance comme composant réact
+  const Child = child; // pour reconnaissance comme composant réact modification casse
 
   const islogged = useSelector((state) => state.user.isLogged);
   const role = useSelector((state) => state.user.infos.role);

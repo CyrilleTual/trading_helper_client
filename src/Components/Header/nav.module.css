@@ -43,12 +43,11 @@
 }
 
 .navbar_link {
-
   padding: 0 0.3rem;
   color: inherit;
   display: block;
   padding: 1.5rem;
-  font-size: 3rem;
+  font-size: 2.5rem;
   flex-direction: column;
   white-space:nowrap;
   border-bottom: 1px gray solid;
@@ -64,7 +63,7 @@
  
  
  
-@media screen and (min-width: 479px) {
+@media screen and (min-width: 672px) {
 .navbar_item {
   width: 50%;
   max-width: 400px;
@@ -79,13 +78,13 @@
 .navbar_burger {
   width: 40px;
   height: 40px;
-  background: transparent;
+  background: transparent; 
   border: none;
-  color: inherit;
+  /* color: inherit; */
   display: inline-block;
   cursor: pointer;
   position: relative;
-  top: 1rem;
+  top: 0rem;
   right: 1 rem;
   z-index: 10;
 }
@@ -99,9 +98,16 @@
   height: 3px;
   position: relative;
   border-radius: 3px;
-  background-color: black;
+  background-color: rgba(6, 6, 6, 0.557);
   transition: all 0.3s ease-in-out;
 }
+
+.navbar_burger:hover .burger_bar,
+.navbar_burger:hover .burger_bar::before,
+.navbar_burger:hover .burger_bar::after{
+  background-color: black;
+}
+
 .burger_bar::before,
 .burger_bar::after {
   content: "";

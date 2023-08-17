@@ -31,7 +31,7 @@ function NavPorfolios() {
                   : `${styles.button}`
               }
             >
-              Summary
+              - Global -
             </NavLink>
 
             {portfolios.map((portfolio, i) => (

@@ -12,7 +12,7 @@ function ManagePortfolio() {
 
   // liste des portfolios
   const { data: portfolios, isLoading } = useGetPortfoliosByUserQuery(id);
-
+  
   const [manageExisting, setManageExisting] = useState(false);
   const [create, setCreate] = useState(false);
 
@@ -29,10 +29,11 @@ function ManagePortfolio() {
     <>
       {isLoading ? (
         <p>loading</p>
-      ) : (
+      ) : ( 
         <div>
           <main className={styles.managePort}>
             <h1>Gestion des portefeuilles</h1>
+            {portfolios.length > 0 &&
             <table>
               <thead>
                 <tr>
@@ -49,11 +50,12 @@ function ManagePortfolio() {
                 ))}
               </tbody>
             </table>
-
+            }
+            
             <div className={styles.wrapper}>
 
               <div className={styles.btns}>
-                <BtnAction value={"Gérer existant"} action={handleClickManage} />
+                {portfolios.length > 0 && <BtnAction value={"Gérer existant"} action={handleClickManage} />}
                 <BtnAction value={"Créer  nouveau "} action={handleClickCreate} />
               </div>
 

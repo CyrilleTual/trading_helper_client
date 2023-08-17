@@ -14,9 +14,8 @@
 }
 
 .button {
-  font-size: 25px;
+  font-size: 18px;
   padding: 5px 10px;
-  font: bold 15px Arial;
   text-decoration: none;
   height: 100%;
   white-space: nowrap;

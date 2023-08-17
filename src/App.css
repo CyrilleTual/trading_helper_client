@@ -34,7 +34,8 @@ html {
 }
 
 body {
-  font-size: 1.6rem;
+  font-family: var(--main-font);
+  font-size: 1.4rem;
   margin: 0; /*enleve la marge autour de la page */
   line-height: 1.6;
   height: 100%;
@@ -47,12 +48,25 @@ section {
 h1,
 h2,
 h3 {
+  font-family: var(--title-font);
   text-align: center;
-  font-weight: normal;
+  font-weight: normal; 
 }
 
 h1 {
-  font-size: 3.2rem;
+  font-size: 2.6rem;
+  position: relative;
+  top :-105px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  margin-bottom:-40px;
+}
+
+@media screen and ( min-width: 400px ) {
+  h1 {
+  font-size: 3rem;
+}
 }
 
 ul {
@@ -67,6 +81,7 @@ figure {
 
 a {
   text-decoration: none;
+  font-family: var(--title-font);
 }
 
 img {

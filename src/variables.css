@@ -1,15 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Playfair+Display:wght@400;700&display=swap');
 
 :root {
-    --main-font: font-family: 'Open Sans', sans-serif;
-    --title-font: font-family: 'Playfair Display', serif;
+    --main-font:'Open Sans', sans-serif;
+    --title-font: 'Playfair Display', serif;
+    --btn-font: 'Playfair Display', serif;
     --txt-color-light: rgb(255, 255, 255);
     --txt-color-dark: rgb(16, 15, 15) ;
+    --txt-color-dark2: rgb(47, 46, 46) ;
     --color-1-dark: rgb(64,112,34); 
     --color-1-light: rgb(141,196,66);
     --color-2-dark: rgb(35,140,185);
     --color-2-light: rgba(74, 184, 231, 0.223);
     --color-bgTableaux:  rgb(242,241,239);
-
- 
 }

@@ -15,14 +15,14 @@ Pour le svg) */
     }
 }
 
-.global_portfolio h1{
+/* .global_portfolio h1{
     position: relative;
     top :-90px;
     left: calc(50vw);
     transform: translateX(-50%);
     white-space: nowrap;
-    margin-bottom: -40px;
-}
+    margin-bottom:-40px;
+} */
 
 
 :export {

@@ -37,7 +37,7 @@ function Nav() {
             className={`${styles.button} ${styles.navbar_link}`}
             to="/newTrade"
           >
-            New trade
+            Créer un nouveau trade
           </NavLink>
         </li>
         <li className={styles.navbar_item}>
@@ -45,12 +45,12 @@ function Nav() {
             className={`${styles.button} ${styles.navbar_link}`}
             to="/portfolio/manage"
           >
-            Manage Portfolios
+            Gérer les portefeuilles
           </NavLink>
         </li>
         <li className={styles.navbar_item}>
-          <NavLink className={`${styles.button} ${styles.navbar_link}`} to="/">
-            Fund Portfolios
+          <NavLink className={`${styles.button} ${styles.navbar_link}`} to="/strategies">
+            Gérer les stratégies
           </NavLink>
         </li>
         <li className={styles.navbar_item}>
@@ -59,7 +59,7 @@ function Nav() {
             onClick={handleLogOut}
             to="/"
           >
-            LogOut
+            Se déconnecter
           </NavLink>
         </li>
       </ul>

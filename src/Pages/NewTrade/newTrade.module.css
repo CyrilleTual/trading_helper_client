@@ -3,12 +3,9 @@
 }
 
 .newTrade h1 {
-  position: relative;
-  top: -100px;
-  left: calc(50vw);
-  transform: translateX(-50%);
-  white-space: nowrap;
-  margin-bottom: -40px;
+  
+  top: -115px;
+  
 }
 
 .noWrap {
