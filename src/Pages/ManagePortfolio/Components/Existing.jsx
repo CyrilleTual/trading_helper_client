@@ -42,6 +42,7 @@ function Existing({ portfolios, isLoading, setManageExisting }) {
         portfolioId: toSet,
       });
     }
+    // eslint-disable-next-line
   }, [portfolios]);
 
   // set des devises sur choix liste déroulante
@@ -73,7 +74,9 @@ function Existing({ portfolios, isLoading, setManageExisting }) {
  
     if (+values.action === 1 || +values.action === 2) {
       try {
-        const res = await deposit(values);
+        await deposit(values);
+        setValues(initValues);
+        setManageExisting(false);
         navigate(`/portfolio/manage`);
       } catch (err) {
         console.log(depositError);
