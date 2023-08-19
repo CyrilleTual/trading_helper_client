@@ -16,6 +16,7 @@ import BtnCancel from "../../Components/UI/BtnCancel";
 import Modal from "../../Components/Modal/Index";
 import { Loading } from "../../Components/Loading/Index";
 import { resetStorage } from "../../utils/tools";
+import { validate } from "./validateInputs";
 import styles from "./newTrade.module.css";
 
 function NewTrade() {
@@ -51,6 +52,7 @@ function NewTrade() {
     ticker: "",
   };
   const [selectedItem, setSelectedItem] = useState(initSelected);
+
   // derniere cotation (skip2 retarde la requete tant que pas de selection)
   const [skip2, setSkip2] = useState(true);
   // quand le titre est selectionné -> recherhche des infos du titre
@@ -59,7 +61,6 @@ function NewTrade() {
       setSkip2(false);
     }
   }, [selectedItem]);
-
   const {
     data: lastInfos,
     isFetching: lastIsFetching,
@@ -109,18 +110,21 @@ function NewTrade() {
     portfolioId: 1,
     position: "long",
   };
-  const [values, setValues] = useState(initValues);
 
-  const [datas, setDatas] = useState({});
+  const [values, setValues] = useState(initValues); // valeurs des inputs
+
+  const [datas, setDatas] = useState({}); // valeurs a post
+
+  //let datas = {}; // valeurs a post
+
   const [existingTrade, setExistingTrade] = useState(false);
   if (portfolios && strategies) {
   }
 
-  // gère l'existance d'au moins un portefeuille ///////////////
-  const [ noPortfolio, setNoportfolio] = useState(false);
-
+  // gère l'existance d'au moins un portefeuille //////////////////
+  const [noPortfolio, setNoportfolio] = useState(false);
   useEffect(() => {
-    if (quoteExist() &&  portfolios && portfolios.length === 0) {
+    if (quoteExist() && portfolios && portfolios.length === 0) {
       setNoportfolio(true);
     }
   }, [lastInfos, portfolios]);
@@ -130,7 +134,7 @@ function NewTrade() {
     navigate("/portfolio/manage");
   }
 
-  // gère l'existance d'un portefeuille dans la bonne devise
+  // gère l'existance d'un portefeuille dans la bonne devise //////
   const [noPortfolioGoodCurrency, setNoportfolioGoodCurrency] = useState(false);
   useEffect(() => {
     if (
@@ -144,38 +148,37 @@ function NewTrade() {
     }
   }, [lastInfos, portfolios]);
 
-  // gestion des listes déroulantes
+  // gestion des listes déroulantes ////////////////////////////////
   useEffect(() => {
-    // teste l'existance d'au moins un portefeuille avec la devise du stock sellectionné
+    // if (
+    //   (lastInfos && portfolios && portfolios.length === 0) ||
+    //   !(
+    //     lastInfos &&
+    //     portfolios.length > 0 &&
+    //     portfolios.find((portfolio) => portfolio.symbol === lastInfos.currency)
+    //   )
+    // ) {
+    // } else {
     if (
-      (lastInfos && portfolios && portfolios.length === 0) ||
-      !(
-        lastInfos &&
-        portfolios.length > 0 &&
-        portfolios.find((portfolio) => portfolio.symbol === lastInfos.currency)
-      )
+      lastInfos &&
+      quoteExist() &&
+      portfolios.length > 0 &&
+      !portfolioIsLoading &&
+      !stategiesIsLoading &&
+      !isError1 &&
+      !isError2
     ) {
-    } else {
-      if (
-        lastInfos &&
-        quoteExist() &&
-        portfolios.length > 0 &&
-        !portfolioIsLoading &&
-        !stategiesIsLoading &&
-        !isError1 &&
-        !isError2
-      ) {
-        // valeurs par defaut des listes déroulantes
-        setValues({
-          ...values,
-          position: "long",
-          portfolioId: portfolios.find(
-            (portfolio) => portfolio.symbol === lastInfos.currency
-          ).id, // premier portfolio dans la bonne devise,
-          strategyId: strategies[0].id,
-        });
-      }
+      // valeurs par defaut des listes déroulantes
+      setValues({
+        ...values,
+        position: "long", // long par défaut
+        portfolioId: portfolios.find(
+          (portfolio) => portfolio.symbol === lastInfos.currency
+        ).id, // premier portfolio dans la bonne devise,
+        strategyId: strategies[0].id, // première stratégie de l'utilisateur
+      });
     }
+    // }
 
     // eslint-disable-next-line
   }, [
@@ -188,6 +191,7 @@ function NewTrade() {
     reset,
   ]);
 
+  // Set de la devise du trade ////////////////////////////////////
   useEffect(() => {
     if (
       portfolios &&
@@ -208,18 +212,28 @@ function NewTrade() {
     // eslint-disable-next-line
   }, [values.portfolioId, portfolios]);
 
-  const [skip, setSkip] = useState(true); // pour recherche des doublons
-  // rechercher d'un trade existant actif (même stock et même portfolio)
+  // Recherche d'un éventuel doublon (même stock et même portfolio)
+  const [skip, setSkip] = useState(true);
   const {
-    data,
-    isSuccess,
+    data: doubleTrade,
+    isSuccess: checkDoubleDone,
     isError: isError4,
   } = useCheckIfActiveTradeQuery(
     { stockId: selectedItem.id, portfolioId: +values.portfolioId },
     { skip }
   );
+  useEffect(() => {
+    if (checkDoubleDone) {
+      if (doubleTrade.length > 0) {
+        setExistingTrade(true);
+      } else {
+        go();
+      }
+    }
+    // eslint-disable-next-line
+  }, [doubleTrade, checkDoubleDone]);
 
-  // gestion des erreurs / les requêtes
+  // gestion des erreurs / les requêtes ///////////////////////////
   const dispatch = useDispatch();
   useEffect(() => {
     if (isError1 || isError2 || isError4) {
@@ -232,7 +246,7 @@ function NewTrade() {
     // eslint-disable-next-line
   }, [isError1, isError2, isError4]);
 
-  // création effective du nouveau trade -> trade et enter
+  // création effective du nouveau trade -> trade et enter ////////
   async function go() {
     if (lastInfos.currency !== tradeCurrency.symbol) {
       cancelEnter();
@@ -248,48 +262,50 @@ function NewTrade() {
     }
   }
 
-  useEffect(() => {
-    if (isSuccess) {
-      if (data.length > 0) {
-        console.log("trade exisant");
-        setExistingTrade(true);
-      } else {
-        go();
-      }
-    }
-    // eslint-disable-next-line
-  }, [data, isSuccess]);
-
   ///// gestion du formulaire //////////////////////////////
+  const [errorsInForm, setErrorsInForm] = useState([]);
+
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setDatas({
-      ...datas,
-      stock_id: selectedItem.id,
-      price: +(+values.price).toFixed(2),
-      target: +(+values.target).toFixed(2),
-      stop: +(+values.stop).toFixed(2),
-      quantity: +(+values.quantity).toFixed(0),
-      fees: +(+values.fees).toFixed(3),
-      tax: +(+values.fees).toFixed(3),
-      comment: values.comment,
-      strategy_id: +values.strategyId,
-      portfolio_id: +values.portfolioId,
-      position: values.position,
-      currency_id: tradeCurrency.id,
-      lastQuote: lastInfos.last,
-      beforeQuote: lastInfos.before,
-    });
 
-    // verification si le trade exite deja -> stockId / portfolio
-    // on déclanche le middle ware existingActiveTrade
-    setSkip(false);
+    // Appel de la fonction de traitement des données du formulaire
+    const { inputErrors, verifiedValues } = validate(values);
+
+    if (inputErrors.length > 0) {
+      setErrorsInForm(inputErrors);
+    } else {
+      // on set datas avec des données nécessaires
+
+      setDatas({
+        price: verifiedValues.price,
+        target: verifiedValues.target,
+        stop: verifiedValues.stop,
+        quantity: verifiedValues.quantity,
+        fees: verifiedValues.fees,
+        tax: verifiedValues.tax,
+        comment: verifiedValues.comment,
+        strategy_id: verifiedValues.strategyId,
+        portfolio_id: verifiedValues.portfolioId,
+        position: verifiedValues.position,
+        stock_id: selectedItem.id,
+        currency_id: tradeCurrency.id,
+        beforeQuote: lastInfos.before,
+        lastQuote: lastInfos.last,
+      });
+
+      setSkip(false); // on déclanche le middle ware existingActiveTrad
+    }
   };
 
-  /////// cancel enter
+  const afterError = () => {
+    setErrorsInForm([]);
+  };
+
+  /////// cancel enter ////////////////////////////////////////////
   function cancelEnter() {
     setSelectedItem(initSelected);
     setValues({
@@ -343,6 +359,26 @@ function NewTrade() {
       ) : (
         <main className={`container ${styles.newTrade}`}>
           <h1>Création d'un trade :</h1>
+
+          {errorsInForm.length > 0 && (
+            <Modal
+              display={
+                <>
+                  <p>
+                    Validation du formulaire impossible : <br />
+                    {errorsInForm.map((error, j) => (
+                      <span key={j}>
+                        {error}
+                        <br />
+                      </span>
+                    ))}
+                  </p>
+                </>
+              }
+              action={afterError}
+            />
+          )}
+
           {!quoteExist() && !lastIsFetching && (
             <Modal
               display={
@@ -573,19 +609,6 @@ function NewTrade() {
                               )}
                             </select>
                           </div>
-
-                          {/* <label htmlFor="position">type de trade</label>
-                          <div className={styles.input_wrapLong}>
-                            <select
-                              onChange={handleChange}
-                              id="position"
-                              name="position"
-                              defaultValue="long"
-                            >
-                              <option value="long">long</option>
-                              <option value="short">short</option>
-                            </select>
-                          </div> */}
 
                           <label htmlFor="strategyId">strategies</label>
                           <div className={styles.input_wrapLong}>

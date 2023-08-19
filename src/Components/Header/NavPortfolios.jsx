@@ -3,6 +3,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useGetPortfoliosByUserQuery } from "../../store/slice/tradeApi";
 import styles from "./navPortfolio.module.css";
+ 
 
 function NavPorfolios() {
   // pour les onglets besion de la liste des portfolios pour cet user
@@ -38,7 +39,7 @@ function NavPorfolios() {
               <NavLink
                 key={i + 1}
                 className={
-                  ( pathname.indexOf(`/portfolio/${portfolio.id}/`) !== -1 )
+                  pathname.indexOf(`/portfolio/${portfolio.id}/`) !== -1
                     ? `${styles.button} ${styles.active}`
                     : `${styles.button}`
                 }

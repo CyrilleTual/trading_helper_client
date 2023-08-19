@@ -172,7 +172,6 @@ function SignIn() {
 
   return (
     <main className={styles.sign}>
-
       {/**** modal d'avertissement si remember  *******/}
       {rememberMe && display && (
         <Modal
@@ -233,7 +232,7 @@ function SignIn() {
             <BtnSubmit value="LogIn" />
           </form>
           <p>
-            Pas de compte ? En créer un
+            Pas de compte ? En créer un {" "} {" "}
             <BtnLink link="/signUp" title="👉 ici 👈" />
           </p>
         </>

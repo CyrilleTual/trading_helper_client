@@ -13,8 +13,8 @@
 .sign form {
     display: flex;
     flex-direction: column;
-    width: 70%;
-    max-width: 300px;
+    width: 300px;
+     
     margin: 10px auto;
     text-align: left;
      
