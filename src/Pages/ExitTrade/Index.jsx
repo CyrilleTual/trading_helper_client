@@ -11,7 +11,9 @@ import { signOut } from "../../store/slice/user";
 import styles from "./exitTrade.module.css";
 import BtnSubmit from "../../Components/UI/BtnSubmit";
 import BtnCancel from "../../Components/UI/BtnCancel";
+import Modal from "../../Components/Modal/Index";
 import { Loading } from "../../Components/Loading/Index";
+import { validate } from "./validateInputsExit";
 
 function ExitTrade() {
   const { tradeId } = useParams();
@@ -72,27 +74,42 @@ function ExitTrade() {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
+  // Gére la validation du formulaire /////////////////////////////
+  const [errorsInForm, setErrorsInForm] = useState([]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const datas = {
-      trade_id: tradeId,
-      price: +(+values.price).toFixed(2),
-      quantity: +(+values.quantity).toFixed(0),
-      remains: trade.remains,
-      fees: +(+values.fees).toFixed(3),
-      tax: +(+values.fees).toFixed(3),
-      date: values.date,
-      comment: values.comment,
-      stock_id: trade.stock_id,
-    };
 
-    try {
-      await exitProcess(datas);
-      navigate(`/portfolio/${trade.portfolio_id}/detail`);
-    } catch (err) {
-      console.log(err);
+    // Appel de la fonction de traitement des données du formulaire
+    const { inputErrors, verifiedValues = {}  } = validate(values, trade.remains);
+
+     if (inputErrors.length > 0) {
+      setErrorsInForm(inputErrors);
+    } else {
+
+     const datas = {
+       comment: verifiedValues.comment,
+       date: verifiedValues.date,
+       fees: verifiedValues.fees,
+       price: verifiedValues.price,
+       quantity: verifiedValues.quantity,
+       tax: verifiedValues.fees,
+       trade_id: tradeId,
+       remains: trade.remains,
+       stock_id: trade.stock_id,
+     };
+     try {
+       await exitProcess(datas);
+       navigate(`/portfolio/${trade.portfolio_id}/`);
+     } catch (err) {
+       console.log(err);
+     }
     }
   };
+
+    const afterError = () => {
+      setErrorsInForm([]);
+    };
 
   const cancelExit = () => {
     navigate(`/portfolio/${trade.portfolio_id}/detail`);
@@ -106,6 +123,24 @@ function ExitTrade() {
       ) : (
         <>
           <h1>Exit</h1>
+          {errorsInForm.length > 0 && (
+            <Modal
+              display={
+                <>
+                  <p>
+                    Validation du formulaire impossible : <br />
+                    {errorsInForm.map((error, j) => (
+                      <span key={j}>
+                        {error}
+                        <br />
+                      </span>
+                    ))}
+                  </p>
+                </>
+              }
+              action={afterError}
+            />
+          )}
           <p>
             Dans le poretefeuille "{trade.portfolio}" tu veux vendre{" "}
             {trade.title}?{" "}

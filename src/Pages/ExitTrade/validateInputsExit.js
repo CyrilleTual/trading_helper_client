@@ -3,35 +3,14 @@
  * @param {object} values - Les valeurs à valider.
  * @returns - Un objet contenant les erreurs de validation et les valeurs nettoyées.
  */
-export function validate(values) {
-  const {
-    fees,
-    portfolioId,
-    price,
-    quantity,
-    stop,
-    strategyId,
-    target,
-    tax,
-    position,
-    comment,
-  } = values;
+export function validate(values, maxQuantity) {
+  const { price, quantity, fees, tax, comment, date } = values;
 
   const inputErrors = []; // Tableau des erreurs de validation
   let verifiedValues = []; // Tableau des valeurs validées à retourner
 
   // Vérification que les champs numériques sont bien numériques et non négatifs
-  const mustBeNumbers = [
-    fees,
-    portfolioId,
-    price,
-    quantity,
-    stop,
-    strategyId,
-    target,
-    tax,
-  ];
-
+  const mustBeNumbers = [price, quantity, fees, tax];
   for (const value of mustBeNumbers) {
     if (
       isNaN(value) || // Vérifie si c'est un nombre
@@ -40,29 +19,14 @@ export function validate(values) {
       value * 1000 - Math.trunc(value * 1000) > 0 // Vérifie qu'il n'a pas plus de 3 décimales
     ) {
       inputErrors.push("Veuillez vérifier les données saisies");
-      return { inputErrors, verifiedValues }; // Sortir de la fonction si un élément est invalide
+      return { inputErrors }; // Sortir de la fonction si un élément est invalide
     }
   }
 
-  // Vérification de la cohérence des saisies en fonction de la position
-  switch (position) {
-    case "long":
-      if (+target < +price || +stop > +price) {
-        inputErrors.push(
-          "Incohérence des valeurs saisies avec le sens de trade"
-        );
-      }
-      break;
-    case "short":
-      if (+target > +price || +stop < +price) {
-        inputErrors.push(
-          "Incohérence des valeurs saisies avec le sens de trade"
-        );
-      }
-      break;
-    default:
-      inputErrors.push("Il y a un problème dans le formulaire de saisie.");
-      return { inputErrors, verifiedValues }; 
+  // Vérification de la cohérence de la quantité saisies
+  if (+quantity > +maxQuantity) {
+    inputErrors.push("Vérifiez la quantité saisie");
+    return { inputErrors };  
   }
 
   // Préparation du commentaire en nettoyant les espaces en début et en fin
@@ -70,23 +34,24 @@ export function validate(values) {
   // Vérification de la longueur du commentaire
   if (cleanComment.length > 200) {
     inputErrors.push("Commentaire de 200 caractères maximum SVP.");
-    return { inputErrors, verifiedValues };  
+    return { inputErrors };  
+  }
+
+  // vérification du format de la date ////////////////////////////
+  if (isNaN(new Date(date).getTime())) {
+    inputErrors.push("Date non valide");
+    return { inputErrors };  
   }
 
   // Les valeurs validées et formatées
   verifiedValues = {
-    fees:   +fees,
-    portfolioId: +portfolioId,
     price: +price,
     quantity: +quantity,
-    stop: +stop,
-    strategyId: +strategyId,
-    target: +target,
+    fees: +fees,
     tax: +tax,
-    position: position,
     comment: cleanComment,
-  }
+    date: date,
+  };
 
-  // Retourne le tableau des erreurs et les valeurs formatées
   return { inputErrors, verifiedValues };
 }

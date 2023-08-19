@@ -7,6 +7,8 @@ import {
 import styles from "./existing.module.css";
 import BtnCancel from "../../../Components/UI/BtnCancel";
 import BtnSubmit from "../../../Components/UI/BtnSubmit";
+import Modal from "../../../Components/Modal/Index";
+import { validateAddRemoveFunds, validateIdlePortfolio} from "./validateInputsExisting.js"
 
 function Existing({ portfolios, isLoading, setManageExisting }) {
   const navigate = useNavigate();
@@ -15,9 +17,9 @@ function Existing({ portfolios, isLoading, setManageExisting }) {
   const [currency, setCurrency] = useState("");
 
   // pour créer un deposit
-  const [deposit, { isError : depositError}] = useDepositFundsMutation();
+  const [deposit, { isError: depositError }] = useDepositFundsMutation();
   // pour passer portfolio en idle:
-  const [idlePortfolio, {data, isError}] = useIdlePortfolioMutation();
+  const [idlePortfolio, { data, isError }] = useIdlePortfolioMutation();
 
   const initValues = {
     portfolioId: null,
@@ -69,27 +71,54 @@ function Existing({ portfolios, isLoading, setManageExisting }) {
     setValues({ ...values, [e.target.name]: +e.target.value });
   };
 
+  // État local pour stocker les erreurs du formulaire
+  const [errorsInForm, setErrorsInForm] = useState([]);
+
+  // gestion de la soumission du formulaire ///////////////////////
   const handleSubmit = async (e) => {
     e.preventDefault();
- 
+
     if (+values.action === 1 || +values.action === 2) {
-      try {
-        await deposit(values);
-        setValues(initValues);
-        setManageExisting(false);
-        navigate(`/portfolio/manage`);
-      } catch (err) {
-        console.log(depositError);
+
+      // Appel de la fonction de traitement des données du formulaire
+      const { inputErrors, verifiedValues = {} } = validateAddRemoveFunds(
+        values,
+        portfolios
+      );
+      if (inputErrors.length > 0) {
+        setErrorsInForm(inputErrors);
+      } else {
+        try {
+          console.log(verifiedValues);
+          await deposit(verifiedValues);
+          setValues(initValues);
+          setManageExisting(false);
+          navigate(`/portfolio/manage`);
+        } catch (err) {
+          console.log(depositError);
+        }
       }
-    }else if (+values.action === 3 ){
-      try {
-        idlePortfolio(+values.portfolioId);
-        console.log(data.msg);
-        navigate(`/portfolio/manage`);
-      } catch (err) {
-        console.log(isError);
+    } else if (+values.action === 3) {
+
+      const { inputErrors, verifiedValues = {} } =  validateIdlePortfolio( values, portfolios);
+      if (inputErrors.length > 0) {
+        setErrorsInForm(inputErrors);
+      } else {
+        try {
+          await idlePortfolio(verifiedValues.portfolioId);
+          setValues(initValues);
+          setManageExisting(false);
+          console.log(data.msg);
+          navigate(`/portfolio/manage`);
+        } catch (err) {
+          console.log(isError);
+        }
       }
-      
+
+
+     
+    } else {
+      cancel();
     }
   };
 
@@ -97,10 +126,32 @@ function Existing({ portfolios, isLoading, setManageExisting }) {
     setValues(initValues);
     setManageExisting(false);
   };
+  // Fonction pour réinitialiser les erreurs du formulaire après une tentative de soumission
+  const afterError = () => {
+    setErrorsInForm([]);
+  };
 
   return (
     <div className={styles.existing}>
       <h2>Agir sur portefeuille existant</h2>
+      {errorsInForm.length > 0 && (
+        <Modal
+          display={
+            <>
+              <p>
+                Validation du formulaire impossible : <br />
+                {errorsInForm.map((error, j) => (
+                  <span key={j}>
+                    {error}
+                    <br />
+                  </span>
+                ))}
+              </p>
+            </>
+          }
+          action={afterError}
+        />
+      )}
       <form className={styles.form_existing} onSubmit={handleSubmit}>
         <label htmlFor="portfolioId">portefeuille</label>
         <div className={styles.select_wrap}>

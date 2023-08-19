@@ -4,33 +4,37 @@ import styles from "./create.module.css";
 import {
   useGetCurrenciesQuery,
   useNewPortfolioMutation,
+  useGetPortfoliosByUserQuery,
 } from "../../../store/slice/tradeApi";
 import BtnCancel from "../../../Components/UI/BtnCancel";
 import BtnSubmit from "../../../Components/UI/BtnSubmit";
+import Modal from "../../../Components/Modal/Index";
+import { validate } from "./validateInputsCreate.js"
 
 function Create({ setCreate }) {
-
-  // id user
+  // Récupération de l'ID de l'utilisateur
   const userId = useSelector((state) => state.user.infos.id);
-  // recup des devises //const currencies = [{ id:1, title:"un"}]
-  const { data: currencies, isSuccess } = useGetCurrenciesQuery()
 
-  // newportfolio
+  // Récupération des devises
+  const { data: currencies, isSuccess } = useGetCurrenciesQuery();
+
+  // Récupération des portfolios de l'utilisateur /////////////////
+  const { data: portfolios } = useGetPortfoliosByUserQuery(userId);
+
+  // Mutation pour créer un nouveau portfolio /////////////////////
   const [createPortfolio] = useNewPortfolioMutation();
 
-  // formulaire
+  // Valeurs initiales du formulaire //////////////////////////////
   const initials = {
     title: "",
     comment: "",
-    userId: userId,
     deposit: 0,
     currencyId: 0,
-    status: "active", 
   };
 
   const [values, setValues] = useState(initials);
 
-  // set de la valeur par défaut de le liste des devises
+  // Initialisation  de la liste des devises après récupération des données
   useEffect(() => {
     if (isSuccess) {
       const toset = currencies[0].id;
@@ -39,10 +43,12 @@ function Create({ setCreate }) {
     // eslint-disable-next-line
   }, [currencies]);
 
+  // Gestion du changement de valeur dans les champs du formulaire
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
+  // Fonction pour créer un nouveau portfolio avec les données fournies
   const go = async (datas) => {
     try {
       await createPortfolio(datas);
@@ -53,27 +59,68 @@ function Create({ setCreate }) {
     }
   };
 
+  // État local pour stocker les erreurs du formulaire
+  const [errorsInForm, setErrorsInForm] = useState([]);
+
+  // Gestion de la soumission du formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
-    const datas = {
-      title: values.title,
-      comment: values.comment,
-      deposit: values.deposit,
-      user_id: +values.userId,
-      currency_id: +values.currencyId,
-      status: values.status,
-    };
-    go(datas);
+
+    // Appel de la fonction de traitement des données du formulaire
+    const { inputErrors, verifiedValues = {} } = validate(
+      values,
+      currencies,
+      portfolios
+    );
+
+    if (inputErrors.length > 0) {
+      setErrorsInForm(inputErrors);
+    } else {
+      const datas = {
+        title: verifiedValues.title,
+        comment: verifiedValues.comment,
+        deposit: verifiedValues.deposit,
+        currency_id: verifiedValues.currencyId,
+        user_id: +userId,
+        status: "active",
+      };
+
+      go(datas);
+    }
   };
 
-  const cancel= () =>{
+  // Fonction pour annuler la création d'un nouveau portfolio
+  const cancel = () => {
     setValues({ ...values, ...initials });
     setCreate(false);
-  }
+  };
+
+  // Fonction pour réinitialiser les erreurs du formulaire après une tentative de soumission
+  const afterError = () => {
+    setErrorsInForm([]);
+  };
 
   return (
     <>
       <h2>Création d'un nouveau portefeuille</h2>
+      {errorsInForm.length > 0 && (
+        <Modal
+          display={
+            <>
+              <p>
+                Validation du formulaire impossible : <br />
+                {errorsInForm.map((error, j) => (
+                  <span key={j}>
+                    {error}
+                    <br />
+                  </span>
+                ))}
+              </p>
+            </>
+          }
+          action={afterError}
+        />
+      )}
 
       {isSuccess && (
         <form

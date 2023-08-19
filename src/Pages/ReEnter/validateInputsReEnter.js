@@ -3,34 +3,14 @@
  * @param {object} values - Les valeurs à valider.
  * @returns - Un objet contenant les erreurs de validation et les valeurs nettoyées.
  */
-export function validate(values) {
-  const {
-    fees,
-    portfolioId,
-    price,
-    quantity,
-    stop,
-    strategyId,
-    target,
-    tax,
-    position,
-    comment,
-  } = values;
-
+export function validate(values, position) {
   const inputErrors = []; // Tableau des erreurs de validation
   let verifiedValues = []; // Tableau des valeurs validées à retourner
 
+  const { fees, price, quantity, stop, target, tax, comment, date } = values;
+
   // Vérification que les champs numériques sont bien numériques et non négatifs
-  const mustBeNumbers = [
-    fees,
-    portfolioId,
-    price,
-    quantity,
-    stop,
-    strategyId,
-    target,
-    tax,
-  ];
+  const mustBeNumbers = [fees, price, quantity, stop, target, tax];
 
   for (const value of mustBeNumbers) {
     if (
@@ -49,20 +29,26 @@ export function validate(values) {
     case "long":
       if (+target < +price || +stop > +price) {
         inputErrors.push(
-          "Incohérence des valeurs saisies avec le sens de trade"
+          "Incohérence des valeurs saisies "
         );
       }
       break;
     case "short":
       if (+target > +price || +stop < +price) {
         inputErrors.push(
-          "Incohérence des valeurs saisies avec le sens de trade"
+          "Incohérence des valeurs saisies "
         );
       }
       break;
     default:
       inputErrors.push("Il y a un problème dans le formulaire de saisie.");
-      return { inputErrors, verifiedValues }; 
+      return { inputErrors, verifiedValues }; // Sortir de la fonction si position invalide
+  }
+
+  // vérification du format de la date ////////////////////////////
+  if (isNaN(new Date(date).getTime())) {
+    inputErrors.push("Date non valide");
+    return { inputErrors, verifiedValues }; // Sortir de la fonction si position invalide
   }
 
   // Préparation du commentaire en nettoyant les espaces en début et en fin
@@ -70,22 +56,20 @@ export function validate(values) {
   // Vérification de la longueur du commentaire
   if (cleanComment.length > 200) {
     inputErrors.push("Commentaire de 200 caractères maximum SVP.");
-    return { inputErrors, verifiedValues };  
+    return { inputErrors, verifiedValues }; // Sortir de la fonction si position invalide
   }
 
   // Les valeurs validées et formatées
   verifiedValues = {
-    fees:   +fees,
-    portfolioId: +portfolioId,
+    fees: +fees,
     price: +price,
     quantity: +quantity,
     stop: +stop,
-    strategyId: +strategyId,
     target: +target,
     tax: +tax,
-    position: position,
     comment: cleanComment,
-  }
+    date: date
+  };
 
   // Retourne le tableau des erreurs et les valeurs formatées
   return { inputErrors, verifiedValues };

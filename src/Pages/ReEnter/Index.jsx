@@ -10,6 +10,8 @@ import styles from "./reEnter.module.css";
 import { Loading } from "../../Components/Loading/Index";
 import BtnSubmit from "../../Components/UI/BtnSubmit";
 import BtnCancel from "../../Components/UI/BtnCancel";
+import Modal from "../../Components/Modal/Index";
+import { validate } from "./validateInputsReEnter";
 
 function ReEnter() {
   const navigate = useNavigate();
@@ -84,7 +86,6 @@ function ReEnter() {
   }, [trade]);
 
 
-
   /// to do -> verifier que l'on est bien sur le bon trade
   /// -> tradeId === trade.tradeId ?
 
@@ -92,30 +93,43 @@ function ReEnter() {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
+  const [errorsInForm, setErrorsInForm] = useState([]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const datas = {
-      trade_id: tradeId,
-      date: values.date,
-      price: +(+values.price).toFixed(2),
-      target: +(+values.target).toFixed(3),
-      stop: +(+values.stop).toFixed(3),
-      quantity: +(+values.quantity).toFixed(0),
-      fees: +(+values.fees).toFixed(3),
-      tax: +(+values.fees).toFixed(3),
-      comment: values.comment,
-      stock_id: trade.stock_id,
-    };
 
-    try {
-      const resp = await reEnter(datas);
-      console.log(resp);
-      navigate(`/portfolio/${trade.portfolio_id}/detail`);
-    } catch (err) {
-      console.log(err);
+    // Appel de la fonction de traitement des données du formulaire
+    const { inputErrors, verifiedValues } = validate(values, trade.position);
+
+     if (inputErrors.length > 0) {
+      setErrorsInForm(inputErrors);
+    } else {
+       const datas = {
+         date: verifiedValues.date,
+         price: verifiedValues.price,
+         target: verifiedValues.target,
+         stop: verifiedValues.stop,
+         quantity: verifiedValues.quantity,
+         fees: verifiedValues.fees,
+         tax: verifiedValues.fees,
+         comment: verifiedValues.comment,
+         trade_id: +tradeId,
+         stock_id: +trade.stock_id,
+       };
+       try {
+         const resp = await reEnter(datas);
+         console.log(resp);
+         navigate(`/portfolio/${trade.portfolio_id}/detail`);
+       } catch (err) {
+         console.log(err);
+       }
     }
   };
+
+    const afterError = () => {
+      setErrorsInForm([]);
+    };
+
 
   /////// cancel enter
   function cancelEnter() {
@@ -129,6 +143,24 @@ function ReEnter() {
       ) : (
         <main className={styles.re_enter}>
           <h1>Re-enter</h1>
+          {errorsInForm.length > 0 && (
+            <Modal
+              display={
+                
+                  <p>
+                    Validation du formulaire impossible : <br />
+                    {errorsInForm.map((error, j) => (
+                      <span key={j}>
+                        {error}
+                        <br />
+                      </span>
+                    ))}
+                  </p>
+                
+              }
+              action={afterError}
+            />
+          )}
 
           <div className="comments">
             {trade && (
