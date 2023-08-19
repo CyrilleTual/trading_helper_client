@@ -163,8 +163,9 @@ function NewTrade() {
       lastInfos &&
       quoteExist() &&
       portfolios.length > 0 &&
-      !portfolioIsLoading &&
-      !stategiesIsLoading &&
+      portfolios.find((portfolio) => portfolio.symbol === lastInfos.currency) &&
+      //!portfolioIsLoading &&
+      //!stategiesIsLoading &&
       !isError1 &&
       !isError2
     ) {
