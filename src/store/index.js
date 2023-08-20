@@ -4,6 +4,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/dist/query";
 import { tradeApi } from "./slice/tradeApi";
 import { userReducer } from "./slice/user.js";
+import { rtkQueryErrorLogger } from "./errorCatchingMiddleware.js";
  
 
 
@@ -13,7 +14,7 @@ export const store = configureStore ({
         user: userReducer, 
     },
     middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(tradeApi.middleware),
+    getDefaultMiddleware().concat(tradeApi.middleware, rtkQueryErrorLogger),
 })
 
 setupListeners(store.dispatch);

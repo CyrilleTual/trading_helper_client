@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { signOut } from "../store/slice/user.js";
 import { resetStorage } from "../utils/tools.js";
+import { resetZoom } from "../utils/resetZoom.js";
 
 function Logged({ child }) {
   const navigate = useNavigate();
@@ -14,7 +15,12 @@ function Logged({ child }) {
   const islogged = useSelector((state) => state.user.isLogged);
   const role = useSelector((state) => state.user.infos.role);
 
+
   useEffect(() => {
+
+    resetZoom();
+
+
     if (islogged && role && (role === "admin" || role === "user")) {
       setIsAuthorized(true);
     } else if (islogged && role && role !== "admin" && role !== "user") {
@@ -24,7 +30,8 @@ function Logged({ child }) {
     } else {
       navigate("/");
     }
-  }, [role]);
+  });
+
   if (isAuthorized) return <Child />;
 }
 

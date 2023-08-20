@@ -89,7 +89,6 @@ function Existing({ portfolios, isLoading, setManageExisting }) {
         setErrorsInForm(inputErrors);
       } else {
         try {
-          console.log(verifiedValues);
           await deposit(verifiedValues);
           setValues(initValues);
           setManageExisting(false);
@@ -105,13 +104,17 @@ function Existing({ portfolios, isLoading, setManageExisting }) {
         setErrorsInForm(inputErrors);
       } else {
         try {
-          await idlePortfolio(verifiedValues.portfolioId);
+          idlePortfolio(verifiedValues.portfolioId)
+            .unwrap()
+            .then(console.log("data.msg", data))
+            .catch((err) => console.log(err, isError))
+        
           setValues(initValues);
           setManageExisting(false);
-          console.log(data.msg);
+           
           navigate(`/portfolio/manage`);
         } catch (err) {
-          console.log(isError);
+          console.log(err);
         }
       }
 
