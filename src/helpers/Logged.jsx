@@ -15,12 +15,8 @@ function Logged({ child }) {
   const islogged = useSelector((state) => state.user.isLogged);
   const role = useSelector((state) => state.user.infos.role);
 
-
   useEffect(() => {
-
     resetZoom();
-
-
     if (islogged && role && (role === "admin" || role === "user")) {
       setIsAuthorized(true);
     } else if (islogged && role && role !== "admin" && role !== "user") {
@@ -30,6 +26,7 @@ function Logged({ child }) {
     } else {
       navigate("/");
     }
+    // eslint-disable-next-line
   });
 
   if (isAuthorized) return <Child />;

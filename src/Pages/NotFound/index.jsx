@@ -1,4 +1,3 @@
-import { NavLink } from "react-router-dom";
 import img404 from "../../assets/img/404.jpg";
 import styles from "./notFound.module.css";
 import BtnLink from "../../Components/UI/BtnLink";

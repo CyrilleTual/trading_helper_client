@@ -24,10 +24,11 @@ function SignUp() {
     if (islogged) {
       navigate("/global");
     }
+    // eslint-disable-next-line
   }, [islogged]);
 
   // middlware pour le set de la state via le store
-  const [signUserUp, result] = useSignUserUpMutation();
+  const [signUserUp] = useSignUserUpMutation();
 
   const [inputs, setInputs] = useState({
     email: "",
@@ -139,6 +140,7 @@ function SignUp() {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       go();
     }
+    // eslint-disable-next-line
   }, [formErrors]);
 
   return (
