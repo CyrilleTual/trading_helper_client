@@ -8,6 +8,7 @@ import Modal from "../../Components/Modal/Index"
 import style from "./index.module.css";
 import logo from "../../assets/img/logo.jpg";
 import BtnLink from "../../Components/UI/BtnLink";
+import BtnSubmit from "../../Components/UI/BtnSubmit";
 
 // Composant de demande de création de compte
 function SignUp() {
@@ -152,8 +153,7 @@ function SignUp() {
               Vous allez recevoir un mail vous précisant le fonctionnement de
               notre application dès l'activation de votre accès. <br />
               Vous pourrez alors vous connecter.
-              <br />
-              A très vite 👋
+              <br />A très vite 👋
             </p>
           }
           action={goOn}
@@ -166,9 +166,10 @@ function SignUp() {
         {myError === 422 && (
           <p>Un conpte existe déja pour cette adresse mail</p>
         )}
-        {myError === 500 && (
-          <p>Une erreur est survenue lors de la création de votre compte</p>
-        )}
+        {myError === 500 ||
+          (myError == 400 && (
+            <p>Une erreur est survenue lors de la création de votre compte</p>
+          ))}
       </p>
       <form onSubmit={handleSignUp}>
         <label htmlFor="email">email :</label>
@@ -232,11 +233,21 @@ function SignUp() {
             checked={agree}
             onChange={handleAgreeChange}
           />
-          <span className={style.space}> </span> I agree to Terms of Service
+          <span className={style.space}> </span> j'accepte les condition
+          générales d'utilisation
         </label>
         <p>{formErrors.agree}</p>
-
-        <input type="submit" value="signUp" />
+        <p className={style.infos_cgi}>
+          J’ai pris connaissance et j’accepte les conditions générales
+          d’utilisation et la politique de confidentialité de TradingHelper. En
+          validant ce formulaire, vous consentez à ce que vos données
+          personnelles soient traitées par TradingHelper, responsable du
+          traitement, pour la création de votre compte et la gestion de votre
+          inscription. Pour en savoir plus sur vos droits ainsi que nos
+          traitements et pratiques en matière de données personnelles, prenez
+          connaissance des mentions légales.
+        </p>
+        <BtnSubmit value="signUp" />
       </form>
       <p>
         <BtnLink link="/" title="Acceuil" />

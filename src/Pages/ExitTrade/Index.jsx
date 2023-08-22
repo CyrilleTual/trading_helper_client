@@ -94,7 +94,7 @@ function ExitTrade() {
        price: verifiedValues.price,
        quantity: verifiedValues.quantity,
        tax: verifiedValues.fees,
-       trade_id: tradeId,
+       trade_id: +tradeId,
        remains: trade.remains,
        stock_id: trade.stock_id,
      };
@@ -141,6 +141,7 @@ function ExitTrade() {
               action={afterError}
             />
           )}
+
           <p>
             Dans le poretefeuille "{trade.portfolio}" tu veux vendre{" "}
             {trade.title}?{" "}

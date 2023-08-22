@@ -2,9 +2,13 @@
     composes: sign from "../SignIn/sign.module.css";
 }
 
+.signup h1{
+    top:-40px;
+}
+
 .signup img{
      margin: auto;
-     width: 300px;
+     width: 100px;
 }
 
 .signup p {
@@ -18,17 +22,19 @@
 }
 .signup input[type="checkbox"] {
     width: 50px;
+    margin-bottom: 0;
 }
  
 .labelCheck{
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
 }
 
 .space{
     display: inline-block;
-    width: 20px;
+    width: 0px;
     vertical-align: middle;
 }
 
@@ -39,3 +45,14 @@
 .parentOfPwd {
     composes: parentOfPwd from "../SignIn/sign.module.css";
 }
+
+.infos_cgi{
+    font-size: 1rem;
+    text-align: justify !important;
+    margin: 10px 0;
+}
+.signup input[type="submit"] {
+    height: 30px;
+   color: black;
+}
+ 

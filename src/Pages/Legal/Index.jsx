@@ -24,7 +24,7 @@ function Legal() {
           E-mail : contact [@] TradingHelper.com
         </p>
         <h4>DIRECTION DE PUBLICATION</h4>
-        <p>Emmanuel de Saint Rémy</p>
+        <p>Cyrille Tual</p>
         <h4>HÉBERGEMENT</h4>
         <p>
           OVH &#8211; 2 rue Kellermann – 59100 Roubaix

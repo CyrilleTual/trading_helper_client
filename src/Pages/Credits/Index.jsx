@@ -1,37 +1,51 @@
-import React from "react";
+import { NavLink } from "react-router-dom";
+import styles from "./credit.module.css";
+import BtnLink from "../../Components/UI/BtnLink";
 
 function Credits() {
   return (
-    <>
+    <main className={styles.credits}>
       <h1>Credits</h1>
-      <div>
+      <div className={styles.wrapper}>
+        <h2>Les images et illustrations proviennent de chez</h2>
+
         <p>
-          les icones sont piquées sur{" "}
-          <a
-            href="https://fr.vecteezy.com/vecteur-libre/money"
+          <NavLink
+            className={styles.links}
+            to="https://fr.vecteezy.com/vecteur-libre/money"
             rel="noopener nofollow noreferrer"
             target="_blank"
           >
-            Vecteezy
-          </a>
+            Vecteezy.com
+          </NavLink>{" "}
+          et de chez <br />
+          <NavLink
+            className={styles.links}
+            to="https://www.flaticon.com/free-icons/plus"
+            rel="noopener nofollow noreferrer"
+            target="_blank"
+            title="plus icons"
+          >
+            Vectors Market - Flaticon
+          </NavLink>
         </p>
 
-        <a href="https://www.flaticon.com/free-icons/plus" title="plus icons">
-          Plus icons created by Vectors Market - Flaticon
-        </a>
+        <h2>Le ticker-tape est fourni par</h2>
 
         <p>
-          Le ticker-tape est fouri par{" "}
-          <a
-            href="https://fr.tradingview.com/"
+          <NavLink
+            className={styles.links}
+            to="https://fr.tradingview.com/"
             rel="noopener nofollow noreferrer"
             target="_blank"
           >
-            TradingView
-          </a>
+            TradingView.com
+          </NavLink>
         </p>
+        <div className={styles.retour}></div>
+        <BtnLink link="/" title="Acceuil" />
       </div>
-    </>
+    </main>
   );
 }
 
