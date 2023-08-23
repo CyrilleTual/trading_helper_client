@@ -58,17 +58,18 @@ function Details({ portfolio }) {
         !isError && (
           <tr>
             <td>{portfolio.title}</td>
+            <td>{baseCurrencie}</td>
             <td>
-              {+data.initCredit} {baseCurrencie}
+              {+data.initCredit.toFixed(0)}  
             </td>
             <td>
-              {data.assets.toFixed(0)} {baseCurrencie}
+              {data.assets.toFixed(0)}  
             </td>
             <td>
-              {data.cash} {baseCurrencie}
+              {data.cash.toFixed(0)}  
             </td>
             <td>
-              {data.totalBalance} {baseCurrencie}
+              {data.totalBalance.toFixed(0)} 
             </td>
           </tr>
         )

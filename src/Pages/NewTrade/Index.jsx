@@ -61,6 +61,7 @@ function NewTrade() {
       setSkip2(false);
     }
   }, [selectedItem]);
+
   const {
     data: lastInfos,
     isFetching: lastIsFetching,
@@ -127,6 +128,7 @@ function NewTrade() {
     if (quoteExist() && portfolios && portfolios.length === 0) {
       setNoportfolio(true);
     }
+    // eslint-disable-next-line
   }, [lastInfos, portfolios]);
 
   function goCreatePortfolio() {
@@ -146,6 +148,7 @@ function NewTrade() {
     ) {
       setNoportfolioGoodCurrency(true);
     }
+    // eslint-disable-next-line
   }, [lastInfos, portfolios]);
 
   // gestion des listes déroulantes ////////////////////////////////

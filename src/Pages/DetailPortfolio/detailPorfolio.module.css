@@ -1,23 +1,10 @@
- /* .detail h1{
-    position: relative;
-    top :-90px;
-    left: calc(50vw);
-    transform: translateX(-50%);
-    white-space: nowrap;
-    margin-bottom: -40px;
-
-} */
- 
  
  .arraysContainer{
-     
     display: flex;
     flex-wrap: nowrap;
     justify-content: center;
     width: 100%;
     margin: 2px;
-    
-
  }
 
  .leftArray{
@@ -71,8 +58,6 @@
     fill: red;
    
 }
-
-
 
 
 @keyframes spin {

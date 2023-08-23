@@ -7,6 +7,7 @@
 .search input {
   padding: 5px;
   border-radius: 10px;
+  margin-bottom: 10px;
 }
 
 .search table {
@@ -16,7 +17,6 @@
   margin: auto;
   border-collapse: collapse;
   border: 3px solid var(--color-bgTableaux);
-  
 }
 
 .search tbody{

@@ -11,31 +11,40 @@
 
 .managePort table{
     table-layout: fixed;
+    width: 100%;
+    max-width: 500px;
     margin: 30px auto 0 auto;
     border-collapse: collapse;
-    border: 3px solid var(--color-bgTableaux);
-    font-size: 1.3 rem;
+    border: 2px solid var(--color-bgTableaux);
+     
 }
 
 .managePort th, .managePort td  {
   width:50px;
   text-align: center;
-  border: 3px solid var(--color-bgTableaux);
+  border: 2px solid var(--color-bgTableaux);
   white-space: nowrap;
 }
 
-.managePort th:first-of-type {
+.managePort td {
+  padding: 3px;
+  text-align: right;
+}
+
+.managePort th:first-of-type,
+.managePort td:first-of-type  {
   width:70px;
   padding-right:10px;
-  text-align: right;
+  text-align: center;
+}
+
+.managePort th:nth-of-type(2),
+.managePort td:nth-of-type(2){
+  width:10px;
 }
 
 .managePort tr:nth-last-of-type(even){
     background-color: var(--color-bgTableaux);
-}
-
-.managePort td {
-  padding: 5px;
 }
 
 .wrapper{

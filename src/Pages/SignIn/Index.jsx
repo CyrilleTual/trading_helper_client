@@ -13,20 +13,25 @@ import { faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
  
 // Composant de connexion d'un utilisateur déja enregistré
 function SignIn() {
-
+  // State pour gérer les champs du formulaire
   const [inputs, setInputs] = useState({ email: "", pwd: "", remember: false });
-  const [rememberMe, setRememberMe] = useState (false); 
-  const [display, setDisplay] = useState(""); 
+  // State pour gérer le remember me
+  const [rememberMe, setRememberMe] = useState(false);
+  // State pour gérer l'affichage du message de connexion réussie
+  const [display, setDisplay] = useState("");
 
+  // hooks de navigation
   const navigate = useNavigate();
+
+  // hoook d'acces au store redux
   const dispatch = useDispatch();
 
-  // après log et fonction passée au modal 
-  const goOn  = () => {
+  // après log et fonction passée au modal
+  const goOn = () => {
     navigate("/global");
   };
 
-  // verifie si est loggé et redirige vers tableau de bord si oui
+  // Redirection si l'utilisateur est déjà connecté
   const islogged = useSelector((state) => state.user.isLogged);
   useEffect(() => {
     if (islogged) {
@@ -35,21 +40,20 @@ function SignIn() {
     // eslint-disable-next-line
   }, []);
 
-  // Vérifie la validité du token et recupères les informations utilisateur
+  // Utilisation du hook pour vérifier la validité du token et obtenir les infos utilisateur
   const [skip, setSkip] = useState(true); // attend que l'on ai bien un remember pour action
-  const { data, isError } = useLogByRememberQuery(null,{skip,});
+  const { data, isError } = useLogByRememberQuery(null, { skip });
 
-  // lors du chargement de la page on va voir si une cle remenber
-  // existe dans le local storage si oui -> log automatique
+  // Vérification de l'existence de la clé "remember" dans le local storage pour une connexion automatique
   useEffect(() => {
     const rmemb = JSON.parse(localStorage.getItem("remember"));
     if (rmemb) {
-      setSkip(false)
+      setSkip(false);
     }
     // eslint-disable-next-line
   }, []);
 
-  // log automatique 
+  // log automatique
   useEffect(() => {
     if (data && !isError) {
       dispatch(
@@ -64,12 +68,14 @@ function SignIn() {
       setRememberMe(true);
       setDisplay(data.response.email);
       setInputs({ ...inputs, remember: !remember }); // pour cohérence
-    }if (isError) {
-    navigate("/");
+    }
+    if (isError) {
+      navigate("/");
     }
     //c'est la fermeture du modal qui déclanche la poursuite de la navigatio
-  },[data, isError])
+  }, [data, isError]);
 
+  //////////////////////////////////////////////////////////////////////////////////
   // gestion du formulaire - bind des champs
   const { email, pwd, remember } = inputs;
   const handleInputChange = (e) => {
@@ -77,6 +83,7 @@ function SignIn() {
     setInputs({ ...inputs, [name]: value });
   };
 
+  // Gestion du champ "Se souvenir de moi"
   const handleRememberChange = () => {
     setInputs({ ...inputs, remember: !remember });
   };
@@ -84,13 +91,13 @@ function SignIn() {
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
 
-  // middlware pour le set de la state via le store
+  // Mutation pour la connexion utilisateur (set via le store)
   const [signUserIn] = useSignUserInMutation();
 
   // gestion des erreurs du formulaire
   const [myError, setMyError] = useState(null);
 
-  // gestion de la visibilité du pwd
+  // Gestion de la visibilité du mot de passe /////////////////////
   const [type, setType] = useState("password");
   const [icon, setIcon] = useState(faEyeSlash);
   const handleToggle = () => {
@@ -107,19 +114,21 @@ function SignIn() {
   const validate = (inputs) => {
     const errors = {};
     /* eslint-disable */
-    const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+    //const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+    const regex = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
     if (!inputs.email) {
       errors.email = "Veuillez entrer votre email";
     } else if (!regex.test(inputs.email)) {
-      errors.email = "Format email invalide";
+      errors.email = "Identification impossible";
     }
     if (!inputs.pwd) {
       errors.pwd = "Veuillez entrer votre mot de passe";
+    } else if (inputs.pwd.length < 4 || inputs.pwd.length > 30) {
+      errors.pwd = "Identification impossible";
     }
     return errors;
     /* eslint-enable */
   };
-
 
   // Fonction appelée après soumission du formulaire en l'absence d'erreur
   async function go() {
@@ -167,8 +176,6 @@ function SignIn() {
     }
   }, [formErrors]);
   /* eslint-enable */
-
-
 
   return (
     <main className={styles.sign}>
@@ -232,7 +239,7 @@ function SignIn() {
             <BtnSubmit value="LogIn" />
           </form>
           <p>
-            Pas de compte ? En créer un {" "} {" "}
+            Pas de compte ? En créer un{" "}
             <BtnLink link="/signUp" title="👉 ici 👈" />
           </p>
         </>

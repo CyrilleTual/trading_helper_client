@@ -103,7 +103,8 @@ function SignUp() {
   // Fonction de valisation du formulaire retourne les erreurs
   const validate = (inputs) => {
     const errors = {};
-    const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i;
+   // const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i;
+    const regex = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
     if (!inputs.email) {
       errors.email = "Veuillez entrer votre email";
     } else if (!regex.test(inputs.email)) {
@@ -111,9 +112,20 @@ function SignUp() {
     }
     if (!inputs.alias) {
       errors.alias = "Veuillez entrer un nom utilisateur";
+    } else if (inputs.alias.length < 3 ||  inputs.alias.length > 40 ){
+      console.log (inputs.alias.length)
+       errors.alias = "Longueur nom utilisateur invalide";
     }
+
+           const regexPwd =
+         /(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}/;
+     
     if (!inputs.pwd) {
-      errors.pwd = "Veuillez entrer votre mot de passe";
+      errors.pwd = "Veuillez entrer un mot de passe";
+    } else if (inputs.pwd.length < 8 || inputs.pwd.length > 30) {
+      errors.pwd = "Longueur mot de passe invalide";
+    }else if (!regexPwd.test(inputs.pwd)) { 
+      errors.pwd = "Motif mot de passe invalide";
     }
     if (!inputs.confirmPwd) {
       errors.confirmPwd = "Veuillez confirmer votre mot de passe";
@@ -169,12 +181,12 @@ function SignUp() {
           <p>Un conpte existe déja pour cette adresse mail</p>
         )}
         {myError === 500 ||
-          (myError == 400 && (
+          (myError === 400 && (
             <p>Une erreur est survenue lors de la création de votre compte</p>
           ))}
       </p>
       <form onSubmit={handleSignUp}>
-        <label htmlFor="email">email :</label>
+        <label htmlFor="email">votre email : (servira pour la connexion)</label>
         <input
           type="email"
           name="email"
@@ -184,26 +196,30 @@ function SignUp() {
         />
         <p>{formErrors.email}</p>
 
-        <label htmlFor="alias">username :</label>
+        <label htmlFor="alias">choisissez un nom d'utilisateur :</label>
         <input
+          placeholder=" entre 3 et 40 caractères"
           type="text"
           name="alias"
           autoComplete="username"
           id="alias"
           value={alias}
+          maxLength="40"
           onChange={handleInputChange}
         />
         <p>{formErrors.alias}</p>
 
-        <label htmlFor="pwd">password :</label>
+        <label htmlFor="pwd">choisissez un mot de passe :</label>
         <div className={style.parentOfPwd}>
           <input
+            placeholder="8/30 caract,  Maj +Min +Chiffre+ caract spé "
             type={type}
             autoComplete="new-password"
             name="pwd"
             id="pwd"
             value={pwd}
             onChange={handleInputChange}
+            maxLength="30"
           />
           <span className={style.eye} onClick={() => handleToggle("first")}>
             <FontAwesomeIcon icon={icon} />
@@ -211,7 +227,7 @@ function SignUp() {
         </div>
 
         <p>{formErrors.pwd}</p>
-        <label htmlFor="confirmPwd"> confirm password :</label>
+        <label htmlFor="confirmPwd">confirmez votre mot de passe :</label>
         <div className={style.parentOfPwd}>
           <input
             type={type2}
@@ -240,7 +256,7 @@ function SignUp() {
         </label>
         <p>{formErrors.agree}</p>
         <p className={style.infos_cgi}>
-          J’ai pris connaissance et j’accepte les conditions générales
+          Vous avez pris connaissance et acceptez les conditions générales
           d’utilisation et la politique de confidentialité de TradingHelper. En
           validant ce formulaire, vous consentez à ce que vos données
           personnelles soient traitées par TradingHelper, responsable du

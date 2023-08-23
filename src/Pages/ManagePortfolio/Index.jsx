@@ -38,10 +38,11 @@ function ManagePortfolio() {
               <thead>
                 <tr>
                   <th>portefeuille</th>
+                  <th></th>
                   <th>versé</th>
-                  <th>exposition</th>
-                  <th>liquidités</th>
-                  <th>valorisation</th>
+                  <th>expo.</th>
+                  <th>liq.</th>
+                  <th>valo.</th>
                 </tr>
               </thead>
               <tbody>

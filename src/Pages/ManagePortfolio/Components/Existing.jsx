@@ -13,10 +13,10 @@ import { validateAddRemoveFunds, validateIdlePortfolio} from "./validateInputsEx
 function Existing({ portfolios, isLoading, setManageExisting }) {
   const navigate = useNavigate();
 
-  // formulaire
+  // devise liée au portefeuille
   const [currency, setCurrency] = useState("");
 
-  // pour créer un deposit
+  // Mutation pour créer un deposit (dépot ou retrait)
   const [deposit, { isError: depositError }] = useDepositFundsMutation();
   // pour passer portfolio en idle:
   const [idlePortfolio, { data, isError }] = useIdlePortfolioMutation();

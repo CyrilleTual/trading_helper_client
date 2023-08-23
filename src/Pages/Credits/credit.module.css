@@ -15,6 +15,7 @@
 }
   
 .links {
+ 
   all: unset;
   cursor: pointer;
   display: flex;
@@ -35,7 +36,7 @@
 }
 
 .links:hover {
-  animation: neon-box-3 2s infinite alternate linear;
+  animation: neon-box-3 1s infinite alternate linear;
 }
 
 @keyframes neon-box-3 {
