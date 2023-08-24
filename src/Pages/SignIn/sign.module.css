@@ -59,8 +59,9 @@
 
 .sign a {
     display: inline;
-    color: gray;
+    color: black;
     background: transparent;
+    font-weight: bolder;
     
 }
 
