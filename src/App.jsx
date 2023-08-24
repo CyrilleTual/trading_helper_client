@@ -21,9 +21,12 @@ import SignIn from "./Pages/SignIn/Index";
 import SignUp from "./Pages/SignUp/Index";
 import Strategies from "./Pages/Strategies/Index";
 import TickerTape from "./Components/Extras/TickerTape";
+import { useEffect } from "react";
 
 
 function App() {
+
+
 
   return (
     <div>

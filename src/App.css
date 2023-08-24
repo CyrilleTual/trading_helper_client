@@ -11,6 +11,14 @@
   padding: 0;
 }
 
+@media (max-width: 800px) {
+  body {
+    zoom: 1 !important;
+  }
+}
+
+
+
 html {
   font-size: 62.5%;
   height: 100%;

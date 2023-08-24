@@ -5,7 +5,8 @@ import NavPorfolios from "./NavPortfolios";
  
 function Header() {
 
-  const islogged = useSelector((state)=> state.user.isLogged)
+  const islogged = useSelector((state)=> state.user.isLogged);
+ 
 
   window.onbeforeunload = function () {
     if (!(localStorage.getItem("remember"))) {
