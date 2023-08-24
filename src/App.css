@@ -11,11 +11,6 @@
   padding: 0;
 }
 
-@media (max-width: 800px) {
-  body {
-    zoom: 1 !important;
-  }
-}
 
 
 

@@ -2,7 +2,7 @@
 export function resetZoom() {
   //console.log("reset zoom called");
 
- // document.body.style.zoom = "100%";
+  document.body.style.zoom = "100%";
 
   // console.log(document.documentElement.style.zoom);
 
