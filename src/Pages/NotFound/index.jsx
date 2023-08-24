@@ -7,7 +7,7 @@ function NotFound() {
     <main className={styles.page404}>
       <h1>Vous semblez perdu...</h1>
       <img src={img404} alt="page 404" />
-      <BtnLink link="/" title="Revenir vers l'acceuil" />
+      <BtnLink link="/" title="Revenir vers l'acceuil" name="acceuil" />
     </main>
   );
 }

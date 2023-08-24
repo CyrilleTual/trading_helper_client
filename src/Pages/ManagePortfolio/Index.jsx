@@ -56,8 +56,8 @@ function ManagePortfolio() {
             <div className={styles.wrapper}>
 
               <div className={styles.btns}>
-                {portfolios.length > 0 && <BtnAction value={"Gérer existant"} action={handleClickManage} />}
-                <BtnAction value={"Créer  nouveau "} action={handleClickCreate} />
+                {portfolios.length > 0 && <BtnAction value={"Gérer existant"} action={handleClickManage} name={"gérer existant"}/>}
+                <BtnAction value={"Créer  nouveau "} action={handleClickCreate} name={"nouveau"}/>
               </div>
 
               {manageExisting && (

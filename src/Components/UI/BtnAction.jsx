@@ -1,12 +1,13 @@
 import styles from "./btn.module.css";
 
-function BtnAction({ value, action }) {
+function BtnAction({ value, action, name }) {
    return (
      <input
        className={`${styles.myBtn}`}
        type="button"
        value={value}
        onClick={action}
+       name={name}
      />
    );
 }

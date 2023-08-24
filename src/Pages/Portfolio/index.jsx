@@ -71,7 +71,7 @@ function Portfolio() {
         <Loading />
       ) : (
         !isError &&
-        baseCurrencie &&(
+        baseCurrencie && (
           <main className={styles.portfolio}>
             <h1>Tableau de bord</h1>
             <div className={styles.meter_container}>
@@ -93,6 +93,7 @@ function Portfolio() {
                   <BtnLink
                     link={`/portfolio/${data.id}/detail`}
                     title={`Details - ${portTitle}`}
+                    name="détails"
                   />
                 </span>
               </div>

@@ -146,17 +146,15 @@ function ReEnter() {
           {errorsInForm.length > 0 && (
             <Modal
               display={
-                
-                  <p>
-                    Validation du formulaire impossible : <br />
-                    {errorsInForm.map((error, j) => (
-                      <span key={j}>
-                        {error}
-                        <br />
-                      </span>
-                    ))}
-                  </p>
-                
+                <p>
+                  Validation du formulaire impossible : <br />
+                  {errorsInForm.map((error, j) => (
+                    <span key={j}>
+                      {error}
+                      <br />
+                    </span>
+                  ))}
+                </p>
               }
               action={afterError}
             />
@@ -303,8 +301,8 @@ function ReEnter() {
             </div>
 
             <div className={styles.full_width}>
-              <BtnCancel value="Abandon" action={cancelEnter} />
-              <BtnSubmit value="Validation" />
+              <BtnCancel value="Abandon" action={cancelEnter} name="abandon" />
+              <BtnSubmit value="Validation" name="validation" />
             </div>
           </form>
         </main>

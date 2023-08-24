@@ -177,8 +177,8 @@ function Create({ setCreate }) {
             </select>
           </div>
           <div className={styles.btns}>
-            <BtnCancel value="Abandon" action={cancel} />
-            <BtnSubmit value="Validation" />
+            <BtnCancel value="Abandon" action={cancel} name="abandon" />
+            <BtnSubmit value="Validation" name="validation" />
           </div>
         </form>
       )}

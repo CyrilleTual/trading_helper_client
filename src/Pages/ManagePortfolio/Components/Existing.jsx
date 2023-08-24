@@ -215,12 +215,12 @@ function Existing({ portfolios, isLoading, setManageExisting }) {
 
         {+values.action === 3 || +values.amount > 0 ? (
           <div className={styles.btns}>
-            <BtnCancel value="Abandon" action={cancel} />
-            <BtnSubmit value="Validation" />
+            <BtnCancel value="Abandon" action={cancel} name="abandon" />
+            <BtnSubmit value="Validation" name="validation" />
           </div>
         ) : (
           <div className={styles.btns}>
-            <BtnCancel value="Abandon" action={cancel} />
+            <BtnCancel value="Abandon" action={cancel} name="abandon" />
           </div>
         )}
       </form>

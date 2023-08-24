@@ -237,11 +237,11 @@ function SignIn() {
               />
               <span className={styles.space}> </span> Rester identifié
             </label>
-            <BtnSubmit value="LogIn" />
+            <BtnSubmit value="LogIn" name="login" />
           </form>
           <p>
             Pas de compte ? En créer un{" "}
-            <BtnLink link="/signUp" title="👉 ici 👈" />
+            <BtnLink link="/signUp" title="👉 ici 👈" name="créer compte" />
           </p>
         </>
       )}

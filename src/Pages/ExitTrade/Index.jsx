@@ -243,8 +243,8 @@ function ExitTrade() {
             </div>
 
             <div className={styles.full_width}>
-              <BtnCancel value="Abandon" action={cancelExit} />
-              <BtnSubmit value="Validation" />
+              <BtnCancel value="Abandon" action={cancelExit} name={"abandon"} />
+              <BtnSubmit value="Validation" name="validation"/>
             </div>
           </form>
         </>

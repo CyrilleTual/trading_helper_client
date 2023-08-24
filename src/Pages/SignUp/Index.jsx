@@ -265,10 +265,10 @@ function SignUp() {
           traitements et pratiques en matière de données personnelles, prenez
           connaissance des mentions légales.
         </p>
-        <BtnSubmit value="signUp" />
+        <BtnSubmit value="signUp" name="valider" />
       </form>
       <p>
-        <BtnLink link="/" title="Acceuil" />
+        <BtnLink link="/" title="Acceuil" name="acceuil" />
       </p>
     </main>
   );

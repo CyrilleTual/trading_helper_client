@@ -8,7 +8,7 @@ function ErrorServer() {
     <main className={styles.errorServer}>
       <h1>L'application rencontre un problème ...</h1>
       <img src={broken} alt="broken pencil" />
-      <BtnLink link="/" title="Acceuil" />
+      <BtnLink link="/" title="Acceuil" name="acceuil"/>
     </main>
   );
 }

@@ -631,8 +631,12 @@ function NewTrade() {
                           </div>
 
                           <div className={styles.full_width}>
-                            <BtnCancel value="Abandon" action={cancelEnter} />
-                            <BtnSubmit value="Validation" />
+                            <BtnCancel
+                              value="Abandon"
+                              action={cancelEnter}
+                              name="abandon"
+                            />
+                            <BtnSubmit value="Validation" name="validation" />
                           </div>
                         </form>
                       </div>

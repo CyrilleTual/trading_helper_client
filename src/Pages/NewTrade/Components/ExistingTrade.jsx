@@ -20,7 +20,7 @@ function ExistingTrade() {
         d'un portefeuille : re-enter !
       </p>
       <div>
-        <BtnLink link="/global" title="Acceuil" />
+        <BtnLink link="/global" title="Acceuil" name="global" />
       </div>
     </>
   );

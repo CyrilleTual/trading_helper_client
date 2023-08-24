@@ -43,7 +43,7 @@ function Credits() {
           </NavLink>
         </p>
         <div className={styles.retour}></div>
-        <BtnLink link="/" title="Acceuil" />
+        <BtnLink link="/" title="Acceuil" name="acceuil"/>
       </div>
     </main>
   );

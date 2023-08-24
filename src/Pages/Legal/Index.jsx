@@ -428,7 +428,7 @@ function Legal() {
           <Link to="#">nous contacter en cliquant ici</Link>{" "}
         </p>
       </div>
-      <div className={styles.center}><BtnLink link="/" title= "Acceuil"/></div>
+      <div className={styles.center}><BtnLink link="/" title= "Acceuil" name="acceuil"/></div>
       
     </main>
   );
