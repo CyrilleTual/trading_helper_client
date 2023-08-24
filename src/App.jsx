@@ -3,33 +3,41 @@ import SignIn from "./Pages/SignIn/Index";
 
 import "./variables.css";
 import "./App.css";
-import SignUp from "./Pages/SignUp/Index";
-import Global from "./Pages/GlobalPortfolio/Index";
-import Portfolio from "./Pages/Portfolio";
+import Credits from "./Pages/Credits/Index";
 import DetailPorfolio from "./Pages/DetailPortfolio/Index";
-import NewTrade from "./Pages/NewTrade/Index";
+import ErrorServer from "./Pages/ErrorServer/Index";
 import ExitTrade from "./Pages/ExitTrade/Index";
-import ReEnter from "./Pages/ReEnter/Index";
 import Footer from "./Components/Footer/Footer";
+import Global from "./Pages/GlobalPortfolio/Index";
 import Header from "./Components/Header/Index";
 import Legal from "./Pages/Legal/Index";
-import Credits from "./Pages/Credits/Index";
 import Logged from "./helpers/Logged";
-import NotFound from "./Pages/NotFound";
 import ManagePortfolio from "./Pages/ManagePortfolio/Index";
-import TickerTape from "./Components/Extras/TickerTape";
+import NewTrade from "./Pages/NewTrade/Index";
+import NotFound from "./Pages/NotFound";
+import Portfolio from "./Pages/Portfolio";
+import ReEnter from "./Pages/ReEnter/Index";
+import SignUp from "./Pages/SignUp/Index";
 import Strategies from "./Pages/Strategies/Index";
+import TickerTape from "./Components/Extras/TickerTape";
 
 
 function App() {
+
+  
+
+
   return (
     <div>
       <div className="page-wrapper">
-        <TickerTape />
+        {/* <TickerTape /> */}
         <Header />
         <Routes>
           <Route path="/" element={<SignIn />} />
           <Route path="/signUp" element={<SignUp />} />
+          <Route path="/legal" element={<Legal />} />
+          <Route path="/credits" element={<Credits />} />
+          <Route path="/errorServer" element={<ErrorServer />}/>
           <Route path="/global" element={<Logged child={Global} />} />
           <Route
             path="/portfolio/:portfolioId"
@@ -52,12 +60,7 @@ function App() {
             path="/reEnter/portfolio/:portfolioId/stock/:tradeId"
             element={<Logged child={ReEnter} />}
           />
-          <Route
-            path="/strategies"
-            element={<Logged child={Strategies} />}
-          />
-          <Route path="/legal" element={<Legal />} />
-          <Route path="/credits" element={<Credits />} />
+          <Route path="/strategies" element={<Logged child={Strategies} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

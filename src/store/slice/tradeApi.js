@@ -16,7 +16,6 @@ export const tradeApi = createApi({
   }),
   tagTypes: ["Auth", "Portfolio", "GlobalDatas"],
   endpoints: (builder) => ({
-    
     // log d'une user existant
     signUserIn: builder.mutation({
       query: (payload) => ({
@@ -130,7 +129,6 @@ export const tradeApi = createApi({
       invalidatesTags: ["GlobalDatas", "CheckActive"],
     }),
 
-    // preparation exit / re-enter
     prepare: builder.query({
       query: (id) => `/trades/${id}/prepare`,
       providesTags: ["Prepare"],

@@ -1,0 +1,22 @@
+
+.errorServer{
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+   
+}
+.errorServer H1 {
+      top :20px;
+      margin: 50px 5px 10px 5px;   
+      left: auto;
+      transform: translate(0);
+      white-space:  wrap;
+}
+
+.errorServer img {
+    width: 80%;
+    max-width: 500px;
+
+}
