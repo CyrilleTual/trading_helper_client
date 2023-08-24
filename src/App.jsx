@@ -30,7 +30,7 @@ function App() {
   return (
     <div>
       <div className="page-wrapper">
-        <TickerTape />
+        {/* <TickerTape /> */}
         <Header />
         <Routes>
           <Route path="/" element={<SignIn />} />
