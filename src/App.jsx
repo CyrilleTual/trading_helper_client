@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import { lazy, Suspense } from "react";
 
 import "./variables.css";
 import "./App.css";
@@ -20,7 +21,8 @@ import ReEnter from "./Pages/ReEnter/Index";
 import SignIn from "./Pages/SignIn/Index";
 import SignUp from "./Pages/SignUp/Index";
 import Strategies from "./Pages/Strategies/Index";
-import TickerTape from "./Components/Extras/TickerTape";
+//import TickerTape from "./Components/Extras/TickerTape";
+const TickerTape = lazy(() => import("./Components/Extras/TickerTape"));
 
 
 function App() {
@@ -30,14 +32,16 @@ function App() {
   return (
     <div>
       <div className="page-wrapper">
-        {/* <TickerTape /> */}
+        <Suspense fallback={<p>Loading</p>}>
+          <TickerTape />
+        </Suspense>
         <Header />
         <Routes>
           <Route path="/" element={<SignIn />} />
           <Route path="/signUp" element={<SignUp />} />
           <Route path="/legal" element={<Legal />} />
           <Route path="/credits" element={<Credits />} />
-          <Route path="/errorServer" element={<ErrorServer />}/>
+          <Route path="/errorServer" element={<ErrorServer />} />
           <Route path="/global" element={<Logged child={Global} />} />
           <Route
             path="/portfolio/:portfolioId"
