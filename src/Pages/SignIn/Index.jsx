@@ -73,6 +73,7 @@ function SignIn() {
       navigate("/");
     }
     //c'est la fermeture du modal qui déclanche la poursuite de la navigatio
+    // eslint-disable-next-line
   }, [data, isError]);
 
   //////////////////////////////////////////////////////////////////////////////////

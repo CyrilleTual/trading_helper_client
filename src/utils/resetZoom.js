@@ -1,18 +1,19 @@
-export function resetZoom () {
-
-    console.log ("reset zoom called")
-
-document.documentElement.style.zoom = "1";
-//   const scale = "scale(1)";
-//   document.body.style.webkitTransform = scale; // Chrome, Opera, Safari
-//   document.body.style.msTransform = scale; // IE 9
-//   document.body.style.transform = scale; // General
+// Function to reset the zoom
+export function resetZoom() {
+  console.log("reset zoom called");
 
   document.body.style.zoom = "100%";
+  const viewportmeta = document.querySelector("meta[name=viewport]");
+  viewportmeta.setAttribute("content", "width=device-width, initial-scale=1");
+
+
+
+
 
 
 
 }
-  
-  
 
+
+
+ 

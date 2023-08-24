@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
-import SignIn from "./Pages/SignIn/Index";
 
 import "./variables.css";
 import "./App.css";
+
 import Credits from "./Pages/Credits/Index";
 import DetailPorfolio from "./Pages/DetailPortfolio/Index";
 import ErrorServer from "./Pages/ErrorServer/Index";
@@ -17,6 +17,7 @@ import NewTrade from "./Pages/NewTrade/Index";
 import NotFound from "./Pages/NotFound";
 import Portfolio from "./Pages/Portfolio";
 import ReEnter from "./Pages/ReEnter/Index";
+import SignIn from "./Pages/SignIn/Index";
 import SignUp from "./Pages/SignUp/Index";
 import Strategies from "./Pages/Strategies/Index";
 import TickerTape from "./Components/Extras/TickerTape";
@@ -24,13 +25,10 @@ import TickerTape from "./Components/Extras/TickerTape";
 
 function App() {
 
-  
-
-
   return (
     <div>
       <div className="page-wrapper">
-        {/* <TickerTape /> */}
+        <TickerTape />
         <Header />
         <Routes>
           <Route path="/" element={<SignIn />} />
