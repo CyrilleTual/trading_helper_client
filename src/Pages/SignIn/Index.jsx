@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
 import { useLogByRememberQuery, useSignUserInMutation } from "../../store/slice/tradeApi";
 import { signIn } from "../../store/slice/user";
+
 import BtnSubmit from "../../Components/UI/BtnSubmit";
 import BtnLink from "../../Components/UI/BtnLink";
 import logo from "../../assets/img/logo.jpg";
 import Modal from "../../Components/Modal/Index";
 import styles from "./sign.module.css";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
+ 
  
 // Composant de connexion d'un utilisateur déja enregistré
 function SignIn() {
@@ -196,9 +200,11 @@ function SignIn() {
 
       <img src={logo} alt="Logo" />
       <h1>Trading Helper</h1>
-      {myError === 401 && <p className="blinck">Probleme d'identification</p>}
+      {(myError === 401 || myError === 400) && (
+        <p className="blinck">Probleme d'identification</p>
+      )}
 
-      {(!myError || myError === 401) && (
+      {(!myError || myError === 401 || myError === 400) && (
         <>
           <form onSubmit={handleSubmit}>
             <label htmlFor="email">email :</label>
@@ -244,10 +250,6 @@ function SignIn() {
             <BtnLink link="/signUp" title="👉 ici 👈" name="créer compte" />
           </p>
         </>
-      )}
-
-      {myError && myError !== 401 && (
-        <div> Oups, un problème est survenu.... </div>
       )}
     </main>
   );

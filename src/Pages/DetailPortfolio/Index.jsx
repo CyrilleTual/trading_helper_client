@@ -71,14 +71,6 @@ function DetailPorfolio() {
         }
         newValues.push(values[index]);
       }
-
-      //  values.forEach(function(item){
-      //   if( typeof (item)=== "number"){
-      //     item = item.toFixed(2)
-      //   }
-      //   newValues.push(item)
-      //  })
-
       // on push les values dans un tableau
       arrayValues.push(newValues);
     }
@@ -122,7 +114,8 @@ function DetailPorfolio() {
                     {newArrayValues.map((element, i) => (
                       <tr key={i}>
                         {element.map((elt, j) => (
-                          <td key={j}>{elt}</td>
+                          <td key={j} datatofocus={elt}>{elt}
+                          </td>
                         ))}
                       </tr>
                     ))}

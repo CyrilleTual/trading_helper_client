@@ -47,7 +47,7 @@ function ManagePortfolio() {
               </thead>
               <tbody>
                 {portfolios.map((item, i) => (
-                  <Details key={i} portfolio={item} />
+                  <Details key={i}  portfolio={item} />
                 ))}
               </tbody>
             </table>

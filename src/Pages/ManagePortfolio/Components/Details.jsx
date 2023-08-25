@@ -8,6 +8,8 @@ import {
   useGetCurrenciesQuery
 } from "../../../store/slice/tradeApi";
 
+import styles from "./details.module.css"
+
 
 function Details({ portfolio }) {
   // on va cherhcher un portfolio particulier
@@ -43,11 +45,6 @@ function Details({ portfolio }) {
     }
   }, [data, currencyInfos]);
 
- 
-
-
-
-
   return (
     <>
       {isLoading ? (
@@ -57,7 +54,7 @@ function Details({ portfolio }) {
       ) : (
         !isError && (
           <tr>
-            <td>{portfolio.title}</td>
+            <td className={styles.toinfo} datainfo={`portefeuille : ${portfolio.title}`} >{portfolio.title}</td>
             <td>{baseCurrencie}</td>
             <td>
               {+data.initCredit.toFixed(0)}  

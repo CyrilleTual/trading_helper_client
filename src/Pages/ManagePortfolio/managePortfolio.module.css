@@ -16,6 +16,7 @@
     margin: 30px auto 0 auto;
     border-collapse: collapse;
     border: 2px solid var(--color-bgTableaux);
+    position: relative;
      
 }
 
@@ -24,6 +25,8 @@
   text-align: center;
   border: 2px solid var(--color-bgTableaux);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .managePort td {
@@ -37,6 +40,16 @@
   padding-right:10px;
   text-align: center;
 }
+
+
+
+
+
+
+
+
+
+
 
 .managePort th:nth-of-type(2),
 .managePort td:nth-of-type(2){

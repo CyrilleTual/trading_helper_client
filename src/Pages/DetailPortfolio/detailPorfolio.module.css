@@ -1,65 +1,95 @@
- 
- .arraysContainer{
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: center;
-    width: 100%;
-    margin: 2px;
- }
+.arraysContainer {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  width: 100%;
+  margin: 2px;
+  position: relative;
+}
 
- .leftArray{
-    min-width: 130px;    
- }
- .leftArray td{
-    min-width: 130px;
- }
+.leftArray {
+  min-width: 130px;
+}
+.leftArray td {
+  min-width: 130px;
+}
 
- .rightArray{
-    overflow-x:auto;   
- }
+.rightArray {
+  overflow-x: auto;
+}
 
- .rightArray td {
-    min-width: 100px;
- }
+.rightArray td {
+  min-width: 90px;
+  max-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
- .arraysContainer table {
-    table-layout: fixed;
-    border-collapse: collapse;
-    border: 3px solid var(--color-bgTableaux);;
+
+.rightArray tr:nth-child(2) td:hover{
+   cursor:help;
+}
+
+
+.rightArray tr:nth-child(2) td:hover:after {
+   width: fit-content;
+  height: fit-content;
+  content: attr(datatofocus);
+  background-color: rgb(237, 237, 237);
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translate(-50%);
+  padding: 15px;
+  border-radius: 13px;
+  line-height: 1.5;
+  z-index: 100;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+
+}
+
+.arraysContainer table {
+  table-layout: fixed;
+  border-collapse: collapse;
+  border: 3px solid var(--color-bgTableaux);
 }
 
 .arraysContainer td {
-   padding: 2px;
-   white-space: nowrap;
-   text-align: right;
-   border: 2px solid var(--color-bgTableaux);
+  padding: 2px;
+  white-space: nowrap;
+  text-align: right;
+  border: 2px solid var(--color-bgTableaux);
 }
 
-.arraysContainer  tr:nth-of-type(even){
-    background-color: var(--color-bgTableaux);
+.arraysContainer tr:nth-of-type(even) {
+  background-color: var(--color-bgTableaux);
 }
 
-.action{
-   position: relative;
-   color: black;
-   text-align: center;
-   display: inline-block;
-   width: 100%;
-   height: 100%;
+.action {
+  position: relative;
+  color: black;
+  text-align: center;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
 }
- 
+
+
+
 
 .action:hover .plus {
-    animation: spin 0.25s linear forwards ;
-    fill: green;
+  animation: spin 0.25s linear forwards;
+  fill: green;
 }
-.action:hover .moins{
-    animation: spin 0.125s linear 2  forwards ;;
-    fill: red;
-   
+.action:hover .moins {
+  animation: spin 0.125s linear 2 forwards;
+  fill: red;
 }
-
 
 @keyframes spin {
-  100% { -webkit-transform: rotate(-180deg); scale: 1.5; transform: rotate(-180deg); }
+  100% {
+    -webkit-transform: rotate(-180deg);
+    scale: 1.5;
+    transform: rotate(-180deg);
+  }
 }

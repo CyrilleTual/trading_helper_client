@@ -1,0 +1,18 @@
+.toinfo:hover  {
+  cursor:help;
+}
+.toinfo:hover::after {
+  width: fit-content;
+  height: fit-content;
+  content: attr(datainfo);
+  background-color: rgb(237, 237, 237);
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translate(-50%);
+  padding: 15px;
+  border-radius: 13px;
+  line-height: 1.5;
+  z-index: 100;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
