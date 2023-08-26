@@ -77,7 +77,7 @@ export const tradeApi = createApi({
     // le détail d'un portefeuille par id de portefeuille
     getDetailPortfolioById: builder.query({
       query: (id) => `/portfolios/${id}/details`,
-      providesTags: ["GlobalDatas"],
+      providesTags: ["GlobalDatas", "PortfolioById"],
     }),
 
     // nouveau portfolio
@@ -126,7 +126,7 @@ export const tradeApi = createApi({
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: ["GlobalDatas", "CheckActive"],
+      invalidatesTags: ["GlobalDatas", "CheckActive", "PortfolioById"],
     }),
 
     prepare: builder.query({

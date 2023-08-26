@@ -260,7 +260,7 @@ function NewTrade() {
         await newTrade(datas);
         // on va sur le portefeuille : portfolioID
         navigate(`/portfolio/${datas.portfolio_id}/detail`);
-      } catch (err) {
+              } catch (err) {
         console.log(err);
       }
     }
@@ -295,10 +295,10 @@ function NewTrade() {
         strategy_id: verifiedValues.strategyId,
         portfolio_id: verifiedValues.portfolioId,
         position: verifiedValues.position,
-        stock_id: selectedItem.id,
-        currency_id: tradeCurrency.id,
-        beforeQuote: lastInfos.before,
-        lastQuote: lastInfos.last,
+        stock_id: +selectedItem.id,
+        currency_id: +tradeCurrency.id,
+        beforeQuote: +lastInfos.before,
+        lastQuote: +lastInfos.last,
       });
 
       setSkip(false); // on déclanche le middle ware existingActiveTrad
