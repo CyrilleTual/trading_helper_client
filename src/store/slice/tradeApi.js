@@ -47,7 +47,7 @@ export const tradeApi = createApi({
       }),
     }),
 
-    // la liste des portfolios pour un user
+    // la liste des portfolios pour un user + caratèristiques
     getPortfoliosByUser: builder.query({
       query: (id) => `/portfolios/user/${id}`,
       providesTags: ["Portfolio"],
@@ -59,7 +59,7 @@ export const tradeApi = createApi({
         url: `/portfolios/${id}/idle`,
         method: "PUT",
       }),
-      invalidatesTags: ["GlobalDatas", "Portfolio"],
+      invalidatesTags: ["Portfolio"],
     }),
 
     // la synthèses des portfolios pour un user
@@ -71,13 +71,13 @@ export const tradeApi = createApi({
     // le dashboard d'un portfolio particulier par id de portfolio
     getPortfolioDashboardById: builder.query({
       query: (id) => `/portfolios/${id}/dashboard`,
-      providesTags: ["GlobalDatas", "PortfolioByUser"],
+      providesTags: ["PortfolioByUser"],
     }),
 
     // le détail d'un portefeuille par id de portefeuille
     getDetailPortfolioById: builder.query({
       query: (id) => `/portfolios/${id}/details`,
-      providesTags: ["GlobalDatas", "PortfolioById"],
+      providesTags: ["PortfolioById"],
     }),
 
     // nouveau portfolio
@@ -87,7 +87,7 @@ export const tradeApi = createApi({
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: ["GlobalDatas", "Portfolio"],
+      invalidatesTags: ["Global", "Portfolio"],
     }),
 
     // liste des strategies par user
@@ -110,7 +110,7 @@ export const tradeApi = createApi({
     checkIfActiveTrade: builder.query({
       query: (params) =>
         `/trades/checkIfActive/${params.stockId}&${params.portfolioId}`,
-      providesTags: ["CheckActive"],
+      providesTags: ["CheckIfTradeIsActive"],
     }),
 
     // devises disponibles
@@ -126,7 +126,7 @@ export const tradeApi = createApi({
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: ["GlobalDatas", "CheckActive", "PortfolioById"],
+      invalidatesTags: ["GlobalDatas", "CheckIfTradeIsActive",  "PortfolioByUser","PortfolioById"],
     }),
 
     prepare: builder.query({
@@ -141,7 +141,13 @@ export const tradeApi = createApi({
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: ["GlobalDatas", "CheckActive", "Prepare"],
+      invalidatesTags: [
+        "GlobalDatas",
+        "CheckIfTradeIsActive",
+        "Prepare",
+        "PortfolioByUser",
+        "PortfolioById",
+      ],
     }),
 
     // reEnter Process
@@ -151,7 +157,13 @@ export const tradeApi = createApi({
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: ["GlobalDatas", "CheckActive", "Prepare"],
+      invalidatesTags: [
+        "GlobalDatas",
+        "CheckIfTradeIsActive",
+        "Prepare",
+        "PortfolioByUser",
+        "PortfolioById",
+      ],
     }),
 
     // mouvement de fonds -> deposit
@@ -161,7 +173,7 @@ export const tradeApi = createApi({
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: ["GlobalDatas", "Prepare"],
+      invalidatesTags: ["GlobalDatas", "Prepare", "PortfolioByUser"],
     }),
   }),
 });

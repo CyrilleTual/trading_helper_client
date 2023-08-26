@@ -17,6 +17,7 @@ function Details({ portfolio }) {
   const { data, isLoading, isError } = useGetPortfolioDashboardByIdQuery(
     portfolio.id
   );
+ 
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
