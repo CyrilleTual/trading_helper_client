@@ -25,3 +25,6 @@ yarn-error.log*
 
 # archives 
 /archives
+
+Dockerfile
+.dockerignore
