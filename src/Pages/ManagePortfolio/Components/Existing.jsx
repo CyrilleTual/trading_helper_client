@@ -21,6 +21,8 @@ function Existing({ portfolios, isLoading, setManageExisting }) {
   // pour passer portfolio en idle:
   const [idlePortfolio, { data, isError }] = useIdlePortfolioMutation();
 
+
+
   const initValues = {
     portfolioId: null,
     action: null,
@@ -176,7 +178,7 @@ function Existing({ portfolios, isLoading, setManageExisting }) {
           </select>
         </div>
 
-        <p className={styles.infos}> ce portefeuille est en {currency}</p>
+        <p className={styles.infos}> ce portefeuille est en {currency} et il est {portfolios.status}</p>
 
         <label htmlFor="action">action</label>
         <div className={styles.select_wrap}>
