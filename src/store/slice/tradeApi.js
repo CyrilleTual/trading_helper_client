@@ -55,9 +55,10 @@ export const tradeApi = createApi({
 
     // passage en idle d'un portfolio
     idlePortfolio: builder.mutation({
-      query: (id) => ({
+      query: ({ id, status }) => ({
         url: `/portfolios/${id}/idle`,
         method: "PUT",
+        body: { id:id, status:status },
       }),
       invalidatesTags: ["Portfolio"],
     }),
@@ -126,7 +127,12 @@ export const tradeApi = createApi({
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: ["GlobalDatas", "CheckIfTradeIsActive",  "PortfolioByUser","PortfolioById"],
+      invalidatesTags: [
+        "GlobalDatas",
+        "CheckIfTradeIsActive",
+        "PortfolioByUser",
+        "PortfolioById",
+      ],
     }),
 
     prepare: builder.query({

@@ -8,20 +8,31 @@ import styles from "./existing.module.css";
 import BtnCancel from "../../../Components/UI/BtnCancel";
 import BtnSubmit from "../../../Components/UI/BtnSubmit";
 import Modal from "../../../Components/Modal/Index";
-import { validateAddRemoveFunds, validateIdlePortfolio} from "./validateInputsExisting.js"
+import {
+  validateAddRemoveFunds,
+  validateIdlePortfolio,
+} from "./validateInputsExisting.js";
 
 function Existing({ portfolios, isLoading, setManageExisting }) {
   const navigate = useNavigate();
 
   // devise liée au portefeuille
   const [currency, setCurrency] = useState("");
+  const [status, setStatus] = useState("");
+
+  // actions
+  const initActions = [
+    { id: 0, title: "choisissez" },
+    { id: 1, title: "ajouter des fonds" },
+    { id: 2, title: "retirer des fonds" },
+    { id: 3, title: "désactiver" },
+  ];
+  const [actions, setActions] = useState(initActions);
 
   // Mutation pour créer un deposit (dépot ou retrait)
   const [deposit, { isError: depositError }] = useDepositFundsMutation();
   // pour passer portfolio en idle:
   const [idlePortfolio, { data, isError }] = useIdlePortfolioMutation();
-
-
 
   const initValues = {
     portfolioId: null,
@@ -29,13 +40,6 @@ function Existing({ portfolios, isLoading, setManageExisting }) {
     amount: 0,
   };
   const [values, setValues] = useState(initValues);
-
-  const actions = [
-    { id: 0, title: "choisissez" },
-    { id: 1, title: "ajouter des fonds" },
-    { id: 2, title: "retirer des fonds" },
-    { id: 3, title: "désactiver" },
-  ];
 
   // set du portif de base -> le premier des portfolios
   useEffect(() => {
@@ -52,10 +56,15 @@ function Existing({ portfolios, isLoading, setManageExisting }) {
   // set des devises sur choix liste déroulante
   useEffect(() => {
     if (!isLoading && values.portfolioId !== null) {
-      let { currency } = portfolios.find(
+      let { currency, status } = portfolios.find(
         (portfolio) => +portfolio.id === +values.portfolioId
       );
       setCurrency(currency);
+      setStatus(status);
+      if (status === "idle") {
+        actions.splice(3, 1, { id: 3, title: "activer" });
+        setActions([...actions]);
+      }
     }
     // eslint-disable-next-line
   }, [values.portfolioId]);
@@ -81,7 +90,6 @@ function Existing({ portfolios, isLoading, setManageExisting }) {
     e.preventDefault();
 
     if (+values.action === 1 || +values.action === 2) {
-
       // Appel de la fonction de traitement des données du formulaire
       const { inputErrors, verifiedValues = {} } = validateAddRemoveFunds(
         values,
@@ -100,28 +108,28 @@ function Existing({ portfolios, isLoading, setManageExisting }) {
         }
       }
     } else if (+values.action === 3) {
-
-      const { inputErrors, verifiedValues = {} } =  validateIdlePortfolio( values, portfolios);
+      const { inputErrors, verifiedValues = {} } = validateIdlePortfolio(
+        values,
+        portfolios
+      );
       if (inputErrors.length > 0) {
         setErrorsInForm(inputErrors);
       } else {
+        const infos = { id: verifiedValues.portfolioId, status: status };
         try {
-          idlePortfolio(verifiedValues.portfolioId)
+          idlePortfolio(infos)
             .unwrap()
             .then(console.log("data.msg", data))
             .catch((err) => console.log(err, isError))
-        
+
           setValues(initValues);
           setManageExisting(false);
-           
+
           navigate(`/portfolio/manage`);
         } catch (err) {
           console.log(err);
         }
       }
-
-
-     
     } else {
       cancel();
     }
@@ -178,7 +186,11 @@ function Existing({ portfolios, isLoading, setManageExisting }) {
           </select>
         </div>
 
-        <p className={styles.infos}> ce portefeuille est en {currency} et il est {portfolios.status}</p>
+        <p className={styles.infos}>
+          {" "}
+          ce portefeuille est en {currency} et il est{" "}
+          {status === "active" ? "actif" : "inactif"}.
+        </p>
 
         <label htmlFor="action">action</label>
         <div className={styles.select_wrap}>
