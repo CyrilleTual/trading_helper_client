@@ -7,8 +7,15 @@ import styles from "./navPortfolio.module.css";
 
 function NavPorfolios() {
   // pour les onglets besion de la liste des portfolios pour cet user
-  const id = useSelector((state) => state.user.infos.id);
+  let id = useSelector((state) => state.user.infos.id);
 
+  const role = useSelector((state) => state.user.infos.role);
+
+  // si visitor -> on change id 
+  if (role.substring(0,7) === "visitor"){
+    id =  (role.substring(8))
+  }
+ 
   // on va recupere la liste des portfolios de l'user -> portfolios
   // eslint-disable-next-line
   const { data: portfolios, isLoading } = useGetPortfoliosByUserQuery(id);

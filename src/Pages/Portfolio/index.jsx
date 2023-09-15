@@ -19,7 +19,16 @@ function Portfolio() {
   const [portTitle, setPortTitle] = useState("");
 
   // liste des portfolios de l'user
-  const id = useSelector((state) => state.user.infos.id);
+  let id = useSelector((state) => state.user.infos.id);
+  
+
+  const role = useSelector((state) => state.user.infos.role);
+
+  // si visitor -> on change id
+  if (role.substring(0, 7) === "visitor") {
+     id = role.substring(8);
+  } 
+
   const { data: portfolios, isSuccess: isSuccess1 } =
     useGetPortfoliosByUserQuery(id);
 
@@ -58,12 +67,13 @@ function Portfolio() {
 
   // set de la currency
   useEffect(() => {
-    if ( data && currencyInfos) {
-      const portfolioCurrencie = currencyInfos.find ( el => el.id === data.currencyId)
+    if (data && currencyInfos) {
+      const portfolioCurrencie = currencyInfos.find(
+        (el) => el.id === data.currencyId
+      );
       setBaseCurrencie(portfolioCurrencie.symbol);
     }
-  }, [ data, currencyInfos]);
- 
+  }, [data, currencyInfos]);
 
   return (
     <>

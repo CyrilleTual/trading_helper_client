@@ -17,9 +17,19 @@ function Logged({ child }) {
 
   useEffect(() => {
     resetZoom();
-    if (islogged && role && (role === "admin" || role === "user")) {
+
+    if (
+      islogged &&
+      role &&
+      (role === "admin" ||
+        role === "user" ||
+        role.substring(0, 7) === "visitor")
+    ) {
       setIsAuthorized(true);
-    } else if (islogged && role && role !== "admin" && role !== "user") {
+    } else if (
+      (islogged && role && role !== "admin" && role !== "user") ||
+      role.substring(0, 7) === "visitor"
+    ) {
       resetStorage();
       dispatch(signOut());
       navigate("/");
