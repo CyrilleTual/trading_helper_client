@@ -96,7 +96,6 @@ function NewTrade() {
   const [tradeCurrency, setTradeCurrency] = useState({
     symbol: "€",
     abbr: null,
-    id: 1,
   });
 
   const initValues = {
@@ -203,12 +202,13 @@ function NewTrade() {
       !!portfolios.find((portfolio) => +portfolio.id === +values.portfolioId) &&
       isSuccess1
     ) {
-      let { currencyId, symbol, abbr } = portfolios.find(
+
+ 
+      let {symbol, abbr } = portfolios.find(
         (portfolio) => +portfolio.id === +values.portfolioId
       );
       setTradeCurrency({
         ...tradeCurrency,
-        id: currencyId,
         symbol: symbol,
         abbr: abbr,
       });
@@ -252,12 +252,28 @@ function NewTrade() {
 
   // création effective du nouveau trade -> trade et enter ////////
   async function go() {
+
     if (lastInfos.currency !== tradeCurrency.symbol) {
       cancelEnter();
       return;
     } else {
       try {
+
+   
+
         await newTrade(datas);
+
+
+
+
+
+     
+
+
+
+
+
+
         // on va sur le portefeuille : portfolioID
         navigate(`/portfolio/${datas.portfolio_id}/detail`);
               } catch (err) {
@@ -296,14 +312,20 @@ function NewTrade() {
         portfolio_id: verifiedValues.portfolioId,
         position: verifiedValues.position,
         stock_id: +selectedItem.id,
-        currency_id: +tradeCurrency.id,
+        currency_abbr: tradeCurrency.abbr,
         beforeQuote: +lastInfos.before,
         lastQuote: +lastInfos.last,
       });
 
+      
+
+
+
       setSkip(false); // on déclanche le middle ware existingActiveTrad
     }
   };
+
+
 
   const afterError = () => {
     setErrorsInForm([]);
