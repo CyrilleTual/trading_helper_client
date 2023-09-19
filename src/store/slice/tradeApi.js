@@ -58,7 +58,7 @@ export const tradeApi = createApi({
       query: ({ id, status }) => ({
         url: `/portfolios/${id}/idle`,
         method: "PUT",
-        body: { id:id, status:status },
+        body: { id: id, status: status },
       }),
       invalidatesTags: ["Portfolio"],
     }),
@@ -172,6 +172,22 @@ export const tradeApi = createApi({
       ],
     }),
 
+    // adjust Process
+    adjustment: builder.mutation({
+      query: (payload) => ({
+        url: `/trades/adjustment`,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: [
+        "GlobalDatas",
+        "CheckIfTradeIsActive",
+        "Prepare",
+        "PortfolioByUser",
+        "PortfolioById",
+      ],
+    }),
+
     // mouvement de fonds -> deposit
     depositFunds: builder.mutation({
       query: (payload) => ({
@@ -204,5 +220,7 @@ export const {
   useDepositFundsMutation,
   useIdlePortfolioMutation,
   useLogByRememberQuery,
+  useAdjustmentMutation,
+
 
 } = tradeApi;

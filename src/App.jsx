@@ -4,6 +4,7 @@ import { lazy, Suspense } from "react";
 import "./variables.css";
 import "./App.css";
 
+import Adjust from "./Pages/Adjust/Index";
 import Credits from "./Pages/Credits/Index";
 import DetailPorfolio from "./Pages/DetailPortfolio/Index";
 import ErrorServer from "./Pages/ErrorServer/Index";
@@ -63,6 +64,10 @@ function App() {
           <Route
             path="/reEnter/portfolio/:portfolioId/stock/:tradeId"
             element={<Logged child={ReEnter} />}
+          />
+          <Route
+            path="/portfolio/:portfolioId/ajust/:tradeId"
+            element={<Logged child={Adjust} />}
           />
           <Route path="/strategies" element={<Logged child={Strategies} />} />
           <Route path="*" element={<NotFound />} />

@@ -9,20 +9,15 @@ import { signOut } from "../../store/slice/user";
 import { Loading } from "../../Components/Loading/Index";
 import { ReactComponent as Minus } from "../../assets/img/minus.svg";
 import { ReactComponent as Plus } from "../../assets/img/plus.svg";
+import { ReactComponent as Adjust } from "../../assets/img/adjust.svg";
 
 function DetailPorfolio() {
 
   // on chek si visiteur pour adapter l'affichage 
-
   let isVisitor = true;
-
   if (
     useSelector((state) => state.user.infos.role).substring(0, 7) !== "visitor"
-  )
-    {isVisitor = false}; 
-
-   
-
+  ){isVisitor = false}; 
 
   const { portfolioId } = useParams();
 
@@ -112,15 +107,19 @@ function DetailPorfolio() {
                         <td>{element}</td>
                       </tr>
                     ))}
-                    {!isVisitor && <div>
-                      <tr>
-                      <td>Renforcer ?</td>
-                    </tr>
-                    <tr>
-                      <td>Alléger ?</td>
-                    </tr>
-                      </div>}
-                    
+                    {!isVisitor && (
+                      <>
+                        <tr>
+                          <td>Renforcer ?</td>
+                        </tr>
+                        <tr>
+                          <td>Alléger ?</td>
+                        </tr>
+                        <tr>
+                          <td>Ajuster ?</td>
+                        </tr>
+                      </>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -160,6 +159,19 @@ function DetailPorfolio() {
                                 to={`/portfolio/${portfolioId}/exitTrade/${elt.tradeId}`}
                               >
                                 <Minus className={styles.moins} />
+                              </NavLink>
+                            </td>
+                          ))}
+                        </tr>
+                        <tr>
+                          {data.map((elt, k) => (
+                            <td key={k}>
+                              <NavLink
+                                className={`${styles.moins} ${styles.action}`}
+                                to={`/portfolio/${portfolioId}/ajust/${elt.tradeId}`}
+                              >
+                                <Adjust></Adjust>
+                                
                               </NavLink>
                             </td>
                           ))}

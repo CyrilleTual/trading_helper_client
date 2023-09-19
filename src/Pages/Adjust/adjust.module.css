@@ -1,0 +1,43 @@
+.adjust{
+    width: 400px;
+    margin: auto;
+}
+
+.form_reEnter {
+    composes: form_enter from "../NewTrade/newTrade.module.css"
+}
+ 
+.input_wrap, .input_wrapLong {
+  display: block;
+  width: 45%;
+  text-align: left;
+}
+
+/* Attention pour les dimensions du meter indispensable de passer
+par des variables ( et de les setter 2* -> pour la div container et 
+Pour le svg) */
+
+.adjust{
+    --metW :80vw;
+    --metH : calc((var(--metW))*0.58);
+}
+
+@media  screen and (min-width:480px) {
+   .adjust{
+    --metW :400px;
+    --metH :230px; 
+    }
+}
+
+
+:export {
+    meterWidth: var(--metW);
+    meterHeight: var(--metH);
+}
+
+.adjust .meter_container {
+    text-align: center;
+    width: var(--metW);
+    height: var(--metH); 
+    margin: auto;
+}
