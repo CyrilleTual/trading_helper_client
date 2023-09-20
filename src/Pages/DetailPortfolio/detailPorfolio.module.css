@@ -74,6 +74,9 @@
   height: 100%;
 }
 
+
+
+
 .action:hover .plus {
   animation: spin 0.25s linear forwards;
   fill: green;
@@ -83,11 +86,6 @@
   fill: red;
 }
 
-.action:hover .ajust {
-  animation: spin 0.125s linear 2 forwards;
-  fill: blue;
-}
-
 @keyframes spin {
   100% {
     -webkit-transform: rotate(-180deg);
@@ -95,5 +93,3 @@
     transform: rotate(-180deg);
   }
 }
-
-

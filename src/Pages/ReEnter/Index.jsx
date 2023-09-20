@@ -5,7 +5,6 @@ import {
   usePrepareQuery,
   useReEnterMutation,
   useGetPortfoliosByUserQuery,
-  useGetPortfolioDashboardByIdQuery,
 } from "../../store/slice/tradeApi";
 import styles from "./reEnter.module.css";
 import { Loading } from "../../Components/Loading/Index";
@@ -26,18 +25,12 @@ function ReEnter() {
   const { data: portfolios, isSuccess: isSuccess1 } =
     useGetPortfoliosByUserQuery(useSelector((state) => state.user.infos.id));
 
-  ///// recupération des données du portif selectionné pour avoir montant disponible
-  const [skip, setSkip] = useState(true);
-  const { data: portfolioSelected } =
-    useGetPortfolioDashboardByIdQuery(trade.portfolio_id, { skip });
-
   useEffect(() => {
     if (trade && portfolios) {
       let { symbol } = portfolios.find(
         (portfolio) => portfolio.title === trade.portfolio
       );
       setCurrencySymbol(symbol);
-      setSkip(false)
     }
   }, [trade, portfolios]);
 
@@ -57,7 +50,6 @@ function ReEnter() {
   //   lastQuote,
   //   place,
   //   portfolio,
-  //   portfolio_id
   //   position,
   //   pru,
   //   remains,
@@ -67,6 +59,7 @@ function ReEnter() {
   //   title,
   //   tradeId,
   // } = data;
+
 
   // valeurs de la nouvelle prise de position
   const [values, setValues] = useState({
@@ -92,6 +85,7 @@ function ReEnter() {
     // eslint-disable-next-line
   }, [trade]);
 
+
   /// to do -> verifier que l'on est bien sur le bon trade
   /// -> tradeId === trade.tradeId ?
 
@@ -105,40 +99,37 @@ function ReEnter() {
     e.preventDefault();
 
     // Appel de la fonction de traitement des données du formulaire
-    const { inputErrors, verifiedValues } = validate(
-      values,
-      trade.position,
-      portfolioSelected.cash
-    );
+    const { inputErrors, verifiedValues } = validate(values, trade.position);
 
-    if (inputErrors.length > 0) {
+     if (inputErrors.length > 0) {
       setErrorsInForm(inputErrors);
     } else {
-      const datas = {
-        date: verifiedValues.date,
-        price: verifiedValues.price,
-        target: verifiedValues.target,
-        stop: verifiedValues.stop,
-        quantity: verifiedValues.quantity,
-        fees: verifiedValues.fees,
-        tax: verifiedValues.fees,
-        comment: verifiedValues.comment,
-        trade_id: +tradeId,
-        stock_id: +trade.stock_id,
-      };
-      try {
-        const resp = await reEnter(datas);
-        console.log(resp);
-        navigate(`/portfolio/${trade.portfolio_id}/detail`);
-      } catch (err) {
-        console.log(err);
-      }
+       const datas = {
+         date: verifiedValues.date,
+         price: verifiedValues.price,
+         target: verifiedValues.target,
+         stop: verifiedValues.stop,
+         quantity: verifiedValues.quantity,
+         fees: verifiedValues.fees,
+         tax: verifiedValues.fees,
+         comment: verifiedValues.comment,
+         trade_id: +tradeId,
+         stock_id: +trade.stock_id,
+       };
+       try {
+         const resp = await reEnter(datas);
+         console.log(resp);
+         navigate(`/portfolio/${trade.portfolio_id}/detail`);
+       } catch (err) {
+         console.log(err);
+       }
     }
   };
 
-  const afterError = () => {
-    setErrorsInForm([]);
-  };
+    const afterError = () => {
+      setErrorsInForm([]);
+    };
+
 
   /////// cancel enter
   function cancelEnter() {

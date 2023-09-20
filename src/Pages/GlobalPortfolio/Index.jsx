@@ -37,9 +37,6 @@ function Global() {
 
   // set de la devise de base
   const [baseCurrencie, setbaseCurrencie] = useState("");
-
-
-
   useEffect(() => {
     if (global) {
        setbaseCurrencie(global.currencySymbol);

@@ -8,7 +8,6 @@ import {
   useGetStategiesByUserIdQuery,
   useLastQuoteQuery,
   useNewTradeMutation,
-  useGetPortfolioDashboardByIdQuery,
 } from "../../store/slice/tradeApi";
 import SearchStock from "./Components/SearchStock";
 import ExistingTrade from "./Components/ExistingTrade";
@@ -203,7 +202,9 @@ function NewTrade() {
       !!portfolios.find((portfolio) => +portfolio.id === +values.portfolioId) &&
       isSuccess1
     ) {
-      let { symbol, abbr } = portfolios.find(
+
+ 
+      let {symbol, abbr } = portfolios.find(
         (portfolio) => +portfolio.id === +values.portfolioId
       );
       setTradeCurrency({
@@ -251,16 +252,31 @@ function NewTrade() {
 
   // création effective du nouveau trade -> trade et enter ////////
   async function go() {
+
     if (lastInfos.currency !== tradeCurrency.symbol) {
       cancelEnter();
       return;
     } else {
       try {
+
+   
+
         await newTrade(datas);
+
+
+
+
+
+     
+
+
+
+
+
 
         // on va sur le portefeuille : portfolioID
         navigate(`/portfolio/${datas.portfolio_id}/detail`);
-      } catch (err) {
+              } catch (err) {
         console.log(err);
       }
     }
@@ -273,21 +289,11 @@ function NewTrade() {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
-  ///// recupération des données du portif selectionné pour avoir montant disponible
-  const [skip3, setSkip3] = useState(true);
-  const { data: portfolioSelected  } =
-    useGetPortfolioDashboardByIdQuery(+values.portfolioId, { skip3 });
-
-  ///// lors de la validation du formulaire
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setSkip3 (false); 
-
     // Appel de la fonction de traitement des données du formulaire
-    const { inputErrors, verifiedValues} = validate(values,  portfolioSelected.cash );
-
+    const { inputErrors, verifiedValues } = validate(values);
 
     if (inputErrors.length > 0) {
       setErrorsInForm(inputErrors);
@@ -311,9 +317,15 @@ function NewTrade() {
         lastQuote: +lastInfos.last,
       });
 
+      
+
+
+
       setSkip(false); // on déclanche le middle ware existingActiveTrad
     }
   };
+
+
 
   const afterError = () => {
     setErrorsInForm([]);
