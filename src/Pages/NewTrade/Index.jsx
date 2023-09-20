@@ -275,7 +275,7 @@ function NewTrade() {
 
   ///// recupération des données du portif selectionné pour avoir montant disponible
   const [skip3, setSkip3] = useState(true);
-  const { data: portfolioSelected, isSuccess: portfolioSuccess } =
+  const { data: portfolioSelected  } =
     useGetPortfolioDashboardByIdQuery(+values.portfolioId, { skip3 });
 
   ///// lors de la validation du formulaire

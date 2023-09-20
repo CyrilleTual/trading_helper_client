@@ -28,7 +28,7 @@ function ReEnter() {
 
   ///// recupération des données du portif selectionné pour avoir montant disponible
   const [skip, setSkip] = useState(true);
-  const { data: portfolioSelected, isSuccess: portfolioSuccess } =
+  const { data: portfolioSelected } =
     useGetPortfolioDashboardByIdQuery(trade.portfolio_id, { skip });
 
   useEffect(() => {
