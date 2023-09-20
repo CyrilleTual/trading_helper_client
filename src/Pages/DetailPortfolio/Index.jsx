@@ -90,7 +90,7 @@ function DetailPorfolio() {
         ),
       ]);
     }
-    // eslint-disable-next-line
+  // eslint-disable-next-line
   }, [data, isLoading]);
 
   const afterModal = () => {
