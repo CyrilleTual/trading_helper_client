@@ -3,14 +3,22 @@
  * @param {object} values - Les valeurs à valider.
  * @returns - Un objet contenant les erreurs de validation et les valeurs nettoyées.
  */
-export function validate(values, position) {
+export function validate(values, position, cashAvailable) {
   const inputErrors = []; // Tableau des erreurs de validation
   let verifiedValues = []; // Tableau des valeurs validées à retourner
 
   const { fees, price, quantity, stop, target, tax, comment, date } = values;
 
   // Vérification que les champs numériques sont bien numériques et non négatifs
-  const mustBeNumbers = [fees, price, quantity, stop, target, tax];
+  const mustBeNumbers = [
+    fees,
+    price,
+    quantity,
+    stop,
+    target,
+    tax,
+    cashAvailable,
+  ];
 
   for (const value of mustBeNumbers) {
     if (
@@ -24,20 +32,28 @@ export function validate(values, position) {
     }
   }
 
+  // varification de l'approvisionnement suffisant du compte
+  if (price * quantity + fees + tax > cashAvailable) {
+    const max = Math.trunc((cashAvailable - fees - tax) / price);
+
+    inputErrors.push(
+      `Liquidités insuffisantes sur le compte. ${
+        max > 1 ? `Vous pouvez entrer sur ${max} titres` : ``
+      }`
+    );
+    return { inputErrors, verifiedValues };
+  }
+
   // Vérification de la cohérence des saisies en fonction de la position
   switch (position) {
     case "long":
       if (+target < +price || +stop > +price) {
-        inputErrors.push(
-          "Incohérence des valeurs saisies "
-        );
+        inputErrors.push("Incohérence des valeurs saisies ");
       }
       break;
     case "short":
       if (+target > +price || +stop < +price) {
-        inputErrors.push(
-          "Incohérence des valeurs saisies "
-        );
+        inputErrors.push("Incohérence des valeurs saisies ");
       }
       break;
     default:
@@ -68,7 +84,7 @@ export function validate(values, position) {
     target: +target,
     tax: +tax,
     comment: cleanComment,
-    date: date
+    date: date,
   };
 
   // Retourne le tableau des erreurs et les valeurs formatées

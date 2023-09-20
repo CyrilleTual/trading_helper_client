@@ -5,6 +5,20 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 
 // on passe en props le contenu du modal et une action à faire sur fermeture
+//exemple
+//<Modal
+//   display={
+//     <p>
+//      ICI LE MESSAGE
+//     </p>
+//   }
+//   action={afterError}
+// />;
+////////////////// et dans le code : 
+  // const afterError = () => {
+  //   navigate(`/`);
+  // };
+
 
 export default function Modal({ display, action }) {
 

@@ -3,7 +3,7 @@
  * @param {object} values - Les valeurs à valider.
  * @returns - Un objet contenant les erreurs de validation et les valeurs nettoyées.
  */
-export function validate(values) {
+export function validate(values, cashAvailable) {
   const {
     fees,
     portfolioId,
@@ -30,6 +30,7 @@ export function validate(values) {
     strategyId,
     target,
     tax,
+    cashAvailable,
   ];
 
   for (const value of mustBeNumbers) {
@@ -42,6 +43,19 @@ export function validate(values) {
       inputErrors.push("Veuillez vérifier les données saisies");
       return { inputErrors, verifiedValues }; // Sortir de la fonction si un élément est invalide
     }
+  }
+
+  // varification de l'approvisionnement suffisant du compte
+  if (price * quantity + fees + tax > cashAvailable) {
+    const max = Math.trunc((cashAvailable - fees - tax) / price);
+
+    inputErrors.push(
+      `Liquidités insuffisantes sur le compte. ${
+        max > 1 ? `Vous pouvez entrer sur ${max} titres` : ``
+      }`
+    );
+
+    return { inputErrors, verifiedValues };
   }
 
   // Vérification de la cohérence des saisies en fonction de la position
@@ -62,7 +76,7 @@ export function validate(values) {
       break;
     default:
       inputErrors.push("Il y a un problème dans le formulaire de saisie.");
-      return { inputErrors, verifiedValues }; 
+      return { inputErrors, verifiedValues };
   }
 
   // Préparation du commentaire en nettoyant les espaces en début et en fin
@@ -70,12 +84,12 @@ export function validate(values) {
   // Vérification de la longueur du commentaire
   if (cleanComment.length > 200) {
     inputErrors.push("Commentaire de 200 caractères maximum SVP.");
-    return { inputErrors, verifiedValues };  
+    return { inputErrors, verifiedValues };
   }
 
   // Les valeurs validées et formatées
   verifiedValues = {
-    fees:   +fees,
+    fees: +fees,
     portfolioId: +portfolioId,
     price: +price,
     quantity: +quantity,
@@ -85,7 +99,7 @@ export function validate(values) {
     tax: +tax,
     position: position,
     comment: cleanComment,
-  }
+  };
 
   // Retourne le tableau des erreurs et les valeurs formatées
   return { inputErrors, verifiedValues };

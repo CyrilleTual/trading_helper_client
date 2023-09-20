@@ -69,7 +69,7 @@ function Portfolio() {
   useEffect(() => {
     if (data && currencyInfos) {
       const portfolioCurrencie = currencyInfos.find(
-        (el) => el.id === data.currencyId
+        (el) => el.abbr === data.currencyAbbr
       );
       setBaseCurrencie(portfolioCurrencie.symbol);
     }

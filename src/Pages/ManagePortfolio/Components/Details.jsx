@@ -12,12 +12,13 @@ import styles from "./details.module.css"
 
 
 function Details({ portfolio }) {
+  
   // on va cherhcher un portfolio particulier
-
   const { data, isLoading, isError } = useGetPortfolioDashboardByIdQuery(
     portfolio.id
   );
- 
+
+  
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -36,11 +37,12 @@ function Details({ portfolio }) {
   const [baseCurrencie, setBaseCurrencie] = useState("");
   // recup des infos sur les currrencies (toutes)
   const { data: currencyInfos } = useGetCurrenciesQuery();
+
   // set de la currency
   useEffect(() => {
     if (data && currencyInfos) {
       const portfolioCurrencie = currencyInfos.find(
-        (el) => el.id === data.currencyId
+        (el) => el.abbr === data.currencyAbbr
       );
       setBaseCurrencie(portfolioCurrencie.symbol);
     }
