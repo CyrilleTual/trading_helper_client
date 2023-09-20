@@ -49,7 +49,7 @@ function Logged({ child }) {
       navigate("/");
     }
     // eslint-disable-next-line
-  }, [isLogged, role, navigate, dispatch]);
+  }, [ role, navigate, dispatch]);
 
   if (isAuthorized) return <Child />;
 

@@ -5,7 +5,7 @@
  */
 export function validate(values, currencies, portfolios) {
 
-  const { comment, currencyId, deposit, title } = values;
+  const { comment, currencyAbbr, deposit, title } = values;
   const inputErrors = []; // Tableau des erreurs de validation
   let verifiedValues = []; // Tableau des valeurs validées à retourner
 
@@ -46,7 +46,7 @@ export function validate(values, currencies, portfolios) {
     return { inputErrors };
   }
   // verification que la currency existe bien
-  if (currencies.find((elet) => +elet.id === +currencyId) === undefined) {
+  if (currencies.find((elet) => elet.abbr === currencyAbbr) === undefined) {
     inputErrors.push("Problème dans le formulaire ");
     return { inputErrors };
   }
@@ -54,7 +54,7 @@ export function validate(values, currencies, portfolios) {
   // Les valeurs validées et formatées
   verifiedValues = {
     comment: cleanComment,
-    currencyId: +currencyId,
+    currencyAbbr: currencyAbbr,
     deposit: +deposit,
     title: cleanTitle,
   };

@@ -29,16 +29,17 @@ function Create({ setCreate }) {
     title: "",
     comment: "",
     deposit: 0,
-    currencyId: 0,
+    currencyAbbr: "",
   };
 
   const [values, setValues] = useState(initials);
 
   // Initialisation  de la liste des devises après récupération des données
   useEffect(() => {
+
     if (isSuccess) {
-      const toset = currencies[0].id;
-      setValues({ ...values, currencyId: toset });
+      const toset = currencies[0].abbr;
+      setValues({ ...values, currencyAbbr: toset });
     }
     // eslint-disable-next-line
   }, [currencies]);
@@ -66,8 +67,10 @@ function Create({ setCreate }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    
+
     // Appel de la fonction de traitement des données du formulaire
-    const { inputErrors, verifiedValues = {} } = validate(
+    const { inputErrors, verifiedValues } = validate(
       values,
       currencies,
       portfolios
@@ -80,11 +83,10 @@ function Create({ setCreate }) {
         title: verifiedValues.title,
         comment: verifiedValues.comment,
         deposit: verifiedValues.deposit,
-        currency_id: verifiedValues.currencyId,
+        currency_abbr: verifiedValues.currencyAbbr,
         user_id: +userId,
         status: "active",
       };
-
       go(datas);
     }
   };
@@ -165,12 +167,12 @@ function Create({ setCreate }) {
             />
             <select
               onChange={handleChange}
-              id="currencyId"
-              name="currencyId"
-              value={values.currencyId}
+              id="currencyAbbr"
+              name="currencyAbbr"
+              value={values.currencyAbbr}
             >
               {currencies.map((currency, i) => (
-                <option key={i} value={currency.id}>
+                <option key={i} value={currency.abbr}>
                   {currency.abbr}
                 </option>
               ))}
