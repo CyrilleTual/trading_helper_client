@@ -37,10 +37,11 @@ function Details({ portfolio }) {
   // recup des infos sur les currrencies (toutes)
   const { data: currencyInfos } = useGetCurrenciesQuery();
   // set de la currency
+ 
   useEffect(() => {
     if (data && currencyInfos) {
       const portfolioCurrencie = currencyInfos.find(
-        (el) => el.id === data.currencyId
+        (el) => el.abbr === data.currencyAbbr
       );
       setBaseCurrencie(portfolioCurrencie.symbol);
     }

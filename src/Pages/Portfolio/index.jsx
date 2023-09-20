@@ -65,11 +65,13 @@ function Portfolio() {
     // eslint-disable-next-line
   }, [isError]);
 
+  console.log (currencyInfos, data)
+
   // set de la currency
   useEffect(() => {
     if (data && currencyInfos) {
       const portfolioCurrencie = currencyInfos.find(
-        (el) => el.id === data.currencyId
+        (el) => el.abbr === data.currencyAbbr
       );
       setBaseCurrencie(portfolioCurrencie.symbol);
     }
