@@ -65,7 +65,7 @@ function Portfolio() {
     // eslint-disable-next-line
   }, [isError]);
 
-  console.log (currencyInfos, data)
+ 
 
   // set de la currency
   useEffect(() => {
