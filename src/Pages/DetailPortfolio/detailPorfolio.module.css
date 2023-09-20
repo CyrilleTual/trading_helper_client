@@ -85,6 +85,10 @@
   animation: spin 0.125s linear 2 forwards;
   fill: red;
 }
+.action:hover .ajust {
+  animation: spin 0.125s linear 2 forwards;
+  fill: blue;
+}
 
 @keyframes spin {
   100% {
