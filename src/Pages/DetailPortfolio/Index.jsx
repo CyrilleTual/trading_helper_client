@@ -1,7 +1,7 @@
 import { useParams, NavLink } from "react-router-dom";
 import styles from "./detailPorfolio.module.css";
 import { useGetDetailPortfolioByIdQuery } from "../../store/slice/tradeApi";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { resetStorage } from "../../utils/tools";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,14 +10,16 @@ import { Loading } from "../../Components/Loading/Index";
 import { ReactComponent as Minus } from "../../assets/img/minus.svg";
 import { ReactComponent as Plus } from "../../assets/img/plus.svg";
 import { ReactComponent as Adjust } from "../../assets/img/adjust.svg";
+import Modal from "../../Components/Modal/Index";
 
 function DetailPorfolio() {
-
-  // on chek si visiteur pour adapter l'affichage 
+  // on chek si visiteur pour adapter l'affichage
   let isVisitor = true;
   if (
     useSelector((state) => state.user.infos.role).substring(0, 7) !== "visitor"
-  ){isVisitor = false}; 
+  ) {
+    isVisitor = false;
+  }
 
   const { portfolioId } = useParams();
 
@@ -34,7 +36,7 @@ function DetailPorfolio() {
       dispatch(signOut());
       navigate("/");
     }
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, [isError]);
 
   let myLabels = [
@@ -58,6 +60,45 @@ function DetailPorfolio() {
     "nombre de titres",
   ];
 
+  // alerte si stop touché ou objectif atteint /////////////////////////////////////////
+  const [valuesStopped, setValuesStopped] = useState([]);
+  const [valuesOnObjective, setValuesOnObjective] = useState([]);
+
+  useEffect(() => {
+    if (data) {
+      setValuesOnObjective([
+        ...valuesOnObjective,
+        ...data.filter(
+          (element) =>
+            element.position === "long" && +element.last > +element.target
+        ),
+        ...data.filter(
+          (element) =>
+            element.position === "short" && +element.last < +element.target
+        ),
+      ]);
+
+      setValuesStopped([
+        ...valuesStopped,
+        ...data.filter(
+          (element) =>
+            element.position === "long" && +element.last < +element.stop
+        ),
+        ...data.filter(
+          (element) =>
+            element.position === "short" && +element.last > +element.stop
+        ),
+      ]);
+    }
+  }, [data, isLoading]);
+
+  const afterModal = () => {
+    setValuesStopped([]);
+    setValuesOnObjective([]);
+  };
+
+  // préparation du tableau des valeurs ////////////////////////////////////////////
+
   let newArrayValues = [];
   if (!isLoading && !isError) {
     // on prépare pour affichage de droite à gauche
@@ -66,9 +107,7 @@ function DetailPorfolio() {
 
     for (const element of data) {
       const values = Object.values(element);
-
       let newValues = [];
-
       for (let index = 0; index < values.length; index++) {
         if (
           typeof values[index] === "number" &&
@@ -98,6 +137,31 @@ function DetailPorfolio() {
           <main className={styles.detail}>
             <h1>Trades actifs</h1>
             <div className={styles.arraysContainer}>
+              {(valuesOnObjective.length > 0 || valuesStopped.length > 0) && (
+                <Modal
+                  display={
+                    <>
+                      <h2>Alerte :</h2>
+                      {valuesOnObjective.length > 0 && (
+                        <>
+                          {valuesOnObjective.map((elt, io) => (
+                            <p key={io}>{elt.title} est sur objectif.</p>
+                          ))}
+                        </>
+                      )}
+                      {valuesStopped.length > 0 && (
+                        <>
+                          {valuesStopped.map((elt, is) => (
+                            <p key={is}>{elt.title} a touché son stop.</p>
+                          ))}
+                        </>
+                      )}
+                    </>
+                  }
+                  action={afterModal}
+                />
+              )}
+
               <div className={styles.leftArray}>
                 {" "}
                 <table>
@@ -167,11 +231,10 @@ function DetailPorfolio() {
                           {data.map((elt, k) => (
                             <td key={k}>
                               <NavLink
-                                className={`${styles.moins} ${styles.action}`}
+                                className={`${styles.action}`}
                                 to={`/portfolio/${portfolioId}/ajust/${elt.tradeId}`}
                               >
-                                <Adjust></Adjust>
-                                
+                                <Adjust className={styles.ajust}></Adjust>
                               </NavLink>
                             </td>
                           ))}
