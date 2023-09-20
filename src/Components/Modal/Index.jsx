@@ -12,14 +12,14 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
   //   navigate("/global");
   // };
 
-{/* <Modal
-  display={
-    <p>
-      ICI VOTRE TEXTE
-    </p>
-  }
-  action={afterModal}
-/>; */}
+//<Modal
+  //display={
+    //<p>
+      //ICI VOTRE TEXTE
+    //</p>
+  //}
+ //action={afterModal}
+///>; 
 
 
 

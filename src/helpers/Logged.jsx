@@ -11,7 +11,6 @@ function Logged({ child }) {
   const dispatch = useDispatch();
 
   const [isAuthorized, setIsAuthorized] = useState(false);
-
   const [isCandidate, setIsCandidate] = useState(false);
 
   const Child = child; // pour reconnaissance comme composant réact modification casse
@@ -50,7 +49,7 @@ function Logged({ child }) {
       navigate("/");
     }
     // eslint-disable-next-line
-  });
+  }, [isLogged, role, navigate, dispatch]);
 
   if (isAuthorized) return <Child />;
 
