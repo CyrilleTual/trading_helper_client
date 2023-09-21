@@ -10,6 +10,7 @@ import { Loading } from "../../Components/Loading/Index";
 import { ReactComponent as Minus } from "../../assets/img/minus.svg";
 import { ReactComponent as Plus } from "../../assets/img/plus.svg";
 import { ReactComponent as Adjust } from "../../assets/img/adjust.svg";
+import { ReactComponent as Details } from "../../assets/img/details.svg";
 import Modal from "../../Components/Modal/Index";
 
 function DetailPorfolio() {
@@ -193,6 +194,9 @@ function DetailPorfolio() {
                     {!isVisitor && (
                       <>
                         <tr>
+                          <td>Détail ?</td>
+                        </tr>
+                        <tr>
                           <td>Renforcer ?</td>
                         </tr>
                         <tr>
@@ -218,22 +222,33 @@ function DetailPorfolio() {
                         ))}
                       </tr>
                     ))}
+                    <tr>
+                      {data.map((elt, j) => (
+                        <td key={j}>
+                          <NavLink
+                            className={` ${styles.action}`}
+                            to={`/portfolio/${portfolioId}/detail/${elt.tradeId}`}
+                          >
+                            <Details className={styles.details} />
+                          </NavLink>
+                        </td>
+                      ))}
+                    </tr>
+                    <tr>
+                      {data.map((elt, j) => (
+                        <td key={j}>
+                          <NavLink
+                            className={` ${styles.action}`}
+                            to={`/reEnter/portfolio/${portfolioId}/stock/${elt.tradeId}`}
+                          >
+                            <Plus className={styles.plus} />
+                          </NavLink>
+                        </td>
+                      ))}
+                    </tr>
 
                     {!isVisitor && (
                       <>
-                        <tr>
-                          {data.map((elt, j) => (
-                            <td key={j}>
-                              <NavLink
-                                className={` ${styles.action}`}
-                                to={`/reEnter/portfolio/${portfolioId}/stock/${elt.tradeId}`}
-                              >
-                                <Plus className={styles.plus} />
-                              </NavLink>
-                            </td>
-                          ))}
-                        </tr>
-
                         <tr>
                           {data.map((elt, k) => (
                             <td key={k}>
@@ -252,9 +267,12 @@ function DetailPorfolio() {
                               <NavLink
                                 className={`${styles.action}`}
                                 to={{
-                                  pathname: `/portfolio/${portfolioId}/ajust/${elt.tradeId}`
+                                  pathname: `/portfolio/${portfolioId}/ajust/${elt.tradeId}`,
                                 }}
-                                state={{portfolioId:portfolioId, tradesIdArray:listOfTrades}}
+                                state={{
+                                  portfolioId: portfolioId,
+                                  tradesIdArray: listOfTrades,
+                                }}
                               >
                                 <Adjust className={styles.ajust}></Adjust>
                               </NavLink>

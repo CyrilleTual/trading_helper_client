@@ -1,0 +1,33 @@
+.details{
+    width: 400px;
+    margin: auto;
+    --metW :80vw;
+    --metH : calc((var(--metW))*0.58);
+}
+
+@media  screen and (min-width:480px) {
+   .details{
+    --metW :400px;
+    --metH :230px; 
+    }
+}
+
+
+
+
+
+
+/* Attention pour les dimensions du meter indispensable de passer
+par des variables ( et de les setter 2* -> pour la div container et 
+Pour le svg) */
+:export {
+    meterWidth: var(--metW);
+    meterHeight: var(--metH);
+}
+
+.details .meter_container {
+    text-align: center;
+    width: var(--metW);
+    height: var(--metH); 
+    margin: auto;
+}

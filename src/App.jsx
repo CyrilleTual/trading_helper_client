@@ -22,6 +22,8 @@ import ReEnter from "./Pages/ReEnter/Index";
 import SignIn from "./Pages/SignIn/Index";
 import SignUp from "./Pages/SignUp/Index";
 import Strategies from "./Pages/Strategies/Index";
+import DetailTrade from "./Pages/DetailTrade/Index";
+import ShowAllDetails from "./Pages/ShowsAllDetails/Index";
 //import TickerTape from "./Components/Extras/TickerTape";
 const TickerTape = lazy(() => import("./Components/Extras/TickerTape"));
 
@@ -68,6 +70,14 @@ function App() {
           <Route
             path="/portfolio/:portfolioId/ajust/:tradeId"
             element={<Logged child={Adjust} />}
+          />
+          <Route
+            path="/portfolio/:portfolioId/detail/:tradeId"
+            element={<Logged child={DetailTrade} />}
+          />
+          <Route
+            path="/showAll"
+            element={<Logged child={ShowAllDetails} />}
           />
           <Route path="/strategies" element={<Logged child={Strategies} />} />
           <Route path="*" element={<NotFound />} />

@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signOut } from "../../store/slice/user";
 import { Loading } from "../../Components/Loading/Index";
+import BtnLink from "../../Components/UI/BtnLink";
 
 function Global() {
 
@@ -46,7 +47,7 @@ function Global() {
   return (
     <>
       {isLoading ? (
-        <Loading/>
+        <Loading />
       ) : (
         !isError && (
           <>
@@ -55,7 +56,7 @@ function Global() {
               <div className={styles.meter_container}>
                 <PerfMeter
                   legend="Trades actifs"
-                  min={(global.perfIfStopeed).toFixed(0)}
+                  min={global.perfIfStopeed.toFixed(0)}
                   max={(global.potential + global.currentPv).toFixed(0)}
                   perf={global.currentPv}
                   meterWidth={styles.meterWidth}
@@ -64,6 +65,12 @@ function Global() {
               </div>
 
               <PortTable datas={global} baseCurrencie={baseCurrencie} />
+
+              <BtnLink
+                link={`/showAll`}
+                title={`Parcourir les trades ouverts`}
+                name="détails"
+              />
             </main>
           </>
         )
