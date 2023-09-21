@@ -25,7 +25,6 @@ function Adjust() {
   // on prépare les icones de navigations next et before
   // recherche de l'index du trade actuel
   const indexOfActual = tradesIdArray.indexOf(+tradeId);
-
   const previousId =
     indexOfActual !== 0 && indexOfActual !== -1
       ? indexOfActual - 1
@@ -34,12 +33,11 @@ function Adjust() {
     indexOfActual !== tradesIdArray.length - 1 && indexOfActual !== -1
       ? indexOfActual + 1
       : indexOfActual;
-
   const previousTradeId = tradesIdArray[previousId]     
   const nextTradeId = tradesIdArray[nextId];
      
 
-  // va recupérer les infos du trade
+  // va recupérer les infos du trade avec son id 
   const { data: trade, isSuccess } = usePrepareQuery(tradeId);
 
   // on se sert des portfolios pour obtenir le symbole des currencies
@@ -56,6 +54,8 @@ function Adjust() {
     risk: 0,
     riskPc: 0,
     rr: 0,
+    targetAtPc:0,
+    riskAtPc:0,
   });
 
   // nouveaux metriques
@@ -66,6 +66,8 @@ function Adjust() {
     risk: 0,
     riskPc: 0,
     rr: 0,
+    targetAtPc: null,
+    riskAtPc: null,
   });
 
   useEffect(() => {
@@ -110,7 +112,8 @@ function Adjust() {
     target: 0,
     stop: 0,
   });
-  ///// gestion du formulaire //////////////////////////////
+
+  ///// calcul des valeurs  //////////////////////////////
   useEffect(() => {
     if (isSuccess) {
       setValues({
@@ -178,6 +181,8 @@ function Adjust() {
   function cancelEnter() {
     navigate(`/portfolio/${trade.portfolio_id}/detail`);
   }
+
+
 
   return (
     <>
@@ -262,7 +267,8 @@ function Adjust() {
                 value={values.target}
                 onChange={handleChange}
               />{" "}
-              {currencySymbol}
+              {currencySymbol} à {newMetrics.targetAtPc || metrics.targetAtPc} %
+              du cours.
             </div>
 
             <label className={styles.label} htmlFor="stop">
@@ -279,7 +285,8 @@ function Adjust() {
                 value={values.stop}
                 onChange={handleChange}
               />{" "}
-              {currencySymbol}
+              {currencySymbol} à {newMetrics.riskAtPc || metrics.riskAtPc} %
+              du cours.
             </div>
 
             {trade &&

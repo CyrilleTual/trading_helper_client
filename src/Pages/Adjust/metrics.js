@@ -28,6 +28,12 @@ export function calculMetrics(trade, metrics, setMetrics) {
       ? (trade.stop - trade.pru) / trade.pru
       : (trade.pru - trade.stop) / trade.pru;
   const rr = risk < 0 ? -potential / risk : 0;
+
+   
+
+  const targetAtPc = (trade.target - trade.lastQuote)/trade.lastQuote 
+  const riskAtPc = ((trade.stop - trade.lastQuote) / trade.lastQuote)  ;
+
   setMetrics({
     ...metrics,
     balance: +balance,
@@ -37,12 +43,13 @@ export function calculMetrics(trade, metrics, setMetrics) {
     risk: +risk.toFixed(3),
     riskPc: +(riskPc * 100).toFixed(2),
     rr: +rr.toFixed(2),
+    targetAtPc: (targetAtPc*100).toFixed(2),
+    riskAtPc: (riskAtPc*100).toFixed(2)
   });
 }
 
 export function calculNewMetrics(trade, values, newMetrics, setNewMetrics) {
 
-    
   if (
     (trade.position === "long" &&
       +values.target >= +trade.lastQuote &&
@@ -69,6 +76,9 @@ export function calculNewMetrics(trade, values, newMetrics, setNewMetrics) {
         : (trade.pru - values.stop) / trade.pru;
     const rr = risk < 0 ? -potential / risk : 0;
 
+    const targetAtPc = (values.target - trade.lastQuote) / trade.lastQuote;
+    const riskAtPc = (values.stop - trade.lastQuote) / trade.lastQuote;
+
     setNewMetrics({
       ...newMetrics,
       valid: true,
@@ -77,6 +87,8 @@ export function calculNewMetrics(trade, values, newMetrics, setNewMetrics) {
       risk: +risk.toFixed(3),
       riskPc: (+riskPc * 100).toFixed(2),
       rr: +rr.toFixed(2),
+      targetAtPc: (targetAtPc * 100).toFixed(2),
+      riskAtPc: (riskAtPc * 100).toFixed(2),
     });
   }else{
     setNewMetrics({

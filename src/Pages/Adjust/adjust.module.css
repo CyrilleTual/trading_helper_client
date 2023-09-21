@@ -13,6 +13,14 @@
   text-align: left;
 }
 
+.form_reEnter .label {
+    width: 28% !important;  
+}
+
+.form_reEnter .input_wrap {
+    width: 68% !important;
+}
+
 /* Attention pour les dimensions du meter indispensable de passer
 par des variables ( et de les setter 2* -> pour la div container et 
 Pour le svg) */
