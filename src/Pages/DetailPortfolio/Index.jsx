@@ -60,12 +60,28 @@ function DetailPorfolio() {
     "nombre de titres",
   ];
 
+  // construction du tableau des numero de trade 
+
+  const [listOfTrades, setListOfTrades] = useState([]);
+  
+
   // alerte si stop touché ou objectif atteint /////////////////////////////////////////
   const [valuesStopped, setValuesStopped] = useState([]);
   const [valuesOnObjective, setValuesOnObjective] = useState([]);
 
   useEffect(() => {
     if (data) {
+
+
+      const arrayTrades = [];
+      for (const elt of data) {
+        arrayTrades.push (elt.tradeId)
+      }
+
+      setListOfTrades([...arrayTrades])
+
+     
+
       setValuesOnObjective([
         ...valuesOnObjective,
         ...data.filter(
@@ -92,6 +108,8 @@ function DetailPorfolio() {
     }
   // eslint-disable-next-line
   }, [data, isLoading]);
+
+
 
   const afterModal = () => {
     setValuesStopped([]);
@@ -233,7 +251,10 @@ function DetailPorfolio() {
                             <td key={k}>
                               <NavLink
                                 className={`${styles.action}`}
-                                to={`/portfolio/${portfolioId}/ajust/${elt.tradeId}`}
+                                to={{
+                                  pathname: `/portfolio/${portfolioId}/ajust/${elt.tradeId}`
+                                }}
+                                state={{portfolioId:portfolioId, tradesIdArray:listOfTrades}}
                               >
                                 <Adjust className={styles.ajust}></Adjust>
                               </NavLink>

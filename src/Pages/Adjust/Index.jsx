@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation, NavLink } from "react-router-dom";
 import {
   usePrepareQuery,
   useGetPortfoliosByUserQuery,
@@ -13,11 +13,31 @@ import BtnCancel from "../../Components/UI/BtnCancel";
 import Modal from "../../Components/Modal/Index";
 import { validate } from "./validateInputsAdjust";
 import { calculMetrics, calculNewMetrics } from "./metrics.js";
-import  PerfMeter from "./../../Components/PerfMeter/Index"
+import PerfMeter from "./../../Components/PerfMeter/Index";
 
 function Adjust() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const { portfolioId, tradesIdArray} = location.state;
   const { tradeId } = useParams();
+
+  // on prépare les icones de navigations next et before
+  // recherche de l'index du trade actuel
+  const indexOfActual = tradesIdArray.indexOf(+tradeId);
+
+  const previousId =
+    indexOfActual !== 0 && indexOfActual !== -1
+      ? indexOfActual - 1
+      : indexOfActual;
+  const nextId =
+    indexOfActual !== tradesIdArray.length - 1 && indexOfActual !== -1
+      ? indexOfActual + 1
+      : indexOfActual;
+
+  const previousTradeId = tradesIdArray[previousId]     
+  const nextTradeId = tradesIdArray[nextId];
+     
 
   // va recupérer les infos du trade
   const { data: trade, isSuccess } = usePrepareQuery(tradeId);
@@ -38,7 +58,7 @@ function Adjust() {
     rr: 0,
   });
 
-  // nouveaux metriques 
+  // nouveaux metriques
   const [newMetrics, setNewMetrics] = useState({
     valid: true,
     potential: 0,
@@ -59,8 +79,6 @@ function Adjust() {
 
   // hook d'ajustement
   const [adjustment] = useAdjustmentMutation();
-
- 
 
   ///  disponible pour l'affichage : ( trade . qq chose)
   //   const {
@@ -108,20 +126,13 @@ function Adjust() {
     // eslint-disable-next-line
   }, [trade]);
 
-  // calcul avec les nouveaux paramèrtes 
-  useEffect (() =>{
+  // calcul avec les nouveaux paramèrtes
+  useEffect(() => {
     if (isSuccess) {
       calculNewMetrics(trade, values, newMetrics, setNewMetrics);
     }
     // eslint-disable-next-line
-  }, [values]); 
-
-
-
-
-
-
-
+  }, [values]);
 
   /// to do -> verifier que l'on est bien sur le bon trade
   /// -> tradeId === trade.tradeId ?
@@ -168,8 +179,6 @@ function Adjust() {
     navigate(`/portfolio/${trade.portfolio_id}/detail`);
   }
 
-   
-
   return (
     <>
       {!isSuccess && !isSuccess1 ? (
@@ -197,9 +206,8 @@ function Adjust() {
           <div className="comments">
             {trade && (
               <>
-                <p>
-                  Portefeuille {trade.portfolio}, {trade.title}
-                </p>
+                <h2>{trade.title}</h2>
+                <p>Portefeuille {trade.portfolio}</p>
                 <p>
                   C'est un trade {trade.position}, le dernier cours est à{" "}
                   {trade.lastQuote} {currencySymbol}.
@@ -213,8 +221,8 @@ function Adjust() {
                   ) : (
                     <span>perte</span>
                   )}{" "}
-                  de {metrics.balance} {currencySymbol} soit {(metrics.balancePc).toFixed(2)}{" "}
-                  % .
+                  de {metrics.balance} {currencySymbol} soit{" "}
+                  {metrics.balancePc.toFixed(2)} % .
                   <br />
                   Actuellement, objectif : {trade.target} {currencySymbol} et
                   stop {trade.stop} {currencySymbol}
@@ -224,7 +232,13 @@ function Adjust() {
                   Si stop déclanché: {metrics.risk} {currencySymbol} soit{" "}
                   {metrics.riskPc} %.
                   <br />
-                  {metrics.rr > 0 && <span>Risk/reward de {metrics.rr}</span>}
+                  {newMetrics.rr > 0 ? (
+                    <p>Risk/reward de {newMetrics.rr}</p>
+                  ) : newMetrics.potential < 0 ? (
+                    <p>Trade perdant</p>
+                  ) : (
+                    <p>Trade sans rique</p>
+                  )}
                 </p>
               </>
             )}
@@ -283,7 +297,7 @@ function Adjust() {
                   ) : (
                     <span> gain de </span>
                   )}
-                  {newMetrics.risk} {currencySymbol} soit {(newMetrics.riskPc)} %.
+                  {newMetrics.risk} {currencySymbol} soit {newMetrics.riskPc} %.
                   <br />
                   {newMetrics.rr > 0 ? (
                     <p>Risk/reward de {newMetrics.rr}</p>
@@ -309,7 +323,9 @@ function Adjust() {
                     : `Perte actuelle : ${metrics.balance} ${currencySymbol} `
                 }
                 min={newMetrics.valid ? newMetrics.risk : metrics.risk}
-                max={newMetrics.valid ? newMetrics.potential: metrics.potential}
+                max={
+                  newMetrics.valid ? newMetrics.potential : metrics.potential
+                }
                 perf={metrics.balance}
                 meterWidth={styles.meterWidth}
                 meterHeight={styles.meterHeight}
@@ -338,8 +354,32 @@ function Adjust() {
             </div>
 
             <div className={styles.full_width}>
+              <NavLink
+                className={`${styles.action}`}
+                to={{
+                  pathname: `/portfolio/${portfolioId}/ajust/${previousTradeId}`,
+                }}
+                state={{
+                  portfolioId: portfolioId,
+                  tradesIdArray: tradesIdArray,
+                }}
+              >
+                {`Prev`}
+              </NavLink>
               <BtnCancel value="Abandon" action={cancelEnter} name="abandon" />
               <BtnSubmit value="Validation" name="validation" />
+              <NavLink
+                className={`${styles.action}`}
+                to={{
+                  pathname: `/portfolio/${portfolioId}/ajust/${nextTradeId}`,
+                }}
+                state={{
+                  portfolioId: portfolioId,
+                  tradesIdArray: tradesIdArray,
+                }}
+              >
+                {`Next`}
+              </NavLink>
             </div>
           </form>
         </main>
