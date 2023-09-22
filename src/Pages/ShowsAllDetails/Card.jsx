@@ -70,7 +70,7 @@ function Card({trade}) {
             <br />
             Si objectif ralié: {potential} {trade.symbol} soit {potentialPc} %.{" "}
             <br />
-            Si stop déclanché: {risk} {trade.symbol} soit {riskPc} %.
+            Si stop déclenché: {risk} {trade.symbol} soit {riskPc} %.
             <br />
           </p>
           {rr > 0 ? (

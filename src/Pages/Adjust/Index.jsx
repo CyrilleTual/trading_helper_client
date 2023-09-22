@@ -234,7 +234,7 @@ function Adjust() {
                   <br />
                   Si objectif ralié: {metrics.potential} {currencySymbol} soit{" "}
                   {metrics.potentialPc} %. <br />
-                  Si stop déclanché: {metrics.risk} {currencySymbol} soit{" "}
+                  Si stop déclenché: {metrics.risk} {currencySymbol} soit{" "}
                   {metrics.riskPc} %.
                   <br />
                   {newMetrics.rr > 0 ? (
@@ -298,7 +298,7 @@ function Adjust() {
                   Avec les nouvelles valeurs, <br />
                   Si objectif ralié : {newMetrics.potential} {currencySymbol}{" "}
                   soit {newMetrics.potentialPc} % <br />
-                  Si stop déclanché,
+                  Si stop déclenché,
                   {newMetrics.risk < 0 ? (
                     <span> perte de </span>
                   ) : (

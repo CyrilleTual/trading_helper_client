@@ -67,7 +67,7 @@ function DetailTrade() {
                   <br />
                   Si objectif ralié: {metrics.potential} {trade.symbol} soit{" "}
                   {metrics.potentialPc} %. <br />
-                  Si stop déclanché: {metrics.risk} {trade.symbol} soit{" "}
+                  Si stop déclenché: {metrics.risk} {trade.symbol} soit{" "}
                   {metrics.riskPc} %.
                   <br />
                 </p>
