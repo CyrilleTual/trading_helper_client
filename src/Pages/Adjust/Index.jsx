@@ -19,7 +19,7 @@ function Adjust() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { portfolioId, tradesIdArray} = location.state;
+  const { portfolioId, tradesIdArray } = location.state;
   const { tradeId } = useParams();
 
   // on prépare les icones de navigations next et before
@@ -33,11 +33,10 @@ function Adjust() {
     indexOfActual !== tradesIdArray.length - 1 && indexOfActual !== -1
       ? indexOfActual + 1
       : indexOfActual;
-  const previousTradeId = tradesIdArray[previousId]     
+  const previousTradeId = tradesIdArray[previousId];
   const nextTradeId = tradesIdArray[nextId];
-     
 
-  // va recupérer les infos du trade avec son id 
+  // va recupérer les infos du trade avec son id
   const { data: trade, isSuccess } = usePrepareQuery(tradeId);
 
   // on se sert des portfolios pour obtenir le symbole des currencies
@@ -54,8 +53,8 @@ function Adjust() {
     risk: 0,
     riskPc: 0,
     rr: 0,
-    targetAtPc:0,
-    riskAtPc:0,
+    targetAtPc: 0,
+    riskAtPc: 0,
   });
 
   // nouveaux metriques
@@ -182,8 +181,6 @@ function Adjust() {
     navigate(`/portfolio/${trade.portfolio_id}/detail`);
   }
 
-
-
   return (
     <>
       {!isSuccess && !isSuccess1 ? (
@@ -285,8 +282,8 @@ function Adjust() {
                 value={values.stop}
                 onChange={handleChange}
               />{" "}
-              {currencySymbol} à {newMetrics.riskAtPc || metrics.riskAtPc} %
-              du cours.
+              {currencySymbol} à {newMetrics.riskAtPc || metrics.riskAtPc} % du
+              cours.
             </div>
 
             {trade &&
@@ -322,21 +319,30 @@ function Adjust() {
                 +trade.target !== +values.target) &&
               !newMetrics.valid && <p> sasie invalide</p>}
 
-            <div className={styles.meter_container}>
-              <PerfMeter
-                legend={
-                  metrics.balance > 0
-                    ? `Gain actuel : ${metrics.balance} ${currencySymbol} `
-                    : `Perte actuelle : ${metrics.balance} ${currencySymbol} `
-                }
-                min={newMetrics.valid ? newMetrics.risk : metrics.risk}
-                max={
-                  newMetrics.valid ? newMetrics.potential : metrics.potential
-                }
-                perf={metrics.balance}
-                meterWidth={styles.meterWidth}
-                meterHeight={styles.meterHeight}
-              />
+            <div className={` ${styles.wrapper_meter}`}>
+              <div className={styles.alertInvalid}>
+                <div className={styles.alertInvalid_content}> Stop ou TP invalide </div>
+              </div>
+              <div
+                className={`${styles.meter_container} ${
+                  !newMetrics.valid ? styles.opacify : ""
+                }`}
+              >
+                <PerfMeter
+                  legend={
+                    metrics.balance > 0
+                      ? `Gain actuel : ${metrics.balance} ${currencySymbol} `
+                      : `Perte actuelle : ${metrics.balance} ${currencySymbol} `
+                  }
+                  min={newMetrics.valid ? newMetrics.risk : metrics.risk}
+                  max={
+                    newMetrics.valid ? newMetrics.potential : metrics.potential
+                  }
+                  perf={metrics.balance}
+                  meterWidth={styles.meterWidth}
+                  meterHeight={styles.meterHeight}
+                />
+              </div>
             </div>
 
             <textarea
