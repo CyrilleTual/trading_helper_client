@@ -1,0 +1,44 @@
+.cardShow{
+    width: 400px;
+    margin: auto;
+}
+
+ 
+ 
+.title2 {
+    height: 40px;  
+    overflow: hidden; /* Hide the overflow text */
+    text-overflow: ellipsis; /* Add an ellipsis (...) when text overflows */
+    white-space: nowrap; /* Prevent text from wrapping to the next line */
+    border-bottom: 1px grey solid;
+}
+ 
+ 
+/* Attention pour les dimensions du meter indispensable de passer
+par des variables ( et de les setter 2* -> pour la div container et 
+Pour le svg) */
+
+.cardShow{
+    --metW :80vw;
+    --metH : calc((var(--metW))*0.58);
+}
+
+@media  screen and (min-width:480px) {
+   .cardShow{
+    --metW :400px;
+    --metH :230px; 
+    }
+}
+
+
+:export {
+    meterWidth: var(--metW);
+    meterHeight: var(--metH);
+}
+
+.cardShow .meter_container {
+    text-align: center;
+    width: var(--metW);
+    height: var(--metH); 
+    margin: auto;
+}
