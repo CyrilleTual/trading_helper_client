@@ -19,18 +19,19 @@ function Card({trade}) {
 
   const balancePc = +(
     trade.position === "long"
-      ? (trade.lastQuote - trade.pru) / trade.pru
-      : (trade.pru - trade.lastQuote) / trade.pru
+      ? (trade.lastQuote - trade.pru) / trade.pru *100
+      : (trade.pru - trade.lastQuote) / trade.pru *100
   ).toFixed(2);
 
   const potential =
     (trade.position === "long"
       ? (trade.target - trade.pru) * trade.actualQuantity
       : (trade.pru - trade.target) * trade.actualQuantity).toFixed(2);
+
   const potentialPc =
    ( trade.position === "long"
-      ? (trade.target - trade.pru) / trade.pru
-      : (trade.pru - trade.target) / trade.pru).toFixed(2);
+      ? (trade.target - trade.pru) / trade.pru *100
+      : (trade.pru - trade.target) / trade.pru*100).toFixed(2);
   const risk =
     (trade.position === "long"
       ? (trade.stop - trade.pru) * trade.actualQuantity
@@ -38,7 +39,7 @@ function Card({trade}) {
   const riskPc =
     (trade.position === "long"
       ? (trade.stop - trade.pru) / trade.pru
-      : (trade.pru - trade.stop) / trade.pru).toFixed(2);
+      : (trade.pru - trade.stop) / trade.pru*100).toFixed(2);
   const rr = (risk < 0 ? -potential / risk : 0).toFixed(2);
 
   const targetAtPc = ((trade.target - trade.lastQuote) / trade.lastQuote *100).toFixed(2);
@@ -54,10 +55,10 @@ function Card({trade}) {
           <p>Portefeuille {trade.portfolio}</p>
           <p>
             C'est un trade {trade.position}, le dernier cours est à{" "}
-            {trade.lastQuote} {trade.symbol}.
+            {(trade.lastQuote).toFixed(2)} {trade.symbol}.
           </p>
           <p>
-            Le PRU est de {trade.pru} {trade.symbol} pour une ligne de{" "}
+            Le PRU est de {trade.pru.toFixed(2)} {trade.symbol} pour une ligne de{" "}
             {trade.actualQuantity} titres. <br />
             Ligne en {balance > 0 ? (
               <span>gain</span>
@@ -68,9 +69,9 @@ function Card({trade}) {
             Actuellement, objectif : {trade.target} {trade.symbol} et stop{" "}
             {trade.stop} {trade.symbol}
             <br />
-            Si objectif ralié: {potential} {trade.symbol} soit {potentialPc} %.{" "}
+            Si objectif ralié, {potential > 0 ? `gain de `: `perte` } {potential} {trade.symbol} soit {potentialPc} %.{" "}
             <br />
-            Si stop déclenché: {risk} {trade.symbol} soit {riskPc} %.
+            Si stop déclenché, {risk<0?`perte de ` : 'gain de '}{risk} {trade.symbol} soit {riskPc} %.
             <br />
           </p>
           {rr > 0 ? (
