@@ -53,6 +53,12 @@ export const tradeApi = createApi({
       providesTags: ["Portfolio"],
     }),
 
+    // retourne tous les trades ouverts détaillés pour un user
+    getTradesActivesByUser: builder.query({
+      query: (id) => `trades/activesByUser/${id}`,
+      providesTags: ["DetailActivesTrades"],
+    }),
+
     // passage en idle d'un portfolio
     idlePortfolio: builder.mutation({
       query: ({ id, status }) => ({
@@ -132,6 +138,7 @@ export const tradeApi = createApi({
         "CheckIfTradeIsActive",
         "PortfolioByUser",
         "PortfolioById",
+        "DetailActivesTrades",
       ],
     }),
 
@@ -153,6 +160,7 @@ export const tradeApi = createApi({
         "Prepare",
         "PortfolioByUser",
         "PortfolioById",
+        "DetailActivesTrades",
       ],
     }),
 
@@ -169,6 +177,7 @@ export const tradeApi = createApi({
         "Prepare",
         "PortfolioByUser",
         "PortfolioById",
+        "DetailActivesTrades",
       ],
     }),
 
@@ -185,6 +194,7 @@ export const tradeApi = createApi({
         "Prepare",
         "PortfolioByUser",
         "PortfolioById",
+        "DetailActivesTrades",
       ],
     }),
 
@@ -221,6 +231,7 @@ export const {
   useIdlePortfolioMutation,
   useLogByRememberQuery,
   useAdjustmentMutation,
+  useGetTradesActivesByUserQuery,
 
 
 } = tradeApi;

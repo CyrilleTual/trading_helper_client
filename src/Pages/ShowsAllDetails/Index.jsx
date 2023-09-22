@@ -1,34 +1,69 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
-import { useGetPortfoliosByUserQuery } from '../../store/slice/tradeApi';
-import Level2 from './Level2';
+import { useGetPortfoliosByUserQuery, useGetTradesActivesByUserQuery } from '../../store/slice/tradeApi';
+
+import { Loading } from '../../Components/Loading/Index';
+import { prepare } from './utils';
+import Card from './Card';
+
  
  
 
 function ShowAllDetails() {
-  // recup des caractères de l'user
-  // on recupère l'idduuser depuis le store -> id
-  const id = useSelector((state) => state.user.infos.id);
-  // on chek si visiteur pour adapter l'affichage
-  let isVisitor = true;
-  if (
-    useSelector((state) => state.user.infos.role).substring(0, 7) !== "visitor"
-  ) {
-    isVisitor = false;
+  
+  /// gestion du statut visiteur //////////////////////////////////////
+
+  const role = useSelector((state) => state.user.infos.role);
+  let id = useSelector((state) => state.user.infos.id);
+  let isVisitor = false ;
+
+  if (role.substring(0, 7) === "visitor") {
+    id = role.substring(8);
+    isVisitor = true;
   }
 
-  // on recupère les portefeuilles en fonction de l'id 
+  ////// preparation des variables utilisées ici 
+  const [show, setShow] = useState ({
+    trades: [],
+    tradesIds: [],
+    portfoliosIds: [],
+    selectedTradeId: null,
+  })
+
+
+  // Récupère tous les trades ouverts par id d'user
   const {
-   data: portfolios,
-   isLoading: portfolioIsLoading,
-   isSuccess: isSuccess1,
-   isError: isError1,
- } = useGetPortfoliosByUserQuery(id);
+    data: originalsTrades,
+    isLoading: tradesIsLoading,
+    isSuccess: tradesisSuccess,
+    isError: tradesisError1,
+  } = useGetTradesActivesByUserQuery(id);
 
- console.log (portfolios)
+  // peuple les variables utilisées pour passer à la card les infos 
+  useEffect(() => {
+    if (tradesisSuccess) {
+      const { trades, tradesIds, portfoliosIds } = prepare(originalsTrades);
+      setShow ( {...show, 
+        trades:trades, 
+        tradesIds:tradesIds,
+        selectedTradeId:tradesIds[0],
+        portfoliosIds:portfoliosIds})
+    }
+  }, [tradesisSuccess]);
 
+  console.log (show.trades)
 
-  return (<Level2/>);
+  return (
+    <>
+      {!tradesisSuccess ? (
+        <Loading />
+      ) : (
+        <>
+          <Card/>
+        </>
+      )}
+    </>
+  );
 }
 
 export default ShowAllDetails
