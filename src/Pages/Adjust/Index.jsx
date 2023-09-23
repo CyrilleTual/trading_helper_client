@@ -13,7 +13,8 @@ import BtnCancel from "../../Components/UI/BtnCancel";
 import Modal from "../../Components/Modal/Index";
 import { validate } from "./validateInputsAdjust";
 import { calculMetrics, calculNewMetrics } from "./metrics.js";
-import PerfMeter from "./../../Components/PerfMeter/Index";
+import PerfMeter from "../../Components/PerfMeter/Index";
+import styleMeter from "../../Components/PerfMeter/perfMeter.module.css";
 
 function Adjust() {
   const navigate = useNavigate();
@@ -135,6 +136,12 @@ function Adjust() {
     }
     // eslint-disable-next-line
   }, [values]);
+
+  // variable pour invalider la jauge 
+  const [meterInvalid, setMeterInvalid] = useState(false);
+  useEffect(() => {
+    newMetrics.valid === false ? setMeterInvalid(true) : setMeterInvalid(false);
+  }, [newMetrics]);
 
   /// to do -> verifier que l'on est bien sur le bon trade
   /// -> tradeId === trade.tradeId ?
@@ -319,13 +326,22 @@ function Adjust() {
                 +trade.target !== +values.target) &&
               !newMetrics.valid && <p> sasie invalide</p>}
 
-            <div className={` ${styles.wrapper_meter}`}>
-              <div className={styles.alertInvalid}>
-                <div className={styles.alertInvalid_content}> Stop ou TP invalide </div>
-              </div>
+            {/* --------------------------------- début perfMeter --------------- */}
+            <div className={` ${styleMeter.wrapper_meter}`}>
               <div
-                className={`${styles.meter_container} ${
-                  !newMetrics.valid ? styles.opacify : ""
+                className={`${styleMeter.alertInvalid} ${
+                  meterInvalid ? styleMeter.alertVisible : ""
+                } `}
+              >
+                <div className={`${styleMeter.alertInvalid_content} `}>
+                  {" "}
+                  Stop ou TP invalide{" "}
+                </div>
+              </div>
+
+              <div
+                className={`${styleMeter.meter_container} ${
+                  meterInvalid ? styleMeter.opacify : ""
                 }`}
               >
                 <PerfMeter
@@ -344,6 +360,7 @@ function Adjust() {
                 />
               </div>
             </div>
+            {/* --------------------------------fin perfMeter --------------- */}
 
             <textarea
               id="comment"

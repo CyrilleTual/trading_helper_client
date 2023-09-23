@@ -22,63 +22,23 @@
   width: 68% !important;
 }
 
-.opacify {
-  opacity: 0.1;
-  position: relative;
-}
 
-.wrapper_meter {
-  position: relative;
-}
-
-.alertInvalid {
-  position: absolute;
-  /*display:none; /* Hidden by default */
-  z-index: 20; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
- /* background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-}
-
-.alertVisible{
-    display: block;
-}
-
-.alertInvalid_content{
- background-color: #fefefe;
-  margin: 50px auto; /* 15% from the top and centered */
-  padding: 20px;
-  border: 1px solid #888;
-  width: fit-content;
-}
 
 /* Attention pour les dimensions du meter indispensable de passer
 par des variables ( et de les setter 2* -> pour la div container et 
 Pour le svg) */
-
 .adjust {
   --metW: 80vw;
   --metH: calc((var(--metW)) * 0.58);
 }
-
 @media screen and (min-width: 480px) {
   .adjust {
     --metW: 400px;
     --metH: 230px;
   }
 }
-
 :export {
   meterWidth: var(--metW);
   meterHeight: var(--metH);
 }
 
-.adjust .meter_container {
-  text-align: center;
-  width: var(--metW);
-  height: var(--metH);
-  margin: auto;
-}
