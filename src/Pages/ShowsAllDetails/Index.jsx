@@ -71,6 +71,8 @@ function ShowAllDetails() {
     }
   };
 
+
+
   return (
     <>
       {!tradesisSuccess ? (
@@ -78,8 +80,10 @@ function ShowAllDetails() {
       ) : (
         <>
           <h1>Details des trades</h1>
+          {show.trades.map ((trade)=>(
+            <Card trade={trade} />
+          ))}
 
-          <Card trade={show.trades[show.indexOfTradeSelected]} />
           <div className={styles.btn_wrapper}>
             <span className={styles.btn}>
               <BtnAction
