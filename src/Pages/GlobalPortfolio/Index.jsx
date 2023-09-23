@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux";
 import { signOut } from "../../store/slice/user";
 import { Loading } from "../../Components/Loading/Index";
 import BtnLink from "../../Components/UI/BtnLink";
+import ShowAllDetails from "../ShowsAllDetails/Index";
 
 function Global() {
 
@@ -65,6 +66,8 @@ function Global() {
               </div>
 
               <PortTable datas={global} baseCurrencie={baseCurrencie} />
+
+              {/* <ShowAllDetails></ShowAllDetails> */}
 
               <BtnLink
                 link={`/showAll`}
