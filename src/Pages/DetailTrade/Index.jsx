@@ -5,6 +5,7 @@ import { calculMetrics } from "./metrics";
 import { Loading } from "../../Components/Loading/Index";
 import styles from "./detailTrade.module.css"
 import PerfMeter from "../../Components/PerfMeter/Index";
+import styleMeter from "../../Components/PerfMeter/perfMeter.module.css"
 
 
 
@@ -27,13 +28,23 @@ function DetailTrade() {
     targetAtPc: 0,
     riskAtPc: 0,
   });
-  ///// calcul des valeurs  
+
+  ///// calcul des valeurs
   useEffect(() => {
     if (isSuccess) {
       calculMetrics(trade, metrics, setMetrics);
     }
     // eslint-disable-next-line
   }, [trade]);
+
+  ///// variable pour invalider la jauge
+  const [meterInvalid, setMeterInvalid] = useState(false);
+  useEffect(() => {
+    metrics.isValid === false ? setMeterInvalid(true) : setMeterInvalid(false);
+  }, [metrics]);
+
+
+ 
 
   return (
     <>
@@ -81,7 +92,7 @@ function DetailTrade() {
               </>
             )}
           </div>
-          <div className={styles.meter_container}>
+          {/* <div className={styles.meter_container}>
             <PerfMeter
               legend={
                 metrics.balance > 0
@@ -94,7 +105,40 @@ function DetailTrade() {
               meterWidth={styles.meterWidth}
               meterHeight={styles.meterHeight}
             />
+          </div> */}
+          {/* --------------------------------- début perfMeter --------------- */}
+          <div className={` ${styleMeter.wrapper_meter}`}>
+            <div
+              className={`${styleMeter.alertInvalid} ${
+                meterInvalid ? styleMeter.alertVisible : ""
+              } `}
+            >
+              <div className={`${styleMeter.alertInvalid_content} `}>
+                {" "}
+                Stop ou TP invalide{" "}
+              </div>
+            </div>
+
+            <div
+              className={`${styleMeter.meter_container} ${
+                meterInvalid ? styleMeter.opacify : ""
+              }`}
+            >
+              <PerfMeter
+                legend={
+                  metrics.balance > 0
+                    ? `Gain actuel : ${metrics.balance} ${trade.symbol} `
+                    : `Perte actuelle : ${metrics.balance} ${trade.symbol} `
+                }
+                min={metrics.risk}
+                max={metrics.potential}
+                perf={metrics.balance}
+                meterWidth={styles.meterWidth}
+                meterHeight={styles.meterHeight}
+              />
+            </div>
           </div>
+          {/* --------------------------------fin perfMeter --------------- */}
         </div>
       )}
     </>

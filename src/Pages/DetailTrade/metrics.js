@@ -32,6 +32,12 @@ export function calculMetrics(trade, metrics, setMetrics) {
   const targetAtPc = (trade.target - trade.lastQuote) / trade.lastQuote;
   const riskAtPc = (trade.stop - trade.lastQuote) / trade.lastQuote;
 
+  // verification de la validité du stop et tp 
+  const isValid = 
+  (trade.position === "long" && trade.stop < trade.lastQuote && trade.target > trade.lastQuote) ||
+  (trade.position === "short" && trade.target < trade.lastQuote && trade.stop > trade.lastQuote)
+    ? true: false; 
+
   setMetrics({
     ...metrics,
     balance: +balance,
@@ -43,6 +49,7 @@ export function calculMetrics(trade, metrics, setMetrics) {
     rr: +rr.toFixed(2),
     targetAtPc: (targetAtPc * 100).toFixed(2),
     riskAtPc: (riskAtPc * 100).toFixed(2),
+    isValid: isValid,
   });
 }
 

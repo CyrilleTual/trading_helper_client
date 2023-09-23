@@ -83,6 +83,9 @@ Pour le svg) */
   meterWidth: var(--metW);
   meterHeight: var(--metH);
 }
+
+
+
 ```# In the module Where you want to use the perfMeter:
 
 ## imports
