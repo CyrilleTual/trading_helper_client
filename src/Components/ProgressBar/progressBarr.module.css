@@ -1,0 +1,58 @@
+.wrapper{
+    position: relative;
+    margin: 10px auto;
+    max-width: 350px;
+    height: 40px;
+    font-size: 1.1rem;
+    overflow: hidden;
+}
+
+.bar{
+    background-color:black;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    z-index: 10;
+    transform: translate(-50%, -50%);
+    height: 1px; 
+    width: 90%;   
+}
+
+.cursor{
+    position: absolute;
+    background-color: black;
+    top: -10px;
+    height: 20px;
+    width: 3px;  
+}
+
+.pru{
+        position: absolute;
+    background-color: rgba(38, 0, 255, 0.62);
+    border-radius: 6px;
+    top: -4px;
+    height: 9px;
+    width: 9px;  
+}
+
+.target{
+    position: absolute;
+    bottom: -18px;
+    right: 0px;
+}
+
+.min{
+    position: absolute;
+    bottom: -18px;
+    left: 0px;
+}
+
+.now{
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+
+  

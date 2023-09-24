@@ -77,11 +77,7 @@ function Global() {
               <Alltrades/>
  
 
-              <BtnLink
-                link={`/showAll`}
-                title={`Parcourir les trades ouverts`}
-                name="détails"
-              />
+
             </main>
           </>
         )

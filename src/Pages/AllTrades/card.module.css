@@ -41,3 +41,13 @@ Pour le svg) */
 }
 
 
+.wrapper_btn{
+    text-align: center;
+    margin: 5px;
+   
+}
+
+.wrapper_btn a{
+
+    font-size: 1.2rem;
+}

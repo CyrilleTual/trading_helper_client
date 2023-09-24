@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useGetTradesActivesByUserQuery } from "../../store/slice/tradeApi";
+import { NavLink } from "react-router-dom";
 
 import { Loading } from "../../Components/Loading/Index";
 import { prepare } from "./utils";
@@ -52,24 +53,28 @@ function Alltrades() {
   }, [tradesisSuccess]);
 
   // action sur les boutons previous et next
-  const handleClick = (action) => {
-    if (action === "previous") {
-      if (show.indexOfTradeSelected !== 0) {
-        setShow({
-          ...show,
-          indexOfTradeSelected: show.indexOfTradeSelected - 1,
-        });
-      }
-    }
-    if (action === "next") {
-      if (show.indexOfTradeSelected < show.trades.length - 1) {
-        setShow({
-          ...show,
-          indexOfTradeSelected: show.indexOfTradeSelected + 1,
-        });
-      }
-    }
-  };
+  // const handleClick = (action) => {
+  //   if (action === "previous") {
+  //     if (show.indexOfTradeSelected !== 0) {
+  //       setShow({
+  //         ...show,
+  //         indexOfTradeSelected: show.indexOfTradeSelected - 1,
+  //       });
+  //     }
+  //   }
+  //   if (action === "next") {
+  //     if (show.indexOfTradeSelected < show.trades.length - 1) {
+  //       setShow({
+  //         ...show,
+  //         indexOfTradeSelected: show.indexOfTradeSelected + 1,
+  //       });
+  //     }
+  //   }
+  // };
+
+  const handleTopPage = () =>{
+     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }
 
 
 
@@ -79,13 +84,12 @@ function Alltrades() {
         <Loading />
       ) : (
         <>
-          
-          {show.trades.map ((trade, key )=>(
-            <Card key= {key} trade={trade} />
+          {show.trades.map((trade, key) => (
+            <Card key={key} trade={trade} />
           ))}
 
           <div className={styles.btn_wrapper}>
-            <span className={styles.btn}>
+            {/* <span className={styles.btn}>
               <BtnAction
                 className={styles.btn}
                 value={"Previous"}
@@ -101,8 +105,15 @@ function Alltrades() {
                 action={() => handleClick("next")}
                 name={"next"}
               />
-            </span>
+            </span> */}
+
+            <BtnAction
+              action={()=>handleTopPage()}
+              value={"Haut de page"}
+              name={"haut_de_page"}
+            />
           </div>
+           
         </>
       )}
     </>

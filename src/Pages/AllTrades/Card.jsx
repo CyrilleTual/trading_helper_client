@@ -2,17 +2,18 @@ import styles from "./card.module.css";
 import PerfMeter from "../../Components/PerfMeter/Index";
 import styleMeter from "../../Components/PerfMeter/perfMeter.module.css";
 import { Loading } from "../../Components/Loading/Index";
-import { toBeRequired } from "@testing-library/jest-dom/dist/matchers";
+import ProgressBar from "../../Components/ProgressBar/Index";
+import BtnLink from "../../Components/UI/BtnLink";
 
-function Card({trade}) {
+function Card({ trade }) {
   // metriques du trade en cours
 
   if (!trade) {
-    return ;
+    return;
   }
 
+  /// si on est sur stop ou objectif  tradeQuote = stop ou objectif
   let tradeQuote = null;
-  /// si on est sur stop ou objectif  tradeQuote = stop ou objectif 
   if (trade.position === "long") {
     if (trade.lastQuote > trade.target) {
       tradeQuote = trade.target;
@@ -66,18 +67,14 @@ function Card({trade}) {
   ).toFixed(2);
   const rr = (risk < 0 ? -potential / risk : 0).toFixed(2);
 
-  const targetAtPc = (
-    ((trade.target - tradeQuote) / tradeQuote) *
-    100
-  ).toFixed(2);
-  const riskAtPc = (
-    ((trade.stop - tradeQuote) / tradeQuote) *
-    100
-  ).toFixed(2);
+  const targetAtPc = (((trade.target - tradeQuote) / tradeQuote) * 100).toFixed(
+    2
+  );
+  const riskAtPc = (((trade.stop - tradeQuote) / tradeQuote) * 100).toFixed(2);
 
   // verification de la validité du stop et tp pour mascage du meter
   const meterInvalid =
-  (trade.position === "long" &&
+    (trade.position === "long" &&
       trade.stop < tradeQuote &&
       trade.target > tradeQuote) ||
     (trade.position === "short" &&
@@ -85,7 +82,6 @@ function Card({trade}) {
       trade.stop > tradeQuote)
       ? false
       : true;
-  
 
   const situation =
     meterInvalid &&
@@ -111,41 +107,28 @@ function Card({trade}) {
       {!trade ? (
         <Loading />
       ) : (
-        < article className={styles.cardShow}>
+        <article className={styles.cardShow}>
           <h3 className={styles.title2}>{trade.title}</h3>
-          <p>Portefeuille {trade.portfolio}</p>
           <p>
-            C'est un trade {trade.position}, le dernier cours est à{" "}
-            {trade.lastQuote.toFixed(2)} {trade.symbol}.
+            Portefeuille {trade.portfolio} - Dernier{" "}
+            {trade.lastQuote.toFixed(2)} {trade.symbol}
           </p>
           <p>
-            Le PRU est de {trade.pru.toFixed(2)} {trade.symbol} pour une ligne
-            de {trade.actualQuantity} titres. <br />
-            Ligne en {balance > 0 ? (
-              <span>gain</span>
-            ) : (
-              <span>perte</span>
-            )} de {balance} {trade.symbol} soit {balancePc.toFixed(2)} % .
-            <br />
-            Actuellement, objectif : {trade.target} {trade.symbol} et stop{" "}
-            {trade.stop} {trade.symbol}
-            <br />
-            Si objectif ralié, {potential > 0 ? `gain de ` : `perte`}{" "}
-            {potential} {trade.symbol} soit {potentialPc} %. <br />
-            Si stop déclenché, {risk < 0 ? `perte de ` : "gain de "}
-            {risk} {trade.symbol} soit {riskPc} %.
-            <br />
+            Trade {trade.position} - PRU {trade.pru.toFixed(2)} {trade.symbol}
+            {" - "}
+            {trade.actualQuantity} titres. <br />
           </p>
-          {rr > 0 ? (
-            <p>Risk/reward de {rr}</p>
-          ) : potential < 0 ? (
-            <p>Trade perdant</p>
-          ) : (
-            <p>Trade sans rique</p>
-          )}
-          <p>
-            L'objectif est à {targetAtPc} % et le stop à {riskAtPc} % .
-          </p>
+
+          <ProgressBar
+            stop={trade.stop}
+            target={trade.target}
+            now={trade.lastQuote.toFixed(2)}
+            symbol={trade.symbol}
+            targetAtPc={targetAtPc}
+            riskAtPc={riskAtPc}
+            meterInvalid={meterInvalid}
+            pru={trade.pru}
+          />
 
           {/* --------------------------------- début perfMeter --------------- */}
           <div className={` ${styleMeter.wrapper_meter}`}>
@@ -183,11 +166,32 @@ function Card({trade}) {
             </div>
           </div>
           {/* --------------------------------fin perfMeter --------------- */}
-          
-        </ article>
+
+          <p>
+            Si objectif ralié, {potential > 0 ? `gain de ` : `perte`}{" "}
+            {potential} {trade.symbol} soit {potentialPc} %. <br />
+            Si stop déclenché, {risk < 0 ? `perte de ` : "gain de "}
+            {risk} {trade.symbol} soit {riskPc} %.
+            <br />
+          </p>
+          {rr > 0 ? (
+            <p>Risk/reward de {rr}</p>
+          ) : potential < 0 ? (
+            <p>Trade perdant</p>
+          ) : (
+            <p>Trade sans rique</p>
+          )}
+          <div className={styles.wrapper_btn}>
+            <BtnLink
+              link={`/portfolio/${trade.portfolioId}/detail/${trade.tradeId}`}
+              title={`Détails`}
+              name="détails"
+            />
+          </div>
+        </article>
       )}
     </>
   );
 }
 
-export default Card
+export default Card;
