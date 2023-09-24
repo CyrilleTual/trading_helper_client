@@ -34,36 +34,36 @@ function Card({ trade }) {
 
   const balance = +(
     trade.position === "long"
-      ? (+tradeQuote - trade.pru) * trade.actualQuantity
-      : (+trade.pru - tradeQuote) * trade.actualQuantity
+      ? (+tradeQuote - trade.neutral) * trade.actualQuantity
+      : (+trade.neutral - tradeQuote) * trade.actualQuantity
   ).toFixed(0);
 
   const balancePc = +(
     trade.position === "long"
-      ? ((tradeQuote - trade.pru) / trade.pru) * 100
-      : ((trade.pru - tradeQuote) / trade.pru) * 100
+      ? ((tradeQuote - trade.neutral) / trade.neutral) * 100
+      : ((trade.neutral - tradeQuote) / trade.neutral) * 100
   ).toFixed(2);
 
   const potential = (
     trade.position === "long"
-      ? (trade.target - trade.pru) * trade.actualQuantity
-      : (trade.pru - trade.target) * trade.actualQuantity
+      ? (trade.target - trade.neutral) * trade.actualQuantity
+      : (trade.neutral - trade.target) * trade.actualQuantity
   ).toFixed(2);
 
   const potentialPc = (
     trade.position === "long"
-      ? ((trade.target - trade.pru) / trade.pru) * 100
-      : ((trade.pru - trade.target) / trade.pru) * 100
+      ? ((trade.target - trade.neutral) / trade.neutral) * 100
+      : ((trade.neutral - trade.target) / trade.neutral) * 100
   ).toFixed(2);
   const risk = (
     trade.position === "long"
-      ? (trade.stop - trade.pru) * trade.actualQuantity
-      : (trade.pru - trade.stop) * trade.actualQuantity
+      ? (trade.stop - trade.neutral) * trade.actualQuantity
+      : (trade.neutral - trade.stop) * trade.actualQuantity
   ).toFixed(2);
   const riskPc = (
     trade.position === "long"
-      ? (trade.stop - trade.pru) / trade.pru
-      : ((trade.pru - trade.stop) / trade.pru) * 100
+      ? (trade.stop - trade.neutral) / trade.neutral
+      : ((trade.neutral - trade.stop) / trade.neutral) * 100
   ).toFixed(2);
   const rr = (risk < 0 ? -potential / risk : 0).toFixed(2);
 
@@ -102,6 +102,8 @@ function Card({ trade }) {
 
 
 
+
+
   return (
     <>
       {!trade ? (
@@ -114,8 +116,19 @@ function Card({ trade }) {
             {trade.lastQuote.toFixed(2)} {trade.symbol}
           </p>
           <p>
-            Trade {trade.position} - PRU {trade.pru.toFixed(2)} {trade.symbol}
-            {" - "}
+            {trade.position === "long" && (
+              <>
+                Trade {trade.position} - PRU {trade.pru.toFixed(2)}{" "}
+                {trade.symbol} {" - "}
+              </>
+            )}
+            {trade.position === "short" && (
+              <>
+                Trade {trade.position} - Point neutre {trade.neutral.toFixed(2)}{" "}
+                {trade.symbol}
+                {" - "}
+              </>
+            )}
             {trade.actualQuantity} titres. <br />
           </p>
 
@@ -127,7 +140,7 @@ function Card({ trade }) {
             targetAtPc={targetAtPc}
             riskAtPc={riskAtPc}
             meterInvalid={meterInvalid}
-            pru={trade.pru}
+            neutral={trade.neutral}
           />
 
           {/* --------------------------------- début perfMeter --------------- */}

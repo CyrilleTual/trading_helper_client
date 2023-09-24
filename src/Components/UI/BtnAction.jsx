@@ -1,7 +1,7 @@
 import styles from "./btn.module.css";
 
 function BtnAction({ value, action, name }) {
-  console.log (value,action,name)
+   
    return (
      <input
        className={`${styles.myBtn}`}

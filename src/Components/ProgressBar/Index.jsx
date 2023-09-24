@@ -9,17 +9,17 @@ function ProgressBar({
   targetAtPc,
   riskAtPc,
   meterInvalid,
-  pru,
+  neutral,
 }) {
   const level = ((now - stop) / (target - stop)) * 100;
-  const pruLevel = ((pru - stop) / (target - stop)) * 100;
+  const neutralLevel = ((neutral - stop) / (target - stop)) * 100;
 
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.bar}>
         <div className={styles.cursor} style={{ left: `${level}%` }}></div>
-        <div className={styles.pru} style={{ left: `${pruLevel}%` }}></div>
+        <div className={styles.neutral} style={{ left: `${neutralLevel}%` }}></div>
       </div>
 
       <div className={styles.min}>

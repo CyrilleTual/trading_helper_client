@@ -12,7 +12,7 @@ Pour le svg) */
 .alertInvalid {
   position: absolute;
   display:none; /* Hidden by default */
-  z-index: 20;  
+  z-index: 2;  
   left: 0;
   top: 0;
   width: 100%; /* Full width */
