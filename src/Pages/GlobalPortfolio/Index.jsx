@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import { signOut } from "../../store/slice/user";
 import { Loading } from "../../Components/Loading/Index";
 import BtnLink from "../../Components/UI/BtnLink";
-import ShowAllDetails from "../ShowsAllDetails/Index";
+import Alltrades from "../AllTrades/Index";
 
 function Global() {
 
@@ -54,7 +54,10 @@ function Global() {
           <>
             <main className={styles.global_portfolio}>
               <h1>Tableau de bord</h1>
-              <div className={styles.meter_container}>
+              <h2>Trades actifs  </h2>
+              <div className={styles.wrapper}>
+
+                              <div className={styles.meter_container}>
                 <PerfMeter
                   legend="Trades actifs"
                   min={global.perfIfStopeed.toFixed(0)}
@@ -66,8 +69,13 @@ function Global() {
               </div>
 
               <PortTable datas={global} baseCurrencie={baseCurrencie} />
+              </div>
 
-              {/* <ShowAllDetails></ShowAllDetails> */}
+
+              <h2>Apperçu des positions </h2>
+
+              <Alltrades/>
+ 
 
               <BtnLink
                 link={`/showAll`}

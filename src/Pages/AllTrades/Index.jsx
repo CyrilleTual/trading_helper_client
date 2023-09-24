@@ -8,7 +8,7 @@ import Card from "./Card";
 import BtnAction from "../../Components/UI/BtnAction";
 import styles from "./index.module.css";
 
-function ShowAllDetails() {
+function Alltrades() {
   /// gestion du statut visiteur //////////////////////////////////////
 
   const role = useSelector((state) => state.user.infos.role);
@@ -79,7 +79,7 @@ function ShowAllDetails() {
         <Loading />
       ) : (
         <>
-          <h1>Details des trades</h1>
+          
           {show.trades.map ((trade, key )=>(
             <Card key= {key} trade={trade} />
           ))}
@@ -109,4 +109,4 @@ function ShowAllDetails() {
   );
 }
 
-export default ShowAllDetails;
+export default Alltrades;

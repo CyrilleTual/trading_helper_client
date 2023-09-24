@@ -111,8 +111,8 @@ function Card({trade}) {
       {!trade ? (
         <Loading />
       ) : (
-        <main className={styles.cardShow}>
-          <h2 className={styles.title2}>{trade.title}</h2>
+        < article className={styles.cardShow}>
+          <h3 className={styles.title2}>{trade.title}</h3>
           <p>Portefeuille {trade.portfolio}</p>
           <p>
             C'est un trade {trade.position}, le dernier cours est à{" "}
@@ -184,7 +184,7 @@ function Card({trade}) {
           </div>
           {/* --------------------------------fin perfMeter --------------- */}
           
-        </main>
+        </ article>
       )}
     </>
   );
