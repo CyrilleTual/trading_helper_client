@@ -8,19 +8,39 @@ function Card({trade}) {
   // metriques du trade en cours
 
   if (!trade) {
-    return;
+    return ;
+  }
+
+  let tradeQuote = null;
+  /// si on est sur stop ou objectif  tradeQuote = stop ou objectif 
+  if (trade.position === "long") {
+    if (trade.lastQuote > trade.target) {
+      tradeQuote = trade.target;
+    } else if (trade.lastQuote < trade.stop) {
+      tradeQuote = trade.stop;
+    } else {
+      tradeQuote = trade.lastQuote;
+    }
+  } else if (trade.position === "short") {
+    if (trade.lastQuote < trade.target) {
+      tradeQuote = trade.target;
+    } else if (trade.lastQuote > trade.stop) {
+      tradeQuote = trade.stop;
+    } else {
+      tradeQuote = trade.lastQuote;
+    }
   }
 
   const balance = +(
     trade.position === "long"
-      ? (+trade.lastQuote - trade.pru) * trade.actualQuantity
-      : (+trade.pru - trade.lastQuote) * trade.actualQuantity
+      ? (+tradeQuote - trade.pru) * trade.actualQuantity
+      : (+trade.pru - tradeQuote) * trade.actualQuantity
   ).toFixed(0);
 
   const balancePc = +(
     trade.position === "long"
-      ? ((trade.lastQuote - trade.pru) / trade.pru) * 100
-      : ((trade.pru - trade.lastQuote) / trade.pru) * 100
+      ? ((tradeQuote - trade.pru) / trade.pru) * 100
+      : ((trade.pru - tradeQuote) / trade.pru) * 100
   ).toFixed(2);
 
   const potential = (
@@ -47,22 +67,22 @@ function Card({trade}) {
   const rr = (risk < 0 ? -potential / risk : 0).toFixed(2);
 
   const targetAtPc = (
-    ((trade.target - trade.lastQuote) / trade.lastQuote) *
+    ((trade.target - tradeQuote) / tradeQuote) *
     100
   ).toFixed(2);
   const riskAtPc = (
-    ((trade.stop - trade.lastQuote) / trade.lastQuote) *
+    ((trade.stop - tradeQuote) / tradeQuote) *
     100
   ).toFixed(2);
 
   // verification de la validité du stop et tp pour mascage du meter
   const meterInvalid =
   (trade.position === "long" &&
-      trade.stop < trade.lastQuote &&
-      trade.target > trade.lastQuote) ||
+      trade.stop < tradeQuote &&
+      trade.target > tradeQuote) ||
     (trade.position === "short" &&
-      trade.target < trade.lastQuote &&
-      trade.stop > trade.lastQuote)
+      trade.target < tradeQuote &&
+      trade.stop > tradeQuote)
       ? false
       : true;
   
@@ -70,9 +90,19 @@ function Card({trade}) {
   const situation =
     meterInvalid &&
     ((trade.position === "long" && trade.lastQuote > trade.target) ||
-      (trade.position === "short" && trade.lastQuote < trade.target))
-      ? "Objectif Atteint, Bravo !"
-      : "Stop déclanché.";
+      (trade.position === "short" && trade.lastQuote < trade.target)) ? (
+      <>
+        Objectif Atteint. <br />
+        {potential > 0 ? `Gain de ` : `Perte`} {potential} {trade.symbol} soit{" "}
+        {potentialPc} %.
+      </>
+    ) : (
+      <>
+        Stop touché, <br />
+        {risk < 0 ? `perte de ` : "gain de "}
+        {risk} {trade.symbol} soit {riskPc} %.
+      </>
+    );
 
 
 
@@ -114,7 +144,7 @@ function Card({trade}) {
             <p>Trade sans rique</p>
           )}
           <p>
-            L'objectifs est à {targetAtPc} % et le stop à {riskAtPc} % .
+            L'objectif est à {targetAtPc} % et le stop à {riskAtPc} % .
           </p>
 
           {/* --------------------------------- début perfMeter --------------- */}
@@ -125,7 +155,6 @@ function Card({trade}) {
               } `}
             >
               <div className={`${styleMeter.alertInvalid_content} `}>
-                {" "}
                 {situation}
               </div>
             </div>
@@ -138,8 +167,12 @@ function Card({trade}) {
               <PerfMeter
                 legend={
                   balance > 0
-                    ? `Gain actuel : ${balance} ${trade.symbol} `
-                    : `Perte actuelle : ${balance} ${trade.symbol} `
+                    ? `Gain : ${balance} ${trade.symbol} /  ${balancePc.toFixed(
+                        2
+                      )} %. `
+                    : `Perte : ${balance} ${
+                        trade.symbol
+                      } /  ${balancePc.toFixed(2)} %. `
                 }
                 min={risk}
                 max={potential}
@@ -150,6 +183,7 @@ function Card({trade}) {
             </div>
           </div>
           {/* --------------------------------fin perfMeter --------------- */}
+          
         </main>
       )}
     </>

@@ -80,8 +80,8 @@ function ShowAllDetails() {
       ) : (
         <>
           <h1>Details des trades</h1>
-          {show.trades.map ((trade)=>(
-            <Card trade={trade} />
+          {show.trades.map ((trade, key )=>(
+            <Card key= {key} trade={trade} />
           ))}
 
           <div className={styles.btn_wrapper}>
