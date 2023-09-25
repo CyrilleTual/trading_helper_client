@@ -18,11 +18,13 @@ You may also see any lint errors in the console.
 ```  /// gestion du statut visiteur //////////////////////////////////////
 
   const role = useSelector((state) => state.user.infos.role);
+
   let id = useSelector((state) => state.user.infos.id);
-  let isVisitor = false ;
+  let isVisitor = false
 
   if (role.substring(0, 7) === "visitor") {
     id = role.substring(8);
-    isVisitor = true;
+    isVisitor = true
   }
 ```
+

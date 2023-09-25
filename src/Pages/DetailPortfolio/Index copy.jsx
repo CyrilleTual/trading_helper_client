@@ -1,6 +1,7 @@
 import { useParams, NavLink } from "react-router-dom";
 import styles from "./detailPorfolio.module.css";
 import {
+  useGetDetailPortfolioByIdQuery,
   useGetTradesActivesByUserQuery,
 } from "../../store/slice/tradeApi";
 import { useEffect, useState } from "react";
@@ -34,12 +35,18 @@ function DetailPorfolio() {
   //  recupère l'id du portefeuille qui nous importe
   const { portfolioId } = useParams();
 
+  // Methode 1 ///////////////////////////////////////////////////////////////////
+  // détail des trades par le hook GetDetailPortfolioByIdQuery
+  const { data, isLoading, isError } =
+    useGetDetailPortfolioByIdQuery(portfolioId);
+
+  // methode 2 ///////////////////////////////////////////////////////////////////
   // détail des trades par le hook GetTradesActivesByUserQuery filtré
   const {
     data: originalsTrades,
-    isLoading,
+    isLoading: tradesIsLoading,
     isSuccess: tradesisSuccess,
-    isError ,
+    isError: tradesisError1,
   } = useGetTradesActivesByUserQuery(id);
 
   const [tradesFiltered, setTradesFiltered] = useState([]);
@@ -50,7 +57,7 @@ function DetailPorfolio() {
   }, [originalsTrades]);
 
   ///// recupère un tableau des trades complétés //////////
-  const [tradesFull, setTradesFull] = useState([]);
+  const [tradesFull, setTradesFull] = useState([]); 
   useEffect(() => {
     let completedTrade = [];
     for (const trade of tradesFiltered) {
@@ -60,49 +67,78 @@ function DetailPorfolio() {
     setTradesFull(completedTrade);
   }, [tradesFiltered]);
 
+
   ///////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////
   //////////  on reconstitue  le  même squelette que la première methode //////
 
-  const [data, setData] = useState([]);
+  const [data2, setData2] = useState ([])
 
   useEffect(() => {
     let newTrades = [];
 
     for (const trade of tradesFull) {
       let newTrade = {
-        tradeId: trade.tradeId,
-        title: trade.title,
-        last: trade.lastQuote,
-        position: trade.position,
-        pru: trade.pru,
+        actualValue: +trade.actualQuantity * trade.tradeQuote,
         currentPv: +trade.balance,
         currentPvPc: +trade.balancePc,
-        potential: (trade.target - trade.tradeQuote) * trade.actualQuantity,
-        potentialPc:
-          ((trade.target - trade.tradeQuote) / trade.tradeQuote) * 100,
+        dailyVariation: (
+          (trade.tradeQuote - trade.beforeQuote) *
+          trade.actualQuantity
+        ) ,
+        dailyVariationPc: (
+          ((trade.tradeQuote - trade.beforeQuote) / trade.beforeQuote) *
+          100
+        ) ,
+        initialValue: (trade.pru * trade.actualQuantity) ,
+        last: trade.lastQuote,
+        nbActivesShares: +trade.actualQuantity,
         perfIfStopeed: +trade.risk,
         perfIfStopeedPc: +trade.riskPc,
-        dailyVariation:
-          (trade.tradeQuote - trade.beforeQuote) * trade.actualQuantity,
-        dailyVariationPc:
-          ((trade.tradeQuote - trade.beforeQuote) / trade.beforeQuote) * 100,
-          target: trade.target,
+        position: trade.position,
+        potential: (
+          (trade.target - trade.tradeQuote) *
+          trade.actualQuantity
+        ) ,
+        potentialPc: (
+          ((trade.target - trade.tradeQuote) / trade.tradeQuote) *
+          100
+        ) ,
+        pru: trade.pru,
         stop: trade.stop,
-        initialValue: trade.pru * trade.actualQuantity,
-        actualValue: +trade.actualQuantity * trade.tradeQuote,
-        nbActivesShares: +trade.actualQuantity,
+        target: trade.target,
+        title: trade.title,
+        tradeId: trade.tradeId,
       };
 
       newTrades.push(newTrade);
     }
- 
 
-    setData([...newTrades]);
+    console.log(newTrades);
+
+    setData2([...newTrades]);
+
+
+
   }, [tradesFull]);
 
- 
- 
+  console.log (data)
+  console.log(data2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   /////////////////////////////////////////////////////////////////////////////
   ///    traitement des erreurs de chargement
@@ -138,15 +174,18 @@ function DetailPorfolio() {
     "nombre de titres",
   ];
 
+
+
   // alerte si stop touché ou objectif atteint /////////////////////////////////////////
 
   // construction du tableau des numero de trade
   const [listOfTrades, setListOfTrades] = useState([]);
-
+  
   const [valuesStopped, setValuesStopped] = useState([]);
   const [valuesOnObjective, setValuesOnObjective] = useState([]);
   useEffect(() => {
     if (data) {
+
       const arrayTrades = [];
       for (const elt of data) {
         arrayTrades.push(elt.tradeId);
@@ -187,7 +226,7 @@ function DetailPorfolio() {
   // préparation du tableau des valeurs ////////////////////////////////////////////
   let newArrayValues = [];
 
-  if (!isLoading && !isError && data.length > 0) {
+  if (!isLoading && !isError) {
     // on prépare pour affichage de droite à gauche
     // pour chaque share
     let arrayValues = [];
@@ -259,13 +298,11 @@ function DetailPorfolio() {
                         <td>{element}</td>
                       </tr>
                     ))}
-
-                     <tr>
-                          <td>Détail ?</td>
-                        </tr>
                     {!isVisitor && (
                       <>
-                       
+                        <tr>
+                          <td>Détail ?</td>
+                        </tr>
                         <tr>
                           <td>Renforcer ?</td>
                         </tr>
@@ -304,16 +341,7 @@ function DetailPorfolio() {
                         </td>
                       ))}
                     </tr>
-
-
-
-
-                   
-
-                    {!isVisitor && (
-                      <>
-
-                       <tr>
+                    <tr>
                       {data.map((elt, j) => (
                         <td key={j}>
                           <NavLink
@@ -325,6 +353,9 @@ function DetailPorfolio() {
                         </td>
                       ))}
                     </tr>
+
+                    {!isVisitor && (
+                      <>
                         <tr>
                           {data.map((elt, k) => (
                             <td key={k}>

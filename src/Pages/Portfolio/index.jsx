@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { signOut } from "../../store/slice/user";
 import { Loading } from "../../Components/Loading/Index";
+import Alltrades from "../AllTrades/Index";
 
 function Portfolio() {
   const [portTitle, setPortTitle] = useState("");
@@ -21,7 +22,6 @@ function Portfolio() {
   // liste des portfolios de l'user
   let id = useSelector((state) => state.user.infos.id);
   
-
   const role = useSelector((state) => state.user.infos.role);
 
   // si visitor -> on change id
@@ -77,6 +77,8 @@ function Portfolio() {
     }
   }, [data, currencyInfos]);
 
+  
+
   return (
     <>
       {isLoading ? (
@@ -86,7 +88,9 @@ function Portfolio() {
         baseCurrencie && (
           <main className={styles.portfolio}>
             <h1>Tableau de bord</h1>
+              <h2>Situation du portefeuille</h2>
             <div className={styles.meter_container}>
+            
               <PerfMeter
                 legend={`Trades actifs - ${portTitle}`}
                 min={data.perfIfStopeed.toFixed(0)}
@@ -104,12 +108,14 @@ function Portfolio() {
                 <span>
                   <BtnLink
                     link={`/portfolio/${data.id}/detail`}
-                    title={`Details - ${portTitle}`}
+                    title={`tableau des trades - ${portTitle}`}
                     name="détails"
                   />
                 </span>
               </div>
             )}
+            <h2>Les trades en cours </h2>
+            <Alltrades portfolioId={portfolioId}/>
           </main>
         )
       )}

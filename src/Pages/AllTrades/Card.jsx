@@ -4,73 +4,26 @@ import styleMeter from "../../Components/PerfMeter/perfMeter.module.css";
 import { Loading } from "../../Components/Loading/Index";
 import ProgressBar from "../../Components/ProgressBar/Index";
 import BtnLink from "../../Components/UI/BtnLink";
+import { calculMetrics } from "../../utils/calculateTradeMetrics";
 
 function Card({ trade }) {
-  // metriques du trade en cours
-
   if (!trade) {
     return;
   }
 
-  /// si on est sur stop ou objectif  tradeQuote = stop ou objectif
-  let tradeQuote = null;
-  if (trade.position === "long") {
-    if (trade.lastQuote > trade.target) {
-      tradeQuote = trade.target;
-    } else if (trade.lastQuote < trade.stop) {
-      tradeQuote = trade.stop;
-    } else {
-      tradeQuote = trade.lastQuote;
-    }
-  } else if (trade.position === "short") {
-    if (trade.lastQuote < trade.target) {
-      tradeQuote = trade.target;
-    } else if (trade.lastQuote > trade.stop) {
-      tradeQuote = trade.stop;
-    } else {
-      tradeQuote = trade.lastQuote;
-    }
-  }
-
-  const balance = +(
-    trade.position === "long"
-      ? (+tradeQuote - trade.neutral) * trade.actualQuantity
-      : (+trade.neutral - tradeQuote) * trade.actualQuantity
-  ).toFixed(0);
-
-  const balancePc = +(
-    trade.position === "long"
-      ? ((tradeQuote - trade.neutral) / trade.neutral) * 100
-      : ((trade.neutral - tradeQuote) / trade.neutral) * 100
-  ).toFixed(2);
-
-  const potential = (
-    trade.position === "long"
-      ? (trade.target - trade.neutral) * trade.actualQuantity
-      : (trade.neutral - trade.target) * trade.actualQuantity
-  ).toFixed(2);
-
-  const potentialPc = (
-    trade.position === "long"
-      ? ((trade.target - trade.neutral) / trade.neutral) * 100
-      : ((trade.neutral - trade.target) / trade.neutral) * 100
-  ).toFixed(2);
-  const risk = (
-    trade.position === "long"
-      ? (trade.stop - trade.neutral) * trade.actualQuantity
-      : (trade.neutral - trade.stop) * trade.actualQuantity
-  ).toFixed(2);
-  const riskPc = (
-    trade.position === "long"
-      ? (trade.stop - trade.neutral) / trade.neutral
-      : ((trade.neutral - trade.stop) / trade.neutral) * 100
-  ).toFixed(2);
-  const rr = (risk < 0 ? -potential / risk : 0).toFixed(2);
-
-  const targetAtPc = (((trade.target - tradeQuote) / tradeQuote) * 100).toFixed(
-    2
-  );
-  const riskAtPc = (((trade.stop - tradeQuote) / tradeQuote) * 100).toFixed(2);
+  // appel de la fonction qui retourne les métriques du trade
+  const {
+    tradeQuote,
+    balance,
+    balancePc,
+    potential,
+    potentialPc,
+    risk,
+    riskPc,
+    rr,
+    targetAtPc,
+    riskAtPc,
+  } = calculMetrics(trade);
 
   // verification de la validité du stop et tp pour mascage du meter
   const meterInvalid =
@@ -99,10 +52,6 @@ function Card({ trade }) {
         {risk} {trade.symbol} soit {riskPc} %.
       </>
     );
-
-
-
-
 
   return (
     <>
@@ -141,6 +90,8 @@ function Card({ trade }) {
             riskAtPc={riskAtPc}
             meterInvalid={meterInvalid}
             neutral={trade.neutral}
+            position={trade.position}
+            tradeQuote={trade.tradeQuote}
           />
 
           {/* --------------------------------- début perfMeter --------------- */}

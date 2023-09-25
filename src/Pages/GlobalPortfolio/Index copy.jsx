@@ -13,17 +13,22 @@ import BtnLink from "../../Components/UI/BtnLink";
 import Alltrades from "../AllTrades/Index";
 
 function Global() {
+
   // on recupère l'idduuser depuis le store -> id
 
-  const role = useSelector((state) => state.user.infos.role);
 
-  let id = useSelector((state) => state.user.infos.id);
-  let isVisitor = false
+    const role = useSelector((state) => state.user.infos.role);
+    
+    let id = useSelector((state) => state.user.infos.id);
+    
+    const [isVisitor, setIsVisitor] = useState(false);
 
-  if (role.substring(0, 7) === "visitor") {
-    id = role.substring(8);
-    isVisitor = true
-  }
+    if (role.substring(0, 7) === "visitor") {
+      id = role.substring(8);
+      setIsVisitor(true);
+    }
+
+  
 
   // on va chercher la tableau de bord global pour un user (idUser)
   const {
@@ -32,24 +37,16 @@ function Global() {
     isError,
   } = useGetGlobalDashBoardByUserQuery(id);
 
-
-
-  
-
   const navigate = useNavigate();
-
-
   const dispatch = useDispatch();
-
-
-
+ 
   useEffect(() => {
     if (isError) {
       resetStorage();
       // on reset le state
       dispatch(signOut());
       navigate("/");
-    }
+    } 
     // eslint-disable-next-line
   }, [isError]);
 
@@ -57,7 +54,7 @@ function Global() {
   const [baseCurrencie, setbaseCurrencie] = useState("");
   useEffect(() => {
     if (global) {
-      setbaseCurrencie(global.currencySymbol);
+       setbaseCurrencie(global.currencySymbol);
     }
   }, [global]);
 
@@ -70,24 +67,28 @@ function Global() {
           <>
             <main className={styles.global_portfolio}>
               <h1>Tableau de bord</h1>
-              <h2>Trades actifs </h2>
+              <h2>Trades actifs  </h2>
               <div className={styles.wrapper}>
-                <div className={styles.meter_container}>
-                  <PerfMeter
-                    legend="Trades actifs"
-                    min={global.perfIfStopeed.toFixed(0)}
-                    max={(global.potential + global.currentPv).toFixed(0)}
-                    perf={global.currentPv}
-                    meterWidth={styles.meterWidth}
-                    meterHeight={styles.meterHeight}
-                  />
-                </div>
 
-                <PortTable datas={global} baseCurrencie={baseCurrencie} />
+                              <div className={styles.meter_container}>
+                <PerfMeter
+                  legend="Trades actifs"
+                  min={global.perfIfStopeed.toFixed(0)}
+                  max={(global.potential + global.currentPv).toFixed(0)}
+                  perf={global.currentPv}
+                  meterWidth={styles.meterWidth}
+                  meterHeight={styles.meterHeight}
+                />
               </div>
 
-              <h2>Apperçu des positions</h2>
-              <Alltrades />
+              <PortTable datas={global} baseCurrencie={baseCurrencie} />
+              </div>
+
+
+              <h2>Apperçu des positions </h2>
+
+              <Alltrades/>
+
             </main>
           </>
         )

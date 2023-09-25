@@ -9,10 +9,16 @@ import Card from "./Card";
 import BtnAction from "../../Components/UI/BtnAction";
 import styles from "./index.module.css";
 
-function Alltrades() {
+/**
+ * Composant Alltrades : Affiche la liste des trades actifs de l'utilisateur.
+ * @param {number} portfolioId - L'identifiant du portefeuille (facultatif).
+ * @returns {JSX.Element} - Le composant de la liste des trades actifs.
+ */
+function Alltrades({ portfolioId }) {
   /// gestion du statut visiteur //////////////////////////////////////
 
   const role = useSelector((state) => state.user.infos.role);
+
   let id = useSelector((state) => state.user.infos.id);
   let isVisitor = false;
 
@@ -42,41 +48,35 @@ function Alltrades() {
   useEffect(() => {
     if (tradesisSuccess) {
       const { trades, tradesIds, portfoliosIds } = prepare(originalsTrades);
-      setShow({
-        ...show,
-        trades: trades,
-        tradesIds: tradesIds,
-        selectedTradeId: tradesIds[0],
-        portfoliosIds: portfoliosIds,
-      });
+
+      if (typeof portfolioId === "undefined") {
+        setShow({
+          ...show,
+          trades: trades,
+          tradesIds: tradesIds,
+          selectedTradeId: tradesIds[0],
+          portfoliosIds: portfoliosIds,
+        });
+      }
+
+      if (typeof portfolioId !== "undefined") {
+        const tradesFiltered = trades.filter(
+          (trade) => +trade.portfolioId === +portfolioId
+        );
+        setShow({
+          ...show,
+          trades: tradesFiltered,
+          tradesIds: tradesIds,
+          selectedTradeId: tradesIds[0],
+          portfoliosIds: portfoliosIds,
+        });
+      }
     }
-  }, [tradesisSuccess]);
+  }, [tradesisSuccess, portfolioId]);
 
-  // action sur les boutons previous et next
-  // const handleClick = (action) => {
-  //   if (action === "previous") {
-  //     if (show.indexOfTradeSelected !== 0) {
-  //       setShow({
-  //         ...show,
-  //         indexOfTradeSelected: show.indexOfTradeSelected - 1,
-  //       });
-  //     }
-  //   }
-  //   if (action === "next") {
-  //     if (show.indexOfTradeSelected < show.trades.length - 1) {
-  //       setShow({
-  //         ...show,
-  //         indexOfTradeSelected: show.indexOfTradeSelected + 1,
-  //       });
-  //     }
-  //   }
-  // };
-
-  const handleTopPage = () =>{
-     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  }
-
-
+  const handleTopPage = () => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  };
 
   return (
     <>
@@ -89,31 +89,12 @@ function Alltrades() {
           ))}
 
           <div className={styles.btn_wrapper}>
-            {/* <span className={styles.btn}>
-              <BtnAction
-                className={styles.btn}
-                value={"Previous"}
-                action={() => handleClick("previous")}
-                name={"previous"}
-              />
-            </span>
-
-            <span className={styles.btn}>
-              <BtnAction
-                className={styles.btnDetail}
-                value={"Next"}
-                action={() => handleClick("next")}
-                name={"next"}
-              />
-            </span> */}
-
             <BtnAction
-              action={()=>handleTopPage()}
+              action={() => handleTopPage()}
               value={"Haut de page"}
               name={"haut_de_page"}
             />
           </div>
-           
         </>
       )}
     </>
