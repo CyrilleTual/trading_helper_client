@@ -11,6 +11,8 @@ function Card({ trade }) {
     return;
   }
 
+
+
   // appel de la fonction qui retourne les métriques du trade
   const {
     tradeQuote,
@@ -24,6 +26,7 @@ function Card({ trade }) {
     targetAtPc,
     riskAtPc,
   } = calculMetrics(trade);
+
 
   // verification de la validité du stop et tp pour mascage du meter
   const meterInvalid =
@@ -91,7 +94,7 @@ function Card({ trade }) {
             meterInvalid={meterInvalid}
             neutral={trade.neutral}
             position={trade.position}
-            tradeQuote={trade.tradeQuote}
+            tradeQuote={tradeQuote}
           />
 
           {/* --------------------------------- début perfMeter --------------- */}

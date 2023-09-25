@@ -32,16 +32,9 @@ function Global() {
     isError,
   } = useGetGlobalDashBoardByUserQuery(id);
 
-
-
-  
-
   const navigate = useNavigate();
 
-
   const dispatch = useDispatch();
-
-
 
   useEffect(() => {
     if (isError) {

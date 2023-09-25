@@ -78,6 +78,8 @@ export function calculMetrics (trade){
      riskAtPc: riskAtPc,
    };
 
+   
+
    return {
      tradeFull,
        tradeQuote,
