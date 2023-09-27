@@ -23,7 +23,7 @@ function Adjust() {
   const { portfolioId, tradesIdArray } = location.state;
   const { tradeId } = useParams();
 
-  // on prépare les icones de navigations next et before
+  // on prépare les icones de navigations next et before ////////////////////////
   // recherche de l'index du trade actuel
   const indexOfActual = tradesIdArray.indexOf(+tradeId);
   const previousId =
@@ -39,6 +39,15 @@ function Adjust() {
 
   // va recupérer les infos du trade avec son id
   const { data: trade, isSuccess } = usePrepareQuery(tradeId);
+
+
+
+
+
+
+
+
+
 
   // on se sert des portfolios pour obtenir le symbole des currencies
   const [currencySymbol, setCurrencySymbol] = useState(null);

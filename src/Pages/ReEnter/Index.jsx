@@ -5,6 +5,7 @@ import {
   usePrepareQuery,
   useReEnterMutation,
   useGetPortfoliosByUserQuery,
+  useGetTradesActivesByUserQuery
 } from "../../store/slice/tradeApi";
 import styles from "./reEnter.module.css";
 import { Loading } from "../../Components/Loading/Index";
@@ -12,13 +13,37 @@ import BtnSubmit from "../../Components/UI/BtnSubmit";
 import BtnCancel from "../../Components/UI/BtnCancel";
 import Modal from "../../Components/Modal/Index";
 import { validate } from "./validateInputsReEnter";
+import {calculMetrics} from "../../utils/calculateTradeMetrics"
 
 function ReEnter() {
   const navigate = useNavigate();
   const { tradeId } = useParams();
 
   // va recupérer les infos du trade
-  const { data: trade, isSuccess } = usePrepareQuery(tradeId);
+const { data: trade, isSuccess } = usePrepareQuery(tradeId);
+ 
+//   ////////////////////////////////////////////////////////////////////////////////////////////////
+const id = 1
+  const [trade2, setTrade2] = useState(null);
+  // Récupère tous les trades ouverts par id d'user (deja dans le redux store)
+  const {
+    data: originalsTrades,
+    isLoading: tradesIsLoading,
+    isSuccess2,
+    isError: tradesisError1,
+  } = useGetTradesActivesByUserQuery(id);
+
+  // on selectionne le trade2  valide
+  // on complète les données du trade par les valeurs calculèes -> trade2+
+  useEffect(() => {
+    if (isSuccess) {
+      const { tradeFull } = calculMetrics(
+        originalsTrades.filter((trade) => +trade.tradeId === +tradeId)[0]
+      );
+      setTrade2({ ...tradeFull });
+    }
+  }, [isSuccess]);
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
 
   // on se sert des portfolios pour obtenir le symbole des currencies
   const [currencySymbol, setCurrencySymbol] = useState(null);
@@ -60,7 +85,6 @@ function ReEnter() {
   //   tradeId,
   // } = data;
 
-
   // valeurs de la nouvelle prise de position
   const [values, setValues] = useState({
     quantity: 0,
@@ -85,7 +109,6 @@ function ReEnter() {
     // eslint-disable-next-line
   }, [trade]);
 
-
   /// to do -> verifier que l'on est bien sur le bon trade
   /// -> tradeId === trade.tradeId ?
 
@@ -101,40 +124,42 @@ function ReEnter() {
     // Appel de la fonction de traitement des données du formulaire
     const { inputErrors, verifiedValues } = validate(values, trade.position);
 
-     if (inputErrors.length > 0) {
+    if (inputErrors.length > 0) {
       setErrorsInForm(inputErrors);
     } else {
-       const datas = {
-         date: verifiedValues.date,
-         price: verifiedValues.price,
-         target: verifiedValues.target,
-         stop: verifiedValues.stop,
-         quantity: verifiedValues.quantity,
-         fees: verifiedValues.fees,
-         tax: verifiedValues.fees,
-         comment: verifiedValues.comment,
-         trade_id: +tradeId,
-         stock_id: +trade.stock_id,
-       };
-       try {
-         const resp = await reEnter(datas);
-         console.log(resp);
-         navigate(`/portfolio/${trade.portfolio_id}/detail`);
-       } catch (err) {
-         console.log(err);
-       }
+      const datas = {
+        date: verifiedValues.date,
+        price: verifiedValues.price,
+        target: verifiedValues.target,
+        stop: verifiedValues.stop,
+        quantity: verifiedValues.quantity,
+        fees: verifiedValues.fees,
+        tax: verifiedValues.fees,
+        comment: verifiedValues.comment,
+        trade_id: +tradeId,
+        stock_id: +trade.stock_id,
+      };
+      try {
+        const resp = await reEnter(datas);
+        console.log(resp);
+        navigate(`/portfolio/${trade.portfolio_id}/detail`);
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
 
-    const afterError = () => {
-      setErrorsInForm([]);
-    };
-
+  const afterError = () => {
+    setErrorsInForm([]);
+  };
 
   /////// cancel enter
   function cancelEnter() {
     navigate(`/portfolio/${trade.portfolio_id}/detail`);
   }
+
+console.log (trade, trade2)
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
   return (
     <>

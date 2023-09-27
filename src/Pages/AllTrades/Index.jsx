@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 
 import { Loading } from "../../Components/Loading/Index";
 import { prepare } from "./utils";
-import Card from "./Card";
+import Card from "../../Components/Card/Card";
 import BtnAction from "../../Components/UI/BtnAction";
 import styles from "./index.module.css";
 

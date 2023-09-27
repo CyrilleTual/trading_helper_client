@@ -1,60 +1,27 @@
 import styles from "./card.module.css";
-import PerfMeter from "../../Components/PerfMeter/Index";
+import PerfMeter from "../PerfMeter/Index";
 import styleMeter from "../../Components/PerfMeter/perfMeter.module.css";
-import { Loading } from "../../Components/Loading/Index";
-import ProgressBar from "../../Components/ProgressBar/Index";
-import BtnLink from "../../Components/UI/BtnLink";
+import { Loading } from "../Loading/Index";
+import ProgressBar from "../ProgressBar/Index";
+import BtnLink from "../UI/BtnLink";
 import { calculMetrics } from "../../utils/calculateTradeMetrics";
+import { utilsMeter } from "../PerfMeter/utils";
 
 function Card({ trade }) {
   if (!trade) {
     return;
   }
-
-
+;
 
   // appel de la fonction qui retourne les métriques du trade
   const {
-    tradeQuote,
-    balance,
-    balancePc,
-    potential,
-    potentialPc,
-    risk,
-    riskPc,
-    rr,
-    targetAtPc,
-    riskAtPc,
+     tradeFull,
   } = calculMetrics(trade);
-
-
-  // verification de la validité du stop et tp pour mascage du meter
-  const meterInvalid =
-    (trade.position === "long" &&
-      trade.stop < tradeQuote &&
-      trade.target > tradeQuote) ||
-    (trade.position === "short" &&
-      trade.target < tradeQuote &&
-      trade.stop > tradeQuote)
-      ? false
-      : true;
-
-  const situation =
-    meterInvalid &&
-    ((trade.position === "long" && trade.lastQuote > trade.target) ||
-      (trade.position === "short" && trade.lastQuote < trade.target)) ? (
-      <>
-        Objectif Atteint. <br />
-        {potential > 0 ? `Gain de ` : `Perte`} {potential} {trade.symbol} soit{" "}
-        {potentialPc} %.
-      </>
-    ) : (
-      <>
-        Stop touché, <br />
-        {risk < 0 ? `perte de ` : "gain de "}
-        {risk} {trade.symbol} soit {riskPc} %.
-      </>
-    );
+  // on reafecte le nom trade à l'objet complété 
+  trade = {... tradeFull}
+  
+  // appel de la fonction qui retourne des variables utiles pour masquer le meter.
+  const {meterInvalid, situation } = utilsMeter(trade);
 
   return (
     <>
@@ -89,12 +56,12 @@ function Card({ trade }) {
             target={trade.target}
             now={trade.lastQuote.toFixed(2)}
             symbol={trade.symbol}
-            targetAtPc={targetAtPc}
-            riskAtPc={riskAtPc}
+            targetAtPc={ trade.targetAtPc}
+            riskAtPc={ trade.riskAtPc}
             meterInvalid={meterInvalid}
             neutral={trade.neutral}
             position={trade.position}
-            tradeQuote={tradeQuote}
+            tradeQuote={ trade.tradeQuote}
             status={trade.status}
           />
 
@@ -117,17 +84,17 @@ function Card({ trade }) {
             >
               <PerfMeter
                 legend={
-                  balance > 0
-                    ? `Gain : ${balance} ${trade.symbol} /  ${balancePc.toFixed(
+                   trade.balance > 0
+                    ? `Gain : ${ trade.balance} ${trade.symbol} /  ${ trade.balancePc.toFixed(
                         2
                       )} %. `
-                    : `Perte : ${balance} ${
+                    : `Perte : ${ trade.balance} ${
                         trade.symbol
-                      } /  ${balancePc.toFixed(2)} %. `
+                      } /  ${ trade.balancePc.toFixed(2)} %. `
                 }
-                min={risk}
-                max={potential}
-                perf={balance}
+                min={ trade. risk}
+                max={ trade.potential}
+                perf={ trade.balance}
                 meterWidth={styles.meterWidth}
                 meterHeight={styles.meterHeight}
               />
@@ -136,15 +103,15 @@ function Card({ trade }) {
           {/* --------------------------------fin perfMeter --------------- */}
 
           <p>
-            Si objectif ralié, {potential > 0 ? `gain de ` : `perte`}{" "}
-            {potential} {trade.symbol} soit {potentialPc} %. <br />
-            Si stop déclenché, {risk < 0 ? `perte de ` : "gain de "}
-            {risk} {trade.symbol} soit {riskPc} %.
+            Si objectif ralié, { trade.potential > 0 ? `gain de ` : `perte`}{" "}
+            { trade.potential} {trade.symbol} soit { trade.potentialPc} %. <br />
+            Si stop déclenché, { trade. risk < 0 ? `perte de ` : "gain de "}
+            { trade. risk} {trade.symbol} soit { trade.riskPc } %.
             <br />
           </p>
-          {rr > 0 ? (
-            <p>Risk/reward de {rr}</p>
-          ) : potential < 0 ? (
+          { trade.rr > 0 ? (
+            <p> trade. risk/reward de { trade.rr}</p>
+          ) : trade. potential < 0 ? (
             <p>Trade perdant</p>
           ) : (
             <p>Trade sans rique</p>

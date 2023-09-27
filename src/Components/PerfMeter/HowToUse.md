@@ -14,53 +14,66 @@ import styleMeter from "../../Components/PerfMeter/perfMeter.module.css";
 the name of 'meterInvalid' need to be respected.
 
 ```javascript
- // variable pour invalider la jauge 
-  const [meterInvalid, setMeterInvalid] = useState(false);
+  // appel de la fonction qui retourne des variables utiles pour masquer le meter.
+  const {meterInvalid, situation } = utilsMeter(trade);
+```
+->  OR if needed 
+
+```
+    // appel de la fonction qui retourne des variables utiles pour masquer le meter.
+  const [meterInvalid, setMeterInvalid] = useState(null);
+  const [situation, setSituation] = useState(null);
   useEffect(() => {
-    newMetrics.valid === false ? setMeterInvalid(true) : setMeterInvalid(false);
-  }, [newMetrics]);
+    let result = null;
+    if (trade) {
+      const { meterInvalid, situation } = utilsMeter(trade);
+      setMeterInvalid(meterInvalid);
+      setSituation(situation);
+    }
+  }, [trade]);
+
 ```
 
 ## Dans le jsx
-// Exemple d'utilisation :
+// Exemple of Use ( with masking)
 
 ``
- {/* --------------------------------- début perfMeter --------------- */}
-            <div className={` ${styleMeter.wrapper_meter}`}>
-              <div className={`${styleMeter.alertInvalid} ${
-                    meterInvalid ? styleMeter.alertVisible : ""
-                  } `}>
-                <div
-                  className={`${styleMeter.alertInvalid_content} `}
-                >
-                  {" "}
-                  Stop ou TP invalide{" "}
-                </div>
-              </div>
+{/* --------------------------------- début perfMeter --------------- */}
+<div className={` ${styleMeter.wrapper_meter}`}>
+  <div
+    className={`${styleMeter.alertInvalid} ${
+      meterInvalid ? styleMeter.alertVisible : ""
+    } `}
+  >
+    <div className={`${styleMeter.alertInvalid_content} `}>
+      {situation}
+    </div>
+  </div>
 
-              <div
-                className={`${styleMeter.meter_container} ${
-                  meterInvalid ? styleMeter.opacify : ""
-                }`}
-              >
-                <PerfMeter
-                  legend={
-                    metrics.balance > 0
-                      ? `Gain actuel : ${metrics.balance} ${currencySymbol} `
-                      : `Perte actuelle : ${metrics.balance} ${currencySymbol} `
-                  }
-                  min={newMetrics.valid ? newMetrics.risk : metrics.risk}
-                  max={
-                    newMetrics.valid ? newMetrics.potential : metrics.potential
-                  }
-                  perf={metrics.balance}
-                  meterWidth={styleMeter.meterWidth}
-                  meterHeight={styleMeter.meterHeight}
-                />
-              </div>
-            </div>
-            {/* --------------------------------fin perfMeter --------------- */}
-
+  <div
+    className={`${styleMeter.meter_container} ${
+      meterInvalid ? styleMeter.opacify : ""
+    }`}
+  >
+    <PerfMeter
+      legend={
+          trade.balance > 0
+          ? `Gain : ${ trade.balance} ${trade.symbol} /  ${ trade.balancePc.toFixed(
+              2
+            )} %. `
+          : `Perte : ${ trade.balance} ${
+              trade.symbol
+            } /  ${ trade.balancePc.toFixed(2)} %. `
+      }
+      min={ trade. risk}
+      max={ trade.potential}
+      perf={ trade.balance}
+      meterWidth={styles.meterWidth}
+      meterHeight={styles.meterHeight}
+    />
+  </div>
+</div>
+{/* --------------------------------fin perfMeter --------------- */}
 ``
 
 
@@ -84,15 +97,6 @@ Pour le svg) */
   meterHeight: var(--metH);
 }
 
-
-
-```# In the module Where you want to use the perfMeter:
-
-## imports
-
-```javascript
-import PerfMeter from "../../Components/PerfMeter/Index";
-import styleMeter from "../../Components/PerfMeter/perfMeter.module.css";
-```
+ 
 
 

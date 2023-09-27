@@ -1,144 +1,131 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { usePrepareQuery } from "../../store/slice/tradeApi";
-import { calculMetrics } from "./metrics";
+import { usePrepareQuery, useGetTradesActivesByUserQuery} from "../../store/slice/tradeApi";
 import { Loading } from "../../Components/Loading/Index";
 import styles from "./detailTrade.module.css"
 import PerfMeter from "../../Components/PerfMeter/Index";
 import styleMeter from "../../Components/PerfMeter/perfMeter.module.css"
-
+import { useSelector } from "react-redux";
+import { calculMetrics } from "../../utils/calculateTradeMetrics";
+import { utilsMeter } from "../../Components/PerfMeter/utils";
+import ProgressBar from "../../Components/ProgressBar/Index";
 
 
 function DetailTrade() {
+  /// gestion du statut visiteur //////////////////////////////////////
+
+  const role = useSelector((state) => state.user.infos.role);
+
+  let id = useSelector((state) => state.user.infos.id);
+  let isVisitor = false;
+
+  if (role.substring(0, 7) === "visitor") {
+    id = role.substring(8);
+    isVisitor = true;
+  }
+
   // recupère l'id du trade /////////////////////////////////////////
   const { tradeId } = useParams();
 
-  // va recupérer les infos du trade avec son id ////////////////////
-  const { data: trade, isSuccess } = usePrepareQuery(tradeId);
+  const [trade, setTrade] = useState(null);
+  // Récupère tous les trades ouverts par id d'user (deja dans le redux store)
+  const {
+    data: originalsTrades,
+    isLoading: tradesIsLoading,
+    isSuccess,
+    isError: tradesisError1,
+  } = useGetTradesActivesByUserQuery(id);
 
-  // valeurs calculées: métriques du trade en cours//////////////////
-  const [metrics, setMetrics] = useState({
-    balance: 0,
-    balancePc: 0,
-    potential: 0,
-    potentialPc: 0,
-    risk: 0,
-    riskPc: 0,
-    rr: 0,
-    targetAtPc: 0,
-    riskAtPc: 0,
-  });
-
-  ///// calcul des valeurs
+  // on selectionne le trade  valide
+  // on complète les données du trade par les valeurs calculèes -> trade+
   useEffect(() => {
     if (isSuccess) {
-      calculMetrics(trade, metrics, setMetrics);
+      const { tradeFull } = calculMetrics(
+        originalsTrades.filter((trade) => +trade.tradeId === +tradeId)[0]
+      );
+      setTrade({ ...tradeFull });
     }
-    // eslint-disable-next-line
+  }, [isSuccess]);
+
+  // appel de la fonction qui retourne des variables utiles pour masquer le meter.
+  const [meterInvalid, setMeterInvalid] = useState(null);
+  const [situation, setSituation] = useState(null);
+  useEffect(() => {
+    let result = null;
+    if (trade) {
+      const { meterInvalid, situation } = utilsMeter(trade);
+      setMeterInvalid(meterInvalid);
+      setSituation(situation);
+    }
   }, [trade]);
 
-  ///// variable pour invalider la jauge
-  const [meterInvalid, setMeterInvalid] = useState(false);
-  useEffect(() => {
-    metrics.isValid === false ? setMeterInvalid(true) : setMeterInvalid(false);
-  }, [metrics]);
 
-
- 
 
   return (
     <>
-      {!isSuccess || !metrics ? (
+      {!isSuccess && !trade ? (
         <Loading />
       ) : (
         <div className={styles.details}>
           <div className="comments">
             {trade && (
               <>
-                <h2>{trade.title}</h2>
-                <p>Portefeuille {trade.portfolio}</p>
-                <p>
-                  C'est un trade {trade.position}, le dernier cours est à{" "}
-                  {trade.lastQuote} {trade.symbol}.
-                </p>
-                <p>
-                  Le PRU est de {trade.pru} {trade.symbol} pour une ligne de{" "}
-                  {trade.remains} titres. <br />
-                  Ligne en{" "}
-                  {metrics.balance > 0 ? (
-                    <span>gain</span>
-                  ) : (
-                    <span>perte</span>
-                  )}{" "}
-                  de {metrics.balance} {trade.symbol} soit{" "}
-                  {metrics.balancePc.toFixed(2)} % .
-                  <br />
-                  Actuellement, objectif : {trade.target} {trade.symbol} et stop{" "}
-                  {trade.stop} {trade.symbol}
-                  <br />
-                  Si objectif ralié: {metrics.potential} {trade.symbol} soit{" "}
-                  {metrics.potentialPc} %. <br />
-                  Si stop déclenché: {metrics.risk} {trade.symbol} soit{" "}
-                  {metrics.riskPc} %.
-                  <br />
-                </p>
-                {metrics.rr > 0 ? (
-                  <p>Risk/reward de {metrics.rr}</p>
-                ) : metrics.potential < 0 ? (
-                  <p>Trade perdant</p>
-                ) : (
-                  <p>Trade sans rique</p>
-                )}
+                <h1>{trade.title}</h1>
+                <h2>Situation</h2>
+
+                {/* --------------------------------- début perfMeter --------------- */}
+                <div className={` ${styleMeter.wrapper_meter}`}>
+                  <div
+                    className={`${styleMeter.alertInvalid} ${
+                      meterInvalid ? styleMeter.alertVisible : ""
+                    } `}
+                  >
+                    <div className={`${styleMeter.alertInvalid_content} `}>
+                      {situation}
+                    </div>
+                  </div>
+
+                  <div
+                    className={`${styleMeter.meter_container} ${
+                      meterInvalid ? styleMeter.opacify : ""
+                    }`}
+                  >
+                    <PerfMeter
+                      legend={
+                        trade.balance > 0
+                          ? `Gain : ${trade.balance} ${
+                              trade.symbol
+                            } /  ${trade.balancePc.toFixed(2)} %. `
+                          : `Perte : ${trade.balance} ${
+                              trade.symbol
+                            } /  ${trade.balancePc.toFixed(2)} %. `
+                      }
+                      min={trade.risk}
+                      max={trade.potential}
+                      perf={trade.balance}
+                      meterWidth={styles.meterWidth}
+                      meterHeight={styles.meterHeight}
+                    />
+                  </div>
+                </div>
+                {/* --------------------------------Progress bar  --------------- */}
+                <ProgressBar
+                  stop={trade.stop}
+                  target={trade.target}
+                  now={trade.lastQuote.toFixed(2)}
+                  symbol={trade.symbol}
+                  targetAtPc={trade.targetAtPc}
+                  riskAtPc={trade.riskAtPc}
+                  meterInvalid={meterInvalid}
+                  neutral={trade.neutral}
+                  position={trade.position}
+                  tradeQuote={trade.tradeQuote}
+                  status={trade.status}
+                />
+                {/* -------------------------------- Texte  --------------- */}
               </>
             )}
           </div>
-          {/* <div className={styles.meter_container}>
-            <PerfMeter
-              legend={
-                metrics.balance > 0
-                  ? `Gain actuel : ${metrics.balance} ${trade.symbol} `
-                  : `Perte actuelle : ${metrics.balance} ${trade.symbol} `
-              }
-              min={metrics.risk}
-              max={metrics.potential}
-              perf={metrics.balance}
-              meterWidth={styles.meterWidth}
-              meterHeight={styles.meterHeight}
-            />
-          </div> */}
-          {/* --------------------------------- début perfMeter --------------- */}
-          <div className={` ${styleMeter.wrapper_meter}`}>
-            <div
-              className={`${styleMeter.alertInvalid} ${
-                meterInvalid ? styleMeter.alertVisible : ""
-              } `}
-            >
-              <div className={`${styleMeter.alertInvalid_content} `}>
-                {" "}
-                Stop ou TP invalide{" "}
-              </div>
-            </div>
-
-            <div
-              className={`${styleMeter.meter_container} ${
-                meterInvalid ? styleMeter.opacify : ""
-              }`}
-            >
-              <PerfMeter
-                legend={
-                  metrics.balance > 0
-                    ? `Gain actuel : ${metrics.balance} ${trade.symbol} `
-                    : `Perte actuelle : ${metrics.balance} ${trade.symbol} `
-                }
-                min={metrics.risk}
-                max={metrics.potential}
-                perf={metrics.balance}
-                meterWidth={styles.meterWidth}
-                meterHeight={styles.meterHeight}
-              />
-            </div>
-          </div>
-          {/* --------------------------------fin perfMeter --------------- */}
         </div>
       )}
     </>
