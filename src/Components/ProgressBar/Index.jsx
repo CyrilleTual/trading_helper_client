@@ -12,25 +12,20 @@ function ProgressBar({
   neutral,
   position,
   tradeQuote,
+  status,
 }) {
 
-  //level : niveau du curseur en % 
-
   let level = null;
-
-  if (position === "long" && now > target) {
-    level = 100;
-  } else if (position === "long" && now < stop) {
+  let color = "black";
+  if (status === "OnStop") {
     level = 0;
-  } else if (position === "short" && now > target ){
-    level = 100
-  } else if ( position === "shoert" && now < stop ){
-    level = 0
+    color = "red";
+  } else if (status === "OnTarget") {
+    level = 100;
+    color = "green";
   } else {
     level = ((now - stop) / (target - stop)) * 100;
   }
-
-
 
   const neutralLevel = ((neutral - stop) / (target - stop)) * 100;
 
@@ -39,7 +34,7 @@ function ProgressBar({
   return (
     <div className={styles.wrapper}>
       <div className={styles.bar}>
-        <div className={styles.cursor} style={{ left: `${level}%` }}></div>
+        <div className={styles.cursor} style={{ left: `${level}%`, backgroundColor:`${color}`}}></div>
         <div
           className={styles.neutral}
           style={{ left: `${neutralLevel}%`, display: `${neutralVisible}` }}

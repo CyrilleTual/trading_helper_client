@@ -95,6 +95,7 @@ function Card({ trade }) {
             neutral={trade.neutral}
             position={trade.position}
             tradeQuote={tradeQuote}
+            status={trade.status}
           />
 
           {/* --------------------------------- début perfMeter --------------- */}
