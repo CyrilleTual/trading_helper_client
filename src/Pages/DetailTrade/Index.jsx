@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { usePrepareQuery, useGetTradesActivesByUserQuery} from "../../store/slice/tradeApi";
+import { useGetTradesActivesByUserQuery} from "../../store/slice/tradeApi";
 import { Loading } from "../../Components/Loading/Index";
 import styles from "./detailTrade.module.css"
 import PerfMeter from "../../Components/PerfMeter/Index";

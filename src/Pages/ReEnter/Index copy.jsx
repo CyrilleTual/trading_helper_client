@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+  usePrepareQuery,
   useReEnterMutation,
+  useGetPortfoliosByUserQuery,
   useGetTradesActivesByUserQuery
 } from "../../store/slice/tradeApi";
 import styles from "./reEnter.module.css";
@@ -13,42 +15,75 @@ import Modal from "../../Components/Modal/Index";
 import { validate } from "./validateInputsReEnter";
 import {calculMetrics} from "../../utils/calculateTradeMetrics"
 
-
-
 function ReEnter() {
   const navigate = useNavigate();
   const { tradeId } = useParams();
 
-  // on check si visiteur pour adapter l'affichage //////////////////////////////////////
-  const role = useSelector((state) => state.user.infos.role);
-  let id = useSelector((state) => state.user.infos.id);
-  let isVisitor = false;
-  if (role.substring(0, 7) === "visitor") {
-    id = role.substring(8);
-    isVisitor = true;
-  }
-
-  // Récupère le trade  ///////////////////////////////////////////////
-  const [trade, setTrade] = useState(null);
+  // va recupérer les infos du trade
+const { data: trade, isSuccess } = usePrepareQuery(tradeId);
+ 
+//   ////////////////////////////////////////////////////////////////////////////////////////////////
+const id = 1
+  const [trade2, setTrade2] = useState(null);
   // Récupère tous les trades ouverts par id d'user (deja dans le redux store)
   const {
     data: originalsTrades,
-    isSuccess,
+    isLoading: tradesIsLoading,
+    isSuccess2,
+    isError: tradesisError1,
   } = useGetTradesActivesByUserQuery(id);
 
-  // on complète les données du trade par les valeurs calculèes -> trade
+  // on selectionne le trade2  valide
+  // on complète les données du trade par les valeurs calculèes -> trade2+
   useEffect(() => {
     if (isSuccess) {
       const { tradeFull } = calculMetrics(
         originalsTrades.filter((trade) => +trade.tradeId === +tradeId)[0]
       );
-      setTrade({ ...tradeFull });
+      setTrade2({ ...tradeFull });
     }
   }, [isSuccess]);
-  //////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // on se sert des portfolios pour obtenir le symbole des currencies
+  const [currencySymbol, setCurrencySymbol] = useState(null);
+  const { data: portfolios, isSuccess: isSuccess1 } =
+    useGetPortfoliosByUserQuery(useSelector((state) => state.user.infos.id));
+
+  useEffect(() => {
+    if (trade && portfolios) {
+      let { symbol } = portfolios.find(
+        (portfolio) => portfolio.title === trade.portfolio
+      );
+      setCurrencySymbol(symbol);
+    }
+  }, [trade, portfolios]);
 
   // hook de création de la reEnter
   const [reEnter] = useReEnterMutation();
+
+  ///  disponible pour l'affichage : ( trade . qq chose)
+  //   const {
+  //   closureQuantity,
+  //   closureValue,
+  //   comment,
+  //   enterQuantity,
+  //   enterValue,
+  //   exposition,
+  //   firstEnter,
+  //   isin,
+  //   lastQuote,
+  //   place,
+  //   portfolio,
+  //   position,
+  //   pru,
+  //   remains,
+  //   stop,
+  //   target,
+  //   ticker,
+  //   title,
+  //   tradeId,
+  // } = data;
 
   // valeurs de la nouvelle prise de position
   const [values, setValues] = useState({
@@ -63,12 +98,12 @@ function ReEnter() {
   });
   ///// gestion du formulaire //////////////////////////////
   useEffect(() => {
-    if (isSuccess && trade) {
+    if (isSuccess) {
       setValues({
         ...values,
         target: trade.target,
         stop: trade.stop,
-        comment: trade.currentComment,
+        comment: trade.comment,
       });
     }
     // eslint-disable-next-line
@@ -102,12 +137,12 @@ function ReEnter() {
         tax: verifiedValues.fees,
         comment: verifiedValues.comment,
         trade_id: +tradeId,
-        stock_id: +trade.stockId,
+        stock_id: +trade.stock_id,
       };
       try {
         const resp = await reEnter(datas);
         console.log(resp);
-        navigate(`/portfolio/${trade.portfolioId}/detail`);
+        navigate(`/portfolio/${trade.portfolio_id}/detail`);
       } catch (err) {
         console.log(err);
       }
@@ -120,14 +155,15 @@ function ReEnter() {
 
   /////// cancel enter
   function cancelEnter() {
-    navigate(`/portfolio/${trade.portfolioId}/detail`);
+    navigate(`/portfolio/${trade.portfolio_id}/detail`);
   }
 
+console.log (trade, trade2)
   ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
   return (
     <>
-      {!isSuccess || !trade? (
+      {!isSuccess && !isSuccess1 ? (
         <Loading />
       ) : (
         <main className={styles.re_enter}>
@@ -157,11 +193,11 @@ function ReEnter() {
                 </p>
                 <p>
                   C'est un trade {trade.position}, le dernier cours est à{" "}
-                  {trade.lastQuote} {trade.symbol}.
+                  {trade.lastQuote} {currencySymbol}.
                 </p>
                 <p>
-                  Le PRU actuel est de {trade.pru} {trade.symbol} pour une ligne
-                  de {trade.enterQuantity - trade.closureQuantity} titres.
+                  Le PRU actuel est de {trade.pru} {currencySymbol} pour une
+                  ligne de {trade.remains} titres.
                 </p>
               </>
             )}
@@ -186,7 +222,7 @@ function ReEnter() {
                 onChange={handleChange}
                 autoFocus
               />{" "}
-              {trade.symbol}
+              {currencySymbol}
             </div>
 
             <label className={styles.label} htmlFor="quantity">
@@ -216,7 +252,7 @@ function ReEnter() {
                 value={values.target}
                 onChange={handleChange}
               />{" "}
-              {trade.symbol}
+              {currencySymbol}
             </div>
 
             <label className={styles.label} htmlFor="stop">
@@ -233,7 +269,7 @@ function ReEnter() {
                 value={values.stop}
                 onChange={handleChange}
               />{" "}
-              {trade.symbol}
+              {currencySymbol}
             </div>
 
             <label className={styles.label} htmlFor="fees">
@@ -249,7 +285,7 @@ function ReEnter() {
                 value={values.fees}
                 onChange={handleChange}
               />{" "}
-              {trade.symbol}
+              {currencySymbol}
             </div>
 
             <label className={styles.label} htmlFor="tax">
@@ -265,7 +301,7 @@ function ReEnter() {
                 value={values.tax}
                 onChange={handleChange}
               />{" "}
-              {trade.symbol}
+              {currencySymbol}
             </div>
 
             <textarea

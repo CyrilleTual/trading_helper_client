@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
-  useGetTradesActivesByUserQuery,
+  usePrepareQuery,
   useExitProcessMutation,
 } from "../../store/slice/tradeApi";
 import { resetStorage } from "../../utils/tools";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { signOut } from "../../store/slice/user";
 import styles from "./exitTrade.module.css";
 import BtnSubmit from "../../Components/UI/BtnSubmit";
@@ -14,37 +14,27 @@ import BtnCancel from "../../Components/UI/BtnCancel";
 import Modal from "../../Components/Modal/Index";
 import { Loading } from "../../Components/Loading/Index";
 import { validate } from "./validateInputsExit";
-import { calculMetrics } from "../../utils/calculateTradeMetrics"; 
 
 function ExitTrade() {
   const { tradeId } = useParams();
 
   // va recupérer les infos du trade
-  // on check si visiteur pour adapter l'affichage //////////////////////////////////////
-  const role = useSelector((state) => state.user.infos.role);
-  let id = useSelector((state) => state.user.infos.id);
-  let isVisitor = false;
-  if (role.substring(0, 7) === "visitor") {
-    id = role.substring(8);
-    isVisitor = true;
-  }
+  const { data: trade, isSuccess, isError } = usePrepareQuery(tradeId);
 
-  // Récupère le trade  ///////////////////////////////////////////////
-  const [trade, setTrade] = useState(null);
-  // Récupère tous les trades ouverts par id d'user (deja dans le redux store)
-  const { data: originalsTrades, isSuccess, isError } =
-    useGetTradesActivesByUserQuery(id);
 
-  // on complète les données du trade par les valeurs calculèes -> trade
-  useEffect(() => {
-    if (isSuccess) {
-      const { tradeFull } = calculMetrics(
-        originalsTrades.filter((trade) => +trade.tradeId === +tradeId)[0]
-      );
-      setTrade({ ...tradeFull });
-    }
-  }, [isSuccess]);
-  //////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -59,6 +49,28 @@ function ExitTrade() {
 
   // hook de création de sortie
   const [exitProcess] = useExitProcessMutation();
+
+  ///  disponible pour l'affichage : ( trade . qq chose)
+  //   const {
+  //   closureQuantity,
+  //   closureValue,
+  //   comment,
+  //   enterQuantity,
+  //   enterValue,
+  //   exposition,
+  //   firstEnter,
+  //   isin,
+  //   place,
+  //   portfolio,
+  //   position,
+  //   pru,
+  //   remains,
+  //   stop,
+  //   target,
+  //   ticker,
+  //   title,
+  //   tradeId,
+  // } = data;
 
   ///// gestion du formulaire //////////////////////////////
 
@@ -84,46 +96,44 @@ function ExitTrade() {
     e.preventDefault();
 
     // Appel de la fonction de traitement des données du formulaire
-    const { inputErrors, verifiedValues = {} } = validate(
-      values,
-      +trade.enterQuantity - trade.closureQuantity
-    );
+    const { inputErrors, verifiedValues = {}  } = validate(values, trade.remains);
 
-    if (inputErrors.length > 0) {
+     if (inputErrors.length > 0) {
       setErrorsInForm(inputErrors);
     } else {
-      const datas = {
-        comment: verifiedValues.comment,
-        date: verifiedValues.date,
-        fees: verifiedValues.fees,
-        price: verifiedValues.price,
-        quantity: verifiedValues.quantity,
-        tax: verifiedValues.fees,
-        trade_id: +tradeId,
-        remains: +trade.enterQuantity - trade.closureQuantity,
-        stock_id: trade.stockId,
-      };
-      try {
-        await exitProcess(datas);
-        navigate(`/portfolio/${trade.portfolioId}/`);
-      } catch (err) {
-        console.log(err);
-      }
+
+     const datas = {
+       comment: verifiedValues.comment,
+       date: verifiedValues.date,
+       fees: verifiedValues.fees,
+       price: verifiedValues.price,
+       quantity: verifiedValues.quantity,
+       tax: verifiedValues.fees,
+       trade_id: +tradeId,
+       remains: trade.remains,
+       stock_id: trade.stock_id,
+     };
+     try {
+       await exitProcess(datas);
+       navigate(`/portfolio/${trade.portfolio_id}/`);
+     } catch (err) {
+       console.log(err);
+     }
     }
   };
 
-  const afterError = () => {
-    setErrorsInForm([]);
-  };
+    const afterError = () => {
+      setErrorsInForm([]);
+    };
 
   const cancelExit = () => {
-    navigate(`/portfolio/${trade.portfolioId}/detail`);
+    navigate(`/portfolio/${trade.portfolio_id}/detail`);
   };
 
   //*******************************************************
   return (
     <main className={styles.exit}>
-      {!isSuccess || !trade ? (
+      {!isSuccess ? (
         <Loading />
       ) : (
         <>
@@ -152,10 +162,7 @@ function ExitTrade() {
             {trade.title}?{" "}
           </p>
           <p>Le dernier cours est de {trade.lastQuote}</p>
-          <p>
-            Tu disposes de {trade.enterQuantity - trade.closureQuantity} titres
-            en portefeuille
-          </p>
+          <p>Tu disposes de {trade.remains} titres en portefeuille</p>
 
           <form
             className={styles.form_exit}
@@ -252,7 +259,7 @@ function ExitTrade() {
 
             <div className={styles.full_width}>
               <BtnCancel value="Abandon" action={cancelExit} name={"abandon"} />
-              <BtnSubmit value="Validation" name="validation" />
+              <BtnSubmit value="Validation" name="validation"/>
             </div>
           </form>
         </>
