@@ -76,10 +76,10 @@ export const tradeApi = createApi({
     }),
 
     // le dashboard d'un portfolio particulier par id de portfolio
-    getPortfolioDashboardById: builder.query({
-      query: (id) => `/portfolios/${id}/dashboard`,
-      providesTags: ["PortfolioByUser"],
-    }),
+    // getPortfolioDashboardById: builder.query({
+    //   query: (id) => `/portfolios/${id}/dashboard`,
+    //   providesTags: ["PortfolioByUser"],
+    // }),
 
     // le détail d'un portefeuille par id de portefeuille
     // getDetailPortfolioById: builder.query({
@@ -212,7 +212,7 @@ export const {
   useSignUserUpMutation,
   useGetPortfoliosByUserQuery,
   useGetGlobalDashBoardByUserQuery,
-  useGetPortfolioDashboardByIdQuery,
+  //useGetPortfolioDashboardByIdQuery,
   // useGetDetailPortfolioByIdQuery,
   useGetStategiesByUserIdQuery,
   useSearchStocksQuery,

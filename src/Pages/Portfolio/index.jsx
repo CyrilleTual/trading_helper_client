@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import {
-  useGetPortfolioDashboardByIdQuery,
+
+  useGetGlobalDashBoardByUserQuery,
   useGetCurrenciesQuery,
   useGetPortfoliosByUserQuery,
 } from "../../store/slice/tradeApi";
@@ -21,21 +22,44 @@ function Portfolio() {
 
   // liste des portfolios de l'user
   let id = useSelector((state) => state.user.infos.id);
-  
+
   const role = useSelector((state) => state.user.infos.role);
 
   // si visitor -> on change id
   if (role.substring(0, 7) === "visitor") {
-     id = role.substring(8);
-  } 
+    id = role.substring(8);
+  }
 
   const { data: portfolios, isSuccess: isSuccess1 } =
     useGetPortfoliosByUserQuery(id);
 
   const { portfolioId } = useParams();
   // on va cherhcher un portfolio particulier
-  const { data, isLoading, isError } =
-    useGetPortfolioDashboardByIdQuery(portfolioId);
+  // const { data, isLoading, isError } =
+  //   useGetPortfolioDashboardByIdQuery(portfolioId);
+
+  // on va chercher la tableau de bord global pour un user (idUser) *************************
+  const {
+    data: global,
+    isLoading,
+    isError,
+  } = useGetGlobalDashBoardByUserQuery(id);
+
+  // puis on recupère le portfolio par son id  *******************************************
+  const [data, setData]= useState(null)
+
+  useEffect(()=>{
+    if(global){
+      setData(
+        global.portfoliosArray.find(
+          (portfolio) => +portfolio.id === +portfolioId
+        )
+      );
+    }
+  },[global])
+
+  //-------------------------------------------------------------------------------
+
 
   // recup du nom du portefeuille
   useEffect(() => {
@@ -65,8 +89,6 @@ function Portfolio() {
     // eslint-disable-next-line
   }, [isError]);
 
- 
-
   // set de la currency
   useEffect(() => {
     if (data && currencyInfos) {
@@ -77,8 +99,6 @@ function Portfolio() {
     }
   }, [data, currencyInfos]);
 
-  
-
   return (
     <>
       {isLoading ? (
@@ -88,9 +108,8 @@ function Portfolio() {
         baseCurrencie && (
           <main className={styles.portfolio}>
             <h1>Tableau de bord</h1>
-              <h2>Situation du portefeuille</h2>
+            <h2>Situation du portefeuille</h2>
             <div className={styles.meter_container}>
-            
               <PerfMeter
                 legend={`Trades actifs - ${portTitle}`}
                 min={data.perfIfStopeed.toFixed(0)}
@@ -115,7 +134,7 @@ function Portfolio() {
               </div>
             )}
             <h2>Les trades en cours </h2>
-            <Alltrades portfolioId={portfolioId}/>
+            <Alltrades portfolioId={portfolioId} />
           </main>
         )
       )}

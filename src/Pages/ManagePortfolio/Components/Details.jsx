@@ -1,23 +1,47 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { signOut } from "../../../store/slice/user";
 import { resetStorage } from "../../../utils/tools";
 import {
-  useGetPortfolioDashboardByIdQuery,
-  useGetCurrenciesQuery
+  useGetCurrenciesQuery,
+  useGetGlobalDashBoardByUserQuery,
 } from "../../../store/slice/tradeApi";
 
 import styles from "./details.module.css"
 
 
 function Details({ portfolio }) {
-  // on va cherhcher un portfolio particulier
-
-  const { data, isLoading, isError } = useGetPortfolioDashboardByIdQuery(
-    portfolio.id
-  );
  
+  // gestion de l'id de l'user à suivre
+  let id = useSelector((state) => state.user.infos.id);
+  const role = useSelector((state) => state.user.infos.role);
+  // si visitor -> on change id
+  if (role.substring(0, 7) === "visitor") {
+    id = role.substring(8);
+  }
+
+  // on va chercher la tableau de bord global pour un  (idUser) *************************
+  const {
+    data: global,
+    isLoading,
+    isError,
+  } = useGetGlobalDashBoardByUserQuery(id);
+
+  // puis on recupère le portfolio par son id  *******************************************
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    if (global) {
+      setData(
+        global.portfoliosArray.find(
+          (item) => +item.id === +portfolio.id
+        )
+      );
+    }
+  }, [global]);
+
+  //-------------------------------------------------------------------------------
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -37,7 +61,7 @@ function Details({ portfolio }) {
   // recup des infos sur les currrencies (toutes)
   const { data: currencyInfos } = useGetCurrenciesQuery();
   // set de la currency
- 
+
   useEffect(() => {
     if (data && currencyInfos) {
       const portfolioCurrencie = currencyInfos.find(
@@ -56,20 +80,17 @@ function Details({ portfolio }) {
       ) : (
         !isError && (
           <tr>
-            <td className={styles.toinfo} datainfo={`portefeuille : ${portfolio.title}`} >{portfolio.title}</td>
+            <td
+              className={styles.toinfo}
+              datainfo={`portefeuille : ${portfolio.title}`}
+            >
+              {portfolio.title}
+            </td>
             <td>{baseCurrencie}</td>
-            <td>
-              {+data.initCredit.toFixed(0)}  
-            </td>
-            <td>
-              {data.assets.toFixed(0)}  
-            </td>
-            <td>
-              {data.cash.toFixed(0)}  
-            </td>
-            <td>
-              {data.totalBalance.toFixed(0)} 
-            </td>
+            <td>{+data.initCredit.toFixed(0)}</td>
+            <td>{data.assets.toFixed(0)}</td>
+            <td>{data.cash.toFixed(0)}</td>
+            <td>{data.totalBalance.toFixed(0)}</td>
           </tr>
         )
       )}
