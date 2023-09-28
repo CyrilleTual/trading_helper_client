@@ -43,6 +43,7 @@ function ExitTrade() {
       );
       setTrade({ ...tradeFull });
     }
+    // eslint-disable-next-line
   }, [isSuccess]);
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -123,7 +124,7 @@ function ExitTrade() {
   //*******************************************************
   return (
     <main className={styles.exit}>
-      {!isSuccess || !trade ? (
+      {!isSuccess || !trade || isVisitor ? (
         <Loading />
       ) : (
         <>

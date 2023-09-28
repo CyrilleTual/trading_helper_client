@@ -18,7 +18,7 @@ function Card({ trade }) {
      tradeFull,
   } = calculMetrics(trade);
   // on reafecte le nom trade à l'objet complété 
-  trade = {... tradeFull}
+  trade = {...tradeFull}
   
   // appel de la fonction qui retourne des variables utiles pour masquer le meter.
   const {meterInvalid, situation } = utilsMeter(trade);
@@ -92,7 +92,7 @@ function Card({ trade }) {
                         trade.symbol
                       } /  ${ trade.balancePc.toFixed(2)} %. `
                 }
-                min={ trade. risk}
+                min={ trade.risk}
                 max={ trade.potential}
                 perf={ trade.balance}
                 meterWidth={styles.meterWidth}
@@ -105,13 +105,13 @@ function Card({ trade }) {
           <p>
             Si objectif ralié, { trade.potential > 0 ? `gain de ` : `perte`}{" "}
             { trade.potential} {trade.symbol} soit { trade.potentialPc} %. <br />
-            Si stop déclenché, { trade. risk < 0 ? `perte de ` : "gain de "}
-            { trade. risk} {trade.symbol} soit { trade.riskPc } %.
+            Si stop déclenché, { trade.risk < 0 ? `perte de ` : "gain de "}
+            { trade.risk} {trade.symbol} soit { trade.riskPc } %.
             <br />
           </p>
           { trade.rr > 0 ? (
-            <p> trade. risk/reward de { trade.rr}</p>
-          ) : trade. potential < 0 ? (
+            <p> trade.risk/reward de { trade.rr}</p>
+          ) : trade.potential < 0 ? (
             <p>Trade perdant</p>
           ) : (
             <p>Trade sans rique</p>

@@ -44,6 +44,7 @@ function ReEnter() {
       );
       setTrade({ ...tradeFull });
     }
+    // eslint-disable-next-line
   }, [isSuccess]);
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -127,7 +128,7 @@ function ReEnter() {
 
   return (
     <>
-      {!isSuccess || !trade? (
+      {!isSuccess || !trade || isVisitor ? (
         <Loading />
       ) : (
         <main className={styles.re_enter}>

@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signOut } from "../../store/slice/user";
 import { Loading } from "../../Components/Loading/Index";
-import BtnLink from "../../Components/UI/BtnLink";
 import Alltrades from "../AllTrades/Index";
 
 function Global() {
@@ -18,11 +17,11 @@ function Global() {
   const role = useSelector((state) => state.user.infos.role);
 
   let id = useSelector((state) => state.user.infos.id);
-  let isVisitor = false
+  
 
   if (role.substring(0, 7) === "visitor") {
     id = role.substring(8);
-    isVisitor = true
+     
   }
 
   // on va chercher la tableau de bord global pour un user (idUser)

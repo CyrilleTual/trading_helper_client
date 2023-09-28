@@ -49,13 +49,14 @@ function Portfolio() {
   const [data, setData]= useState(null)
 
   useEffect(()=>{
-    if(global){
+    if (global) {
       setData(
         global.portfoliosArray.find(
           (portfolio) => +portfolio.id === +portfolioId
         )
       );
     }
+    // eslint-disable-next-line
   },[global])
 
   //-------------------------------------------------------------------------------

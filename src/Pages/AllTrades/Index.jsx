@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useGetTradesActivesByUserQuery } from "../../store/slice/tradeApi";
-import { NavLink } from "react-router-dom";
+ 
 
 import { Loading } from "../../Components/Loading/Index";
 import { prepare } from "./utils";
@@ -20,11 +20,11 @@ function Alltrades({ portfolioId }) {
   const role = useSelector((state) => state.user.infos.role);
 
   let id = useSelector((state) => state.user.infos.id);
-  let isVisitor = false;
+  
 
   if (role.substring(0, 7) === "visitor") {
     id = role.substring(8);
-    isVisitor = true;
+     
   }
 
   ////// preparation des variables utilisées ici
@@ -39,9 +39,9 @@ function Alltrades({ portfolioId }) {
   // Récupère tous les trades ouverts par id d'user
   const {
     data: originalsTrades,
-    isLoading: tradesIsLoading,
+ 
     isSuccess: tradesisSuccess,
-    isError: tradesisError1,
+ 
   } = useGetTradesActivesByUserQuery(id);
 
   // peuple les variables utilisées pour passer à la card les infos /////
@@ -72,6 +72,7 @@ function Alltrades({ portfolioId }) {
         });
       }
     }
+    // eslint-disable-next-line
   }, [tradesisSuccess, portfolioId]);
 
   const handleTopPage = () => {

@@ -34,11 +34,10 @@ function Details({ portfolio }) {
   useEffect(() => {
     if (global) {
       setData(
-        global.portfoliosArray.find(
-          (item) => +item.id === +portfolio.id
-        )
+        global.portfoliosArray.find((item) => +item.id === +portfolio.id)
       );
     }
+    // eslint-disable-next-line
   }, [global]);
 
   //-------------------------------------------------------------------------------

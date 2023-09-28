@@ -17,11 +17,11 @@ function DetailTrade() {
   const role = useSelector((state) => state.user.infos.role);
 
   let id = useSelector((state) => state.user.infos.id);
-  let isVisitor = false;
+ 
 
   if (role.substring(0, 7) === "visitor") {
     id = role.substring(8);
-    isVisitor = true;
+ 
   }
 
   // recupère l'id du trade /////////////////////////////////////////
@@ -31,9 +31,9 @@ function DetailTrade() {
   // Récupère tous les trades ouverts par id d'user (deja dans le redux store)
   const {
     data: originalsTrades,
-    isLoading: tradesIsLoading,
+  
     isSuccess,
-    isError: tradesisError1,
+ 
   } = useGetTradesActivesByUserQuery(id);
 
   // on selectionne le trade  valide
@@ -45,13 +45,14 @@ function DetailTrade() {
       );
       setTrade({ ...tradeFull });
     }
+    // eslint-disable-next-line
   }, [isSuccess]);
 
   // appel de la fonction qui retourne des variables utiles pour masquer le meter.
   const [meterInvalid, setMeterInvalid] = useState(null);
   const [situation, setSituation] = useState(null);
   useEffect(() => {
-    let result = null;
+   // let result = null;
     if (trade) {
       const { meterInvalid, situation } = utilsMeter(trade);
       setMeterInvalid(meterInvalid);

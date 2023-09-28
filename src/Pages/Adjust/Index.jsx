@@ -3,9 +3,8 @@ import { useSelector } from "react-redux";
 import { useNavigate, useParams, useLocation, NavLink } from "react-router-dom";
 import {
   useGetTradesActivesByUserQuery,
-  useGetPortfoliosByUserQuery,
+ 
   useAdjustmentMutation,
-  tradeApi,
 } from "../../store/slice/tradeApi";
 import styles from "./adjust.module.css";
 import { Loading } from "../../Components/Loading/Index";
@@ -66,13 +65,15 @@ function Adjust() {
       );
       setTrade({ ...tradeFull });
     }
+    // eslint-disable-next-line
   }, [tradeId, isSuccess]);
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
  
+  
 
-  const { data: portfolios, isSuccess: isSuccess1 } =
-    useGetPortfoliosByUserQuery(useSelector((state) => state.user.infos.id));
+  // const { data: portfolios, isSuccess: isSuccess1 } =
+  //   useGetPortfoliosByUserQuery(useSelector((state) => state.user.infos.id));
 
   // nouveaux metriques
   const [newMetrics, setNewMetrics] = useState({
@@ -171,7 +172,7 @@ function Adjust() {
 
   return (
     <>
-      {!isSuccess || !isSuccess1 || !trade ? (
+      {!isSuccess  || !trade || isVisitor ? (
         <Loading />
       ) : (
         <main className={styles.adjust}>
