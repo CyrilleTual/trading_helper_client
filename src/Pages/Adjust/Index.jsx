@@ -69,7 +69,7 @@ function Adjust() {
   }, [tradeId, isSuccess]);
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
-  if (trade) console.log(trade);
+ 
 
   const { data: portfolios, isSuccess: isSuccess1 } =
     useGetPortfoliosByUserQuery(useSelector((state) => state.user.infos.id));
@@ -222,14 +222,14 @@ function Adjust() {
                   Si stop déclenché: {trade.risk} {trade.symbol} soit{" "}
                   {trade.riskPc} %.
                   <br />
-                  {trade.rr > 0 ? (
-                    <p>Risk/reward de {trade.rr}</p>
-                  ) : newMetrics.potential < 0 ? (
-                    <p>Trade perdant</p>
-                  ) : (
-                    <p>Trade sans rique</p>
-                  )}
                 </p>
+                {trade.rr > 0 ? (
+                  <p>Risk/reward de {trade.rr}</p>
+                ) : newMetrics.potential < 0 ? (
+                  <p>Trade perdant</p>
+                ) : (
+                  <p>Trade sans rique</p>
+                )}
               </>
             )}
           </div>
@@ -385,7 +385,9 @@ function Adjust() {
                 disabled={
                   (+trade.stop !== +values.stop ||
                     +trade.target !== +values.target) &&
-                  newMetrics.valid ? ``: "disabled"
+                  newMetrics.valid
+                    ? ``
+                    : "disabled"
                 }
               />
               <NavLink
