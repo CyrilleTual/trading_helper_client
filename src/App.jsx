@@ -72,10 +72,11 @@ function App() {
             element={<Logged child={Adjust} />}
           />
           <Route
+            forceRefresh={true}
             path="/portfolio/:portfolioId/detail/:tradeId"
             element={<Logged child={DetailTrade} />}
           />
- 
+
           <Route path="/strategies" element={<Logged child={Strategies} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

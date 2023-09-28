@@ -1,81 +1,13 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import {
-  usePrepareQuery,
-  useExitProcessMutation,
-} from "../../store/slice/tradeApi";
-import { resetStorage } from "../../utils/tools";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { signOut } from "../../store/slice/user";
 import styles from "./exitTrade.module.css";
 import BtnSubmit from "../../Components/UI/BtnSubmit";
 import BtnCancel from "../../Components/UI/BtnCancel";
 import Modal from "../../Components/Modal/Index";
 import { Loading } from "../../Components/Loading/Index";
 import { validate } from "./validateInputsExit";
+import { useExitProcessMutation } from "../../store/slice/tradeApi";
 
-function ExitTrade() {
-  const { tradeId } = useParams();
-
-  // va recupérer les infos du trade
-  const { data: trade, isSuccess, isError } = usePrepareQuery(tradeId);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if (isError) {
-      resetStorage();
-      dispatch(signOut());
-      navigate("/");
-    }
-    // eslint-disable-next-line
-  }, [isError]);
-
-  // hook de création de sortie
-  const [exitProcess] = useExitProcessMutation();
-
-  ///  disponible pour l'affichage : ( trade . qq chose)
-  //   const {
-  //   closureQuantity,
-  //   closureValue,
-  //   comment,
-  //   enterQuantity,
-  //   enterValue,
-  //   exposition,
-  //   firstEnter,
-  //   isin,
-  //   place,
-  //   portfolio,
-  //   position,
-  //   pru,
-  //   remains,
-  //   stop,
-  //   target,
-  //   ticker,
-  //   title,
-  //   tradeId,
-  // } = data;
-
-  ///// gestion du formulaire //////////////////////////////
-
-  /// to do -> verifier que l'on est bien sur le bon trade
-  /// -> tradeId === trade.tradeId ?
+function ExitTradeCore({ trade, afterProcess }) {
   const [values, setValues] = useState({
     quantity: 0,
     price: 0,
@@ -85,6 +17,10 @@ function ExitTrade() {
     comment: "",
   });
 
+  // hook de création de sortie
+  const [exitProcess] = useExitProcessMutation();
+
+  // gestion du changement de valeur des inputs
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
@@ -96,48 +32,65 @@ function ExitTrade() {
     e.preventDefault();
 
     // Appel de la fonction de traitement des données du formulaire
-    const { inputErrors, verifiedValues = {}  } = validate(values, trade.remains);
+    const { inputErrors, verifiedValues = {} } = validate(
+      values,
+      +trade.enterQuantity - trade.closureQuantity
+    );
 
-     if (inputErrors.length > 0) {
+    if (inputErrors.length > 0) {
       setErrorsInForm(inputErrors);
     } else {
+      const datas = {
+        comment: verifiedValues.comment,
+        date: verifiedValues.date,
+        fees: verifiedValues.fees,
+        price: verifiedValues.price,
+        quantity: verifiedValues.quantity,
+        tax: verifiedValues.fees,
+        trade_id: trade.tradeId,
+        remains: +trade.enterQuantity - trade.closureQuantity,
+        stock_id: trade.stockId,
+      };
+      try {
+        await exitProcess(datas);
+        setValues({
+          quantity: 0,
+          price: 0,
+          fees: 0,
+          tax: 0,
+          date: new Date().toISOString().split("T")[0],
+          comment: "",
+        });
 
-     const datas = {
-       comment: verifiedValues.comment,
-       date: verifiedValues.date,
-       fees: verifiedValues.fees,
-       price: verifiedValues.price,
-       quantity: verifiedValues.quantity,
-       tax: verifiedValues.fees,
-       trade_id: +tradeId,
-       remains: trade.remains,
-       stock_id: trade.stock_id,
-     };
-     try {
-       await exitProcess(datas);
-       navigate(`/portfolio/${trade.portfolio_id}/`);
-     } catch (err) {
-       console.log(err);
-     }
+        afterProcess();
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
 
-    const afterError = () => {
-      setErrorsInForm([]);
-    };
-
-  const cancelExit = () => {
-    navigate(`/portfolio/${trade.portfolio_id}/detail`);
+  const afterError = () => {
+    setErrorsInForm([]);
   };
 
-  //*******************************************************
+  const cancelExit = () => {
+    setValues({
+      quantity: 0,
+      price: 0,
+      fees: 0,
+      tax: 0,
+      date: new Date().toISOString().split("T")[0],
+      comment: "",
+    });
+    afterProcess();
+  };
+
   return (
-    <main className={styles.exit}>
-      {!isSuccess ? (
+    <>
+      {!trade ? (
         <Loading />
       ) : (
         <>
-          <h1>Exit</h1>
           {errorsInForm.length > 0 && (
             <Modal
               display={
@@ -156,13 +109,6 @@ function ExitTrade() {
               action={afterError}
             />
           )}
-
-          <p>
-            Dans le poretefeuille "{trade.portfolio}" tu veux vendre{" "}
-            {trade.title}?{" "}
-          </p>
-          <p>Le dernier cours est de {trade.lastQuote}</p>
-          <p>Tu disposes de {trade.remains} titres en portefeuille</p>
 
           <form
             className={styles.form_exit}
@@ -259,13 +205,13 @@ function ExitTrade() {
 
             <div className={styles.full_width}>
               <BtnCancel value="Abandon" action={cancelExit} name={"abandon"} />
-              <BtnSubmit value="Validation" name="validation"/>
+              <BtnSubmit value="Validation" name="validation" />
             </div>
           </form>
         </>
       )}
-    </main>
+    </>
   );
 }
 
-export default ExitTrade;
+export default ExitTradeCore;

@@ -27,3 +27,11 @@ Pour le svg) */
     height: var(--metH); 
     margin: auto;
 }
+
+.reEnter{
+    background-color: pink;
+}
+
+.exit {
+    background-color: lightskyblue;
+}

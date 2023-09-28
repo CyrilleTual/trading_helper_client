@@ -1,31 +1,21 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams, useLocation, NavLink } from "react-router-dom";
-import {
-  useGetTradesActivesByUserQuery,
- 
-  useAdjustmentMutation,
-} from "../../store/slice/tradeApi";
+import { useGetTradesActivesByUserQuery } from "../../store/slice/tradeApi";
 import styles from "./adjust.module.css";
 import { Loading } from "../../Components/Loading/Index";
-import BtnSubmit from "../../Components/UI/BtnSubmit";
-import BtnCancel from "../../Components/UI/BtnCancel";
-import Modal from "../../Components/Modal/Index";
-import { validate } from "./validateInputsAdjust";
-import { calculNewMetrics } from "./metrics.js";
-import PerfMeter from "../../Components/PerfMeter/Index";
-import styleMeter from "../../Components/PerfMeter/perfMeter.module.css";
 import { calculMetrics } from "../../utils/calculateTradeMetrics";
+import AdjustCore from "./AdjustCore";
+
 
 function Adjust() {
+
   const navigate = useNavigate();
   const location = useLocation();
-
   const { portfolioId, tradesIdArray } = location.state;
-
   const { tradeId } = useParams();
 
-  // on prépare les icones de navigations next et before ////////////////////////
+  // on prépare les icones de navigations next et before //////////////////////////////////
   // recherche de l'index du trade actuel
   const indexOfActual = tradesIdArray.indexOf(+tradeId);
   const previousId =
@@ -39,9 +29,6 @@ function Adjust() {
   const previousTradeId = tradesIdArray[previousId];
   const nextTradeId = tradesIdArray[nextId];
 
-  // va recupérer les infos du trade avec son id
-
-
   // on check si visiteur pour adapter l'affichage //////////////////////////////////////
   const role = useSelector((state) => state.user.infos.role);
   let id = useSelector((state) => state.user.infos.id);
@@ -51,7 +38,7 @@ function Adjust() {
     isVisitor = true;
   }
 
-  // Récupère le trade  ///////////////////////////////////////////////
+  // Récupère le trade  ////////////////////////////////////////////////////////////////////////
   const [trade, setTrade] = useState(null);
   // Récupère tous les trades ouverts par id d'user (deja dans le redux store)
   const { data: originalsTrades, isSuccess } =
@@ -69,130 +56,14 @@ function Adjust() {
   }, [tradeId, isSuccess]);
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
- 
-  
-
-  // const { data: portfolios, isSuccess: isSuccess1 } =
-  //   useGetPortfoliosByUserQuery(useSelector((state) => state.user.infos.id));
-
-  // nouveaux metriques
-  const [newMetrics, setNewMetrics] = useState({
-    valid: true,
-    potential: 0,
-    potentialPc: 0,
-    risk: 0,
-    riskPc: 0,
-    rr: 0,
-    targetAtPc: null,
-    riskAtPc: null,
-  });
-
-  // hook d'ajustement
-  const [adjustment] = useAdjustmentMutation();
-
-  // valeurs initiales de l'ajustement
-  const [values, setValues] = useState({
-    date: new Date().toISOString().split("T")[0],
-    comment: "",
-    target: 0,
-    stop: 0,
-  });
-  ///// calcul des valeurs  initiales ////////////////
-  useEffect(() => {
-    if (isSuccess && trade) {
-      setValues({
-        ...values,
-        price: trade.lastQuote,
-        target: trade.target,
-        stop: trade.stop,
-        comment: trade.currentComment,
-        position: trade.position,
-      });
-    }
-    // eslint-disable-next-line
-  }, [trade]);
-
-  // calcul avec les nouveaux paramèrtes
-  useEffect(() => {
-    if (isSuccess && trade) {
-      calculNewMetrics(trade, values, newMetrics, setNewMetrics);
-    }
-    // eslint-disable-next-line
-  }, [values, trade]);
-
-  // variable pour invalider la jauge
-  const [meterInvalid, setMeterInvalid] = useState(false);
-  useEffect(() => {
-    newMetrics.valid === false ? setMeterInvalid(true) : setMeterInvalid(false);
-  }, [newMetrics]);
-
-  const handleChange = (e) => {
-    setValues({ ...values, [e.target.name]: e.target.value });
-  };
-
-  const [errorsInForm, setErrorsInForm] = useState([]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Appel de la fonction de traitement des données du formulaire
-
-    const { inputErrors, verifiedValues } = validate(values, trade.position);
-
-    if (inputErrors.length > 0) {
-      setErrorsInForm(inputErrors);
-    } else {
-      const datas = {
-        date: verifiedValues.date,
-        target: verifiedValues.target,
-        stop: verifiedValues.stop,
-        comment: verifiedValues.comment,
-        trade_id: +tradeId,
-        stock_id: +trade.stockId,
-      };
-      try {
-
-        const resp = await adjustment(datas);
-        console.log(resp);
-        navigate(`/portfolio/${trade.portfolioId}/detail`);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-  };
-
-  const afterError = () => {
-    setErrorsInForm([]);
-  };
-
-  /////// cancel enter
-  function cancelEnter() {
-    navigate(`/portfolio/${trade.portfolioId}/detail`);
-  }
 
   return (
     <>
-      {!isSuccess  || !trade || isVisitor ? (
+      {!isSuccess || !trade || isVisitor ? (
         <Loading />
       ) : (
         <main className={styles.adjust}>
           <h1>Ajustement target/stop</h1>
-          {errorsInForm.length > 0 && (
-            <Modal
-              display={
-                <p>
-                  Validation du formulaire impossible : <br />
-                  {errorsInForm.map((error, j) => (
-                    <span key={j}>
-                      {error}
-                      <br />
-                    </span>
-                  ))}
-                </p>
-              }
-              action={afterError}
-            />
-          )}
 
           <div className="comments">
             {trade && (
@@ -226,7 +97,7 @@ function Adjust() {
                 </p>
                 {trade.rr > 0 ? (
                   <p>Risk/reward de {trade.rr}</p>
-                ) : newMetrics.potential < 0 ? (
+                ) : trade.potential < 0 ? (
                   <p>Trade perdant</p>
                 ) : (
                   <p>Trade sans rique</p>
@@ -235,176 +106,40 @@ function Adjust() {
             )}
           </div>
 
-          <form
-            className={styles.form_reEnter}
-            onSubmit={handleSubmit}
-            method="POST "
-          >
-            <label className={styles.label} htmlFor="target">
-              target (postion)
-            </label>
-            <div className={styles.input_wrap}>
-              <input
-                type="number"
-                id="target"
-                name="target"
-                min="0"
-                step="0.001"
-                value={values.target}
-                onChange={handleChange}
-              />{" "}
-              {trade.symbol} à {newMetrics.targetAtPc || trade.targetAtPc} % du
-              cours.
-            </div>
+          <AdjustCore
+            trade={trade}
+            afterProcess={() =>
+              navigate(`/portfolio/${trade.portfolioId}/detail`)
+            }
+          />
 
-            <label className={styles.label} htmlFor="stop">
-              stop (postion)
-            </label>
-            <div className={styles.input_wrap}>
-              {" "}
-              <input
-                type="number"
-                id="stop"
-                name="stop"
-                min="0"
-                step="0.001"
-                value={values.stop}
-                onChange={handleChange}
-              />{" "}
-              {trade.symbol} à {newMetrics.riskAtPc || trade.riskAtPc} % du
-              cours.
-            </div>
+          <div>
+            <NavLink
+              className={`${styles.action}`}
+              to={{
+                pathname: `/portfolio/${portfolioId}/ajust/${previousTradeId}`,
+              }}
+              state={{
+                portfolioId: portfolioId,
+                tradesIdArray: tradesIdArray,
+              }}
+            >
+              {`Prev`}
+            </NavLink>
 
-            {trade &&
-              values &&
-              (+trade.stop !== +values.stop ||
-                +trade.target !== +values.target) &&
-              newMetrics.valid && (
-                <div>
-                  Avec les nouvelles valeurs, <br />
-                  Si objectif ralié : {newMetrics.potential} {trade.symbol} soit{" "}
-                  {newMetrics.potentialPc} % <br />
-                  Si stop déclenché,
-                  {newMetrics.risk < 0 ? (
-                    <span> perte de </span>
-                  ) : (
-                    <span> gain de </span>
-                  )}
-                  {newMetrics.risk} {trade.symbol} soit {newMetrics.riskPc} %.
-                  <br />
-                  {newMetrics.rr > 0 ? (
-                    <p>Risk/reward de {newMetrics.rr}</p>
-                  ) : newMetrics.potential < 0 ? (
-                    <p>Trade perdant</p>
-                  ) : (
-                    <p>Trade sans rique</p>
-                  )}
-                </div>
-              )}
-
-            {trade &&
-              values &&
-              (+trade.stop !== +values.stop ||
-                +trade.target !== +values.target) &&
-              !newMetrics.valid && <p> sasie invalide</p>}
-
-            {/* --------------------------------- début perfMeter --------------- */}
-            <div className={` ${styleMeter.wrapper_meter}`}>
-              <div
-                className={`${styleMeter.alertInvalid} ${
-                  meterInvalid ? styleMeter.alertVisible : ""
-                } `}
-              >
-                <div className={`${styleMeter.alertInvalid_content} `}>
-                  {" "}
-                  Stop ou TP invalide{" "}
-                </div>
-              </div>
-
-              <div
-                className={`${styleMeter.meter_container} ${
-                  meterInvalid ? styleMeter.opacify : ""
-                }`}
-              >
-                <PerfMeter
-                  legend={
-                    trade.balance > 0
-                      ? `Gain actuel : ${trade.balance} ${trade.symbol} `
-                      : `Perte actuelle : ${trade.balance} ${trade.symbol} `
-                  }
-                  min={newMetrics.valid ? newMetrics.risk : trade.risk}
-                  max={
-                    newMetrics.valid ? newMetrics.potential : trade.potential
-                  }
-                  perf={trade.balance}
-                  meterWidth={styles.meterWidth}
-                  meterHeight={styles.meterHeight}
-                />
-              </div>
-            </div>
-            {/* --------------------------------fin perfMeter --------------- */}
-
-            <textarea
-              id="comment"
-              name="comment"
-              value={values.comment}
-              onChange={handleChange}
-              rows="2"
-            />
-
-            <label className={styles.label} htmlFor="date">
-              date
-            </label>
-            <div className={styles.input_wrap}>
-              <input
-                type="date"
-                id="date"
-                name="date"
-                value={values.date}
-                onChange={handleChange}
-              ></input>
-            </div>
-
-            <div className={styles.full_width}>
-              <NavLink
-                className={`${styles.action}`}
-                to={{
-                  pathname: `/portfolio/${portfolioId}/ajust/${previousTradeId}`,
-                }}
-                state={{
-                  portfolioId: portfolioId,
-                  tradesIdArray: tradesIdArray,
-                }}
-              >
-                {`Prev`}
-              </NavLink>
-              <BtnCancel value="Abandon" action={cancelEnter} name="abandon" />
-              <BtnSubmit
-                value="Validation"
-                name="validation"
-                style={{}}
-                disabled={
-                  (+trade.stop !== +values.stop ||
-                    +trade.target !== +values.target) &&
-                  newMetrics.valid
-                    ? ``
-                    : "disabled"
-                }
-              />
-              <NavLink
-                className={`${styles.action}`}
-                to={{
-                  pathname: `/portfolio/${portfolioId}/ajust/${nextTradeId}`,
-                }}
-                state={{
-                  portfolioId: portfolioId,
-                  tradesIdArray: tradesIdArray,
-                }}
-              >
-                {`Next`}
-              </NavLink>
-            </div>
-          </form>
+            <NavLink
+              className={`${styles.action}`}
+              to={{
+                pathname: `/portfolio/${portfolioId}/ajust/${nextTradeId}`,
+              }}
+              state={{
+                portfolioId: portfolioId,
+                tradesIdArray: tradesIdArray,
+              }}
+            >
+              {`Next`}
+            </NavLink>
+          </div>
         </main>
       )}
     </>
