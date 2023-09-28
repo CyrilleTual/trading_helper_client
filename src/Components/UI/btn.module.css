@@ -17,7 +17,7 @@ input:hover{
     border: solid rgba(0, 0, 0, 0.446) 1px;
     padding: 4px 10px 4px 10px ;
 }
-.myBtn:hover{
+.myBtn:hover :not(disabled){
     cursor: pointer;
     border: solid black 2px;
     color: var(--txt-color-dark);
@@ -32,4 +32,11 @@ input[type="submit"]
 .cancel{
     background-color: red;
     color: blanchedalmond;
+}
+
+
+*:disabled {
+  background-color: lightgray !important;
+  color: linen;
+  opacity: 1;
 }

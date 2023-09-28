@@ -7,6 +7,8 @@ export function validate(values, position) {
   const inputErrors = []; // Tableau des erreurs de validation
   let verifiedValues = []; // Tableau des valeurs validées à retourner
 
+  
+
   const {price,stop, target, comment, date} = values;
 
   // Vérification que les champs numériques sont bien numériques et non négatifs

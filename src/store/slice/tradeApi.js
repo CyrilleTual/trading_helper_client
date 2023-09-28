@@ -142,10 +142,7 @@ export const tradeApi = createApi({
       ],
     }),
 
-    prepare: builder.query({
-      query: (id) => `/trades/${id}/prepare`,
-      providesTags: ["Prepare"],
-    }),
+
 
     // exit Process
     exitProcess: builder.mutation({
@@ -222,7 +219,7 @@ export const {
   useLastQuoteQuery,
   useNewTradeMutation,
   useExitProcessMutation,
-  usePrepareQuery,
+
   useReEnterMutation,
   useCheckIfActiveTradeQuery,
   useGetCurrenciesQuery,
