@@ -59,6 +59,12 @@ export const tradeApi = createApi({
       providesTags: ["DetailActivesTrades"],
     }),
 
+    // retourne un objet avec tous les mouvements sur un trade
+    getMovementsByTradeId: builder.query({
+      query: (id) => `trades/${id}/movements`,
+      providesTags: ["Movements"],
+    }),
+
     // passage en idle d'un portfolio
     idlePortfolio: builder.mutation({
       query: ({ id, status }) => ({
@@ -142,8 +148,6 @@ export const tradeApi = createApi({
       ],
     }),
 
-
-
     // exit Process
     exitProcess: builder.mutation({
       query: (payload) => ({
@@ -158,6 +162,7 @@ export const tradeApi = createApi({
         "PortfolioByUser",
         "PortfolioById",
         "DetailActivesTrades",
+        "Movements",
       ],
     }),
 
@@ -175,6 +180,7 @@ export const tradeApi = createApi({
         "PortfolioByUser",
         "PortfolioById",
         "DetailActivesTrades",
+        "Movements",
       ],
     }),
 
@@ -192,6 +198,7 @@ export const tradeApi = createApi({
         "PortfolioByUser",
         "PortfolioById",
         "DetailActivesTrades",
+        "Movements",
       ],
     }),
 
@@ -229,6 +236,7 @@ export const {
   useLogByRememberQuery,
   useAdjustmentMutation,
   useGetTradesActivesByUserQuery,
+  useGetMovementsByTradeIdQuery,
 
 
 } = tradeApi;

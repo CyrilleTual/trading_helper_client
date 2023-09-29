@@ -13,6 +13,7 @@ function ProgressBar({
   position,
   tradeQuote,
   status,
+  pru,
 }) {
 
   let level = null;
@@ -34,7 +35,10 @@ function ProgressBar({
   return (
     <div className={styles.wrapper}>
       <div className={styles.bar}>
-        <div className={styles.cursor} style={{ left: `${level}%`, backgroundColor:`${color}`}}></div>
+        <div
+          className={styles.cursor}
+          style={{ left: `${level}%`, backgroundColor: `${color}` }}
+        ></div>
         <div
           className={styles.neutral}
           style={{ left: `${neutralLevel}%`, display: `${neutralVisible}` }}
@@ -61,6 +65,17 @@ function ProgressBar({
         dernier {now}
         {` `}
         {symbol}
+        <br />
+        {pru ? (
+          <>
+            {`   `}
+            pru {pru}
+            {` `}
+            {symbol}
+          </>
+        ) : (
+          <>&nbsp;</>
+        )}
       </div>
     </div>
   );

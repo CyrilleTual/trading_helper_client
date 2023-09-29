@@ -214,13 +214,20 @@ function AdjustCore({ trade, afterProcess }) {
           target={values.target}
           now={trade.lastQuote.toFixed(2)}
           symbol={trade.symbol}
-          targetAtPc={newMetrics.valid ? newMetrics.targetAtPc :  trade.targetAtPc}
+          targetAtPc={
+            newMetrics.valid ? newMetrics.targetAtPc : trade.targetAtPc
+          }
           riskAtPc={newMetrics.valid ? newMetrics.riskAtPc : trade.riskAtPc}
           meterInvalid={meterInvalid}
           neutral={trade.neutral}
           position={trade.position}
           tradeQuote={trade.tradeQuote}
           status={trade.status}
+          pru={
+            trade.position === "long"
+              ? trade.pru.toFixed(2)
+              : trade.neutral.toFixed(2)
+          }
         />
 
         {/* --------------------------------- début perfMeter --------------- */}

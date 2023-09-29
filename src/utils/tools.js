@@ -6,7 +6,11 @@ export function resetStorage() {
   localStorage.removeItem("remember");
 }
 
-
+/**
+ * Transforme un format datetime en un format fr long 
+ * @param {*} dateTime 
+ * @returns 
+ */
 export function datetimeToFrLong (dateTime){
   // Assuming trade.firstEnter is a valid date string or timestamp
   const tradeDate = new Date(dateTime);
@@ -37,6 +41,11 @@ export function datetimeToFrLong (dateTime){
   return `${day} ${month} ${year}`;
 }
 
+/**
+ * Transforme un format datetime en un format fr court
+ * @param {*} dateTime 
+ * @returns 
+ */ 
 export function datetimeToFrShort(dateTime) {
   // Assuming trade.firstEnter is a valid date string or timestamp
   const tradeDate = new Date(dateTime);
@@ -49,12 +58,36 @@ export function datetimeToFrShort(dateTime) {
      : (tradeDate.getMonth() + 1);
   
 
-  //const year = tradeDate.getFullYear() % 100; // Get the last two digits of the year
-  const year = tradeDate.getFullYear(); // Get the last two digits of the year
+  const year = tradeDate.getFullYear() % 100; // Get the last two digits of the year
+  //const year = tradeDate.getFullYear(); // Get the last two digits of the year
 
   // Format the date as "jj mmmm aa"
-  return `${day} / ${month} / ${year}`;
+  return `${day}/${month}/${year}`;
 }
 
+ 
 
 
+/**
+ * Cette fonction trie un tableau d'éléments en fonction des critères spécifiés.
+ * 
+ * @param {Array} items - Le tableau d'éléments à trier.
+ * @param {Array} critereArray - Le tableau de critères de tri.
+ * @returns {Array} - Le tableau trié.
+ */
+export function sort(items, critereArray) {
+  let copy = [...items]; // Crée une copie du tableau sinon erreur -> immutable
+  return copy.sort(function compare(a, b) {
+    const criteres = critereArray;
+    // Parcourt les critères de tri
+    for (const critere in criteres) {
+      // Compare les valeurs des critères pour les deux trades
+      if (a[criteres[critere]] != b[criteres[critere]]) {
+        // Si les valeurs sont différentes, renvoie 1 si a est supérieur, sinon -1
+        return a[criteres[critere]] > b[criteres[critere]] ? 1 : -1;
+      }
+    }
+    // Si tous les critères sont identiques, renvoie 0 (les trades sont équivalents en termes de tri)
+    return 0;
+  });
+}

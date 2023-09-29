@@ -14,7 +14,8 @@ import ExitTradeCore from "../ExitTrade/ExitTradeCore";
 import styles from "./detailTrade.module.css";
 import styleMeter from "../../Components/PerfMeter/perfMeter.module.css";
 import BtnAction from "../../Components/UI/BtnAction";
-import { faShower } from "@fortawesome/free-solid-svg-icons";
+import Movements from "../../Pages/Movements/Index.jsx"
+ 
 
 function DetailTrade() {
   const navigate = useNavigate();
@@ -66,6 +67,7 @@ function DetailTrade() {
     reEnter: false,
     exit: false,
     adjust: false,
+    mvts: false,
   };
   const [show, setShow] = useState(initValues);
 
@@ -160,6 +162,11 @@ function DetailTrade() {
                 position={trade.position}
                 tradeQuote={trade.tradeQuote}
                 status={trade.status}
+                pru={
+                  trade.position === "long"
+                    ? trade.pru.toFixed(2)
+                    : trade.neutral.toFixed(2)
+                }
               />
               {/* -------------------------------- Texte  ------------------------- */}
               <div>
@@ -198,8 +205,10 @@ function DetailTrade() {
                   )}
                   <li>
                     Valorisation :{" "}
-                    {((trade.enterQuantity - trade.closureQuantity) *
-                      trade.tradeQuote).toFixed(2)}{" "}
+                    {(
+                      (trade.enterQuantity - trade.closureQuantity) *
+                      trade.tradeQuote
+                    ).toFixed(2)}{" "}
                     {trade.symbol} (
                     {trade.enterQuantity - trade.closureQuantity}*
                     {trade.tradeQuote} {trade.symbol})
@@ -241,23 +250,27 @@ function DetailTrade() {
               <>
                 {/* ---------------- Buttons  ------------------------------------- */}
                 <div className={styles.btn_wrapper}>
-                                  <BtnAction
-                  value={"Renforcer"}
-                  action={() => handleAction("reEnter")}
-                  name={"reEnter"}
-                />
-                <BtnAction
-                  value={"Alléger"}
-                  action={() => handleAction("exit")}
-                  name={"exit"}
-                />
-                <BtnAction
-                  value={"Ajuster"}
-                  action={() => handleAction("adjust")}
-                  name={"adjust"}
-                />
+                  <BtnAction
+                    value={"Renforcer"}
+                    action={() => handleAction("reEnter")}
+                    name={"reEnter"}
+                  />
+                  <BtnAction
+                    value={"Alléger"}
+                    action={() => handleAction("exit")}
+                    name={"exit"}
+                  />
+                  <BtnAction
+                    value={"Ajuster"}
+                    action={() => handleAction("adjust")}
+                    name={"adjust"}
+                  />
+                  <BtnAction
+                    value={"Historique"}
+                    action={() => handleAction("mvts")}
+                    name={"mvts"}
+                  />
                 </div>
-
 
                 {/* -----------------re Enter  ------------------------------------ */}
                 {show.reEnter && (
@@ -283,7 +296,13 @@ function DetailTrade() {
                   </div>
                 )}
 
-                {/* -------------------------------------------------------------- */}
+                {/* ---------------------Mouvements------------------------------ */}
+                {show.mvts && (
+                  <div className={styles.mvts}>
+                    <h3>Mouvements du trade</h3>
+                    <Movements trade={trade} />
+                  </div>
+                )}
               </>
             )}
           </div>

@@ -59,3 +59,11 @@ Pour le svg) */
     box-shadow: 1px 2px 10px 1px  blue;
     padding: 10px;
 }
+.mvts{
+    background-color:  rgba(128, 128, 128, 0.086);
+     margin: 10px auto;
+    border-radius: 30px;
+    margin-bottom: 20px;
+    box-shadow: 1px 2px 10px 1px  gray;
+    padding: 10px;
+}

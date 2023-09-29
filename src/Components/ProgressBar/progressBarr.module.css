@@ -51,7 +51,7 @@
 
 .now{
     position: absolute;
-    bottom: 0px;
+    bottom: -18px;
     left: 50%;
     transform: translateX(-50%);
 }

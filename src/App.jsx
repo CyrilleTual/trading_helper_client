@@ -23,6 +23,7 @@ import SignIn from "./Pages/SignIn/Index";
 import SignUp from "./Pages/SignUp/Index";
 import Strategies from "./Pages/Strategies/Index";
 import DetailTrade from "./Pages/DetailTrade/Index";
+import Movements from "./Pages/Movements/Index";
  
 //import TickerTape from "./Components/Extras/TickerTape";
 const TickerTape = lazy(() => import("./Components/Extras/TickerTape"));
@@ -75,6 +76,10 @@ function App() {
             forceRefresh={true}
             path="/portfolio/:portfolioId/detail/:tradeId"
             element={<Logged child={DetailTrade} />}
+          />
+          <Route
+            path="/test"
+            element={<Logged child={Movements} />}
           />
 
           <Route path="/strategies" element={<Logged child={Strategies} />} />
