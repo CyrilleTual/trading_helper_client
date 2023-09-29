@@ -10,6 +10,7 @@ import { calculNewMetrics } from "./metrics.js";
 import PerfMeter from "../../Components/PerfMeter/Index";
 import styleMeter from "../../Components/PerfMeter/perfMeter.module.css";
 import Modal from "../../Components/Modal/Index";
+import ProgressBar from "../../Components/ProgressBar/Index.jsx"
 
 
 function AdjustCore({ trade, afterProcess }) {
@@ -48,6 +49,16 @@ function AdjustCore({ trade, afterProcess }) {
     riskAtPc: null,
   });
 
+  const reset = () =>{
+     setValues({
+       ...values,
+       target: trade.target,
+       stop: trade.stop,
+       comment: trade.currentComment,
+       date: new Date().toISOString().split("T")[0],
+     });
+  }
+
   // hook d'ajustement
   const [adjustment] = useAdjustmentMutation();
   // calcul avec les nouveaux paramèrtes
@@ -74,7 +85,6 @@ function AdjustCore({ trade, afterProcess }) {
     e.preventDefault();
 
     // Appel de la fonction de traitement des données du formulaire
-
     const { inputErrors, verifiedValues } = validate(values, trade.position);
 
     if (inputErrors.length > 0) {
@@ -91,6 +101,7 @@ function AdjustCore({ trade, afterProcess }) {
       try {
         const resp = await adjustment(datas);
         console.log(resp);
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
         afterProcess();
       } catch (err) {
         console.log(err);
@@ -104,8 +115,11 @@ function AdjustCore({ trade, afterProcess }) {
 
   /////// cancel enter
   function cancelEnter() {
+    reset();
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
      afterProcess();
   }
+ 
 
   return (
     <>
@@ -194,6 +208,20 @@ function AdjustCore({ trade, afterProcess }) {
           values &&
           (+trade.stop !== +values.stop || +trade.target !== +values.target) &&
           !newMetrics.valid && <p> sasie invalide</p>}
+
+        <ProgressBar
+          stop={values.stop}
+          target={values.target}
+          now={trade.lastQuote.toFixed(2)}
+          symbol={trade.symbol}
+          targetAtPc={newMetrics.valid ? newMetrics.targetAtPc :  trade.targetAtPc}
+          riskAtPc={newMetrics.valid ? newMetrics.riskAtPc : trade.riskAtPc}
+          meterInvalid={meterInvalid}
+          neutral={trade.neutral}
+          position={trade.position}
+          tradeQuote={trade.tradeQuote}
+          status={trade.status}
+        />
 
         {/* --------------------------------- début perfMeter --------------- */}
         <div className={` ${styleMeter.wrapper_meter}`}>

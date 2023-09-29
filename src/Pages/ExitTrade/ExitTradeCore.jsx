@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styles from "./exitTrade.module.css";
 import BtnSubmit from "../../Components/UI/BtnSubmit";
 import BtnCancel from "../../Components/UI/BtnCancel";
@@ -61,6 +61,8 @@ function ExitTradeCore({ trade, afterProcess }) {
           date: new Date().toISOString().split("T")[0],
           comment: "",
         });
+         window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+
 
         afterProcess();
       } catch (err) {
@@ -82,6 +84,8 @@ function ExitTradeCore({ trade, afterProcess }) {
       date: new Date().toISOString().split("T")[0],
       comment: "",
     });
+     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+
     afterProcess();
   };
 

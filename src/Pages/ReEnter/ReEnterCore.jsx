@@ -79,6 +79,7 @@ function ReEnterCore({ trade, afterProcess }) {
             tax: 0,
             date: new Date().toISOString().split("T")[0],
           });
+          window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
 
         console.log(resp);
         // appel de la call-back aprés traitement du formulaire 
@@ -108,6 +109,7 @@ function ReEnterCore({ trade, afterProcess }) {
         tax: 0,
         date: new Date().toISOString().split("T")[0],
       });
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     afterProcess();
   }
 

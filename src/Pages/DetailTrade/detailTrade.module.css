@@ -27,11 +27,35 @@ Pour le svg) */
     height: var(--metH); 
     margin: auto;
 }
+.btn_wrapper{
+    display: flex;
+    margin: 20px auto;
+}
 
 .reEnter{
-    background-color: pink;
+    background-color: rgba(0, 128, 0, 0.1);
+    margin: 10px auto;
+    border-radius: 30px;
+    margin-bottom: 20px;
+    box-shadow: 1px 2px 10px 1px  green;
+    padding: 10px;
+
 }
 
 .exit {
-    background-color: lightskyblue;
+    background-color: rgba(0, 0, 0, 0.1);
+     margin: 10px auto;
+    border-radius: 30px;
+    margin-bottom: 20px;
+    box-shadow: 1px 2px 10px 1px  red;
+    padding: 10px;
+}
+
+.adjust{
+    background-color: rgba(0, 0, 255, 0.036);
+     margin: 10px auto;
+    border-radius: 30px;
+    margin-bottom: 20px;
+    box-shadow: 1px 2px 10px 1px  blue;
+    padding: 10px;
 }

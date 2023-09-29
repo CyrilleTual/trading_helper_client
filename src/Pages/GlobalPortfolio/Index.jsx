@@ -12,18 +12,14 @@ import { Loading } from "../../Components/Loading/Index";
 import Alltrades from "../AllTrades/Index";
 
 function Global() {
-  // on recupère l'idduuser depuis le store -> id
-
+  // Recupère l'id user depuis le store -> id
   const role = useSelector((state) => state.user.infos.role);
 
   let id = useSelector((state) => state.user.infos.id);
-  
 
   if (role.substring(0, 7) === "visitor") {
     id = role.substring(8);
-     
   }
-
   // on va chercher la tableau de bord global pour un user (idUser)
   const {
     data: global,

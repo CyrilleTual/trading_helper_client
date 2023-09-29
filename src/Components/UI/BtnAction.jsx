@@ -1,6 +1,6 @@
 import styles from "./btn.module.css";
 
-function BtnAction({ value, action, name }) {
+function BtnAction({ value, action, name, style }) {
    
    return (
      <input

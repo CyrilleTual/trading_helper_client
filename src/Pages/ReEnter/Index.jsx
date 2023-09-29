@@ -77,7 +77,7 @@ function ReEnter() {
 
           <ReEnterCore
             trade={trade}
-            afterProcess={()=>navigate(`/portfolio/${trade.portfolioId}/detail`)}
+            afterProcess={()=>{navigate(`/portfolio/${trade.portfolioId}/detail`); }}
           />
         </main>
       )}

@@ -1,6 +1,7 @@
 .wrapper{
     position: relative;
     margin: 10px auto;
+    width: 100%;
     max-width: 350px;
     height: 40px;
     font-size: 1.1rem;
