@@ -3,11 +3,11 @@ import { useGetMovementsByTradeIdQuery } from "../../store/slice/tradeApi";
 import { sort, datetimeToFrShort } from "../../utils/tools.js";
 import { Loading } from "../../Components/Loading/Index";
 
-function Movements({ tradeId, symbol }) {
-  if (typeof tradeId === "undefined") tradeId = 1;
+function Movements({ trade }) {
+   
 
   // brings the movements for a trade
-  const { data, isSuccess } = useGetMovementsByTradeIdQuery(tradeId);
+  const { data, isSuccess } = useGetMovementsByTradeIdQuery(trade.tradeId);
 
   const [mvts, setMvts] = useState ([]);
 
@@ -50,21 +50,27 @@ function Movements({ tradeId, symbol }) {
               {mvt.type === "enter" && (
                 <>
                   Le {datetimeToFrShort(mvt.date)}, entrée sur {+mvt.quantity}{" "}
-                  titres, PU {+mvt.price}, taxes: {+mvt.tax}, frais: {+mvt.fees}{" "}
-                  coût total :{" "}
+                  titres, PU {+mvt.price}
+                  {trade.symbol}, taxes: {+mvt.tax}, frais: {+mvt.fees} coût
+                  total :
                   {(+mvt.quantity * +mvt.price + +mvt.tax + +mvt.fees).toFixed(
                     2
                   )}
+                  {trade.symbol}
                 </>
               )}
               {mvt.type === "closure" && (
                 <>
-                  Le {datetimeToFrShort(mvt.date)} vente de {+mvt.quantity}{" "}
-                  titres, PU {+mvt.price}, taxes: {+mvt.tax}, frais: {+mvt.fees}
+                  Le {datetimeToFrShort(mvt.date)} vente de {+mvt.quantity}
+                  {trade.symbol} titres, PU {+mvt.price}
+                  {trade.symbol}, taxes: {+mvt.tax}, frais: {+mvt.fees}
                 </>
               )}
               {mvt.type === "adjustment" && (
-                <>Le {datetimeToFrShort(mvt.date)} ajustement, Stop à {mvt.stop}, Objectif à {mvt.target}</>
+                <>
+                  Le {datetimeToFrShort(mvt.date)} ajustement, Stop à {mvt.stop}
+                  , Objectif à {mvt.target}
+                </>
               )}
             </article>
           ))}
