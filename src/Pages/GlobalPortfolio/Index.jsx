@@ -1,8 +1,9 @@
+ import { lazy, Suspense } from "react";
 import { useSelector } from "react-redux";
 import { useGetGlobalDashBoardByUserQuery } from "../../store/slice/tradeApi";
 import styles from "./globalPortfolio.module.css";
 import PerfMeter from "../../Components/PerfMeter/Index";
-import PortTable from "../../Components/PortTable";
+//import PortTable from "../../Components/PortTable";
 import { useEffect, useState } from "react";
 import { resetStorage } from "../../utils/tools";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +11,10 @@ import { useDispatch } from "react-redux";
 import { signOut } from "../../store/slice/user";
 import { Loading } from "../../Components/Loading/Index";
 import Alltrades from "../AllTrades/Index";
+
+const PortTable = lazy(() => import("../../Components/PortTable"));
+ 
+ 
 
 function Global() {
   // Recupère l'id user depuis le store -> id
@@ -26,8 +31,6 @@ function Global() {
     isLoading,
     isError,
   } = useGetGlobalDashBoardByUserQuery(id);
-
-  
 
   const navigate = useNavigate();
 
@@ -53,7 +56,7 @@ function Global() {
 
   return (
     <>
-      {isLoading ? (
+      {!global ? (
         <Loading />
       ) : (
         !isError && (
@@ -73,7 +76,10 @@ function Global() {
                   />
                 </div>
 
-                <PortTable datas={global} baseCurrencie={baseCurrencie} />
+                <Suspense fallback={<p> </p>}>
+                  <PortTable datas={global} baseCurrencie={baseCurrencie} />
+                </Suspense>
+
               </div>
 
               <h2>Apperçu des positions</h2>

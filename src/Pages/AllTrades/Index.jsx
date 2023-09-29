@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useGetTradesActivesByUserQuery } from "../../store/slice/tradeApi";
+import { lazy, Suspense } from "react";
  
 
 import { Loading } from "../../Components/Loading/Index";
 import { prepare } from "./utils";
-import Card from "../../Components/Card/Card";
+//import Card from "../../Components/Card/Card";
 import BtnAction from "../../Components/UI/BtnAction";
 import styles from "./index.module.css";
 
+const Card = lazy(() => import("../../Components/Card/Card"));
 /**
  * Composant Alltrades : Affiche la liste des trades actifs de l'utilisateur.
  * @param {number} portfolioId - L'identifiant du portefeuille (facultatif).
@@ -86,7 +88,9 @@ function Alltrades({ portfolioId }) {
       ) : (
         <>
           {show.trades.map((trade, key) => (
-            <Card key={key} trade={trade} />
+            <Suspense fallback={<p>...</p>}>
+              <Card key={key} trade={trade} />
+            </Suspense>
           ))}
 
           <div className={styles.btn_wrapper}>

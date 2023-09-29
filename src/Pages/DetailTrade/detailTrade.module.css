@@ -21,6 +21,17 @@ Pour le svg) */
     meterHeight: var(--metH);
 }
 
+.next_prev{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.next, .prev {
+    
+   border: 1px gray solid !important;
+}
+
 .details .meter_container {
     text-align: center;
     width: var(--metW);

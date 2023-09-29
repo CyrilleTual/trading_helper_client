@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useGetTradesActivesByUserQuery } from "../../store/slice/tradeApi";
 import { calculMetrics } from "../../utils/calculateTradeMetrics";
@@ -15,6 +15,7 @@ import styles from "./detailTrade.module.css";
 import styleMeter from "../../Components/PerfMeter/perfMeter.module.css";
 import BtnAction from "../../Components/UI/BtnAction";
 import Movements from "../../Pages/Movements/Index.jsx"
+import { arrayOfIdsFct } from "../../utils/arrayOfIds";
  
 
 function DetailTrade() {
@@ -36,6 +37,9 @@ function DetailTrade() {
   const { data: originalsTrades, isSuccess } =
     useGetTradesActivesByUserQuery(id);
 
+  // array des trades avec { [portifId,tradeId], [etc...]}
+
+
   // on selectionne le trade et on complète les données du trade par les valeurs calculées
   useEffect(() => {
     if (isSuccess) {
@@ -45,7 +49,58 @@ function DetailTrade() {
       setTrade({ ...tradeFull });
     }
     // eslint-disable-next-line
-  }, [originalsTrades, isSuccess]);
+  }, [originalsTrades, isSuccess, tradeId]);
+
+
+  ///// on va setter les id portfolios et idtrade des trades précedent et suivant pour navigation
+  const [previousItem, setPreviousItem] = useState ({
+    portfolioId: 0,
+    tradeId: 0
+  })
+  const [nextItem, setNextItem] = useState({
+    portfolioId: 0,
+    tradeId: 0,
+  });
+
+  useEffect(() => {
+    if (trade) {
+      // on trouve l'index de trade actuel
+      const indexOfActual = originalsTrades.findIndex(
+        (elt) => elt.tradeId === trade.tradeId
+      );
+
+     
+      const previousIndex =
+        indexOfActual !== 0 && indexOfActual !== -1
+          ? indexOfActual - 1
+          : indexOfActual; 
+      const nextIndex =
+        indexOfActual !== originalsTrades.length - 1 && indexOfActual !== -1
+          ? indexOfActual + 1
+          : indexOfActual;
+
+
+      setPreviousItem({
+        ...previousItem,
+        portfolioId: originalsTrades[previousIndex].portfolioId,
+        tradeId: originalsTrades[previousIndex].tradeId,
+      });
+
+       setNextItem({
+         ...nextItem,
+         portfolioId: originalsTrades[nextIndex].portfolioId,
+         tradeId: originalsTrades[nextIndex].tradeId,
+       });
+
+      
+    }
+  }, [trade]);
+
+
+
+
+
+
 
   // appel de la fonction qui retourne des variables utiles pour masquer le meter. //////
   const [meterInvalid, setMeterInvalid] = useState(null);
@@ -79,27 +134,16 @@ function DetailTrade() {
       updatedShow[action] = !show[action];
       return updatedShow;
     });
-   
   }
 
-  useEffect (()=>{
- window.scrollTo({ top: 5000, left: 0, behavior: "smooth" });
-  },[show])
-
-
-
-
-
-
+  useEffect(() => {
+    window.scrollTo({ top: 5000, left: 0, behavior: "smooth" });
+  }, [show]);
 
   const afterProcess = () => {
     setShow({ ...initValues });
-     navigate(`/portfolio/${trade.portfolioId}/detail/${trade.tradeId}`);
-
-  }
-
-
-
+    navigate(`/portfolio/${trade.portfolioId}/detail/${trade.tradeId}`);
+  };
 
   ///////////////////////// Display /////////////////////////////////////////////////////
   return (
@@ -110,9 +154,9 @@ function DetailTrade() {
         trade && (
           <div className={styles.details}>
             <div className="comments">
-              <h1>{trade.title}</h1>
+              <h1>Détail</h1>
 
-              <h2>Situation</h2>
+              <h2>{trade.title}</h2>
 
               {/* --------------------------------- début perfMeter --------------- */}
               <div className={` ${styleMeter.wrapper_meter}`}>
@@ -168,6 +212,27 @@ function DetailTrade() {
                     : trade.neutral.toFixed(2)
                 }
               />
+              {/* ---------------------------Nav previous et next ------------------- */}
+              <div className={styles.next_prev}>
+                <NavLink
+                  className={`${styles.prev}`}
+                  to={{
+                    pathname: `/portfolio/${previousItem.portfolioId}/detail/${previousItem.tradeId}`,
+                  }}
+                >
+                  {`Prev`}
+                </NavLink>
+
+                <NavLink
+                  className={`${styles.next}`}
+                  to={{
+                    pathname: `/portfolio/${nextItem.portfolioId}/detail/${nextItem.tradeId}`,
+                  }}
+                >
+                  {`Next`}
+                </NavLink>
+              </div>
+
               {/* -------------------------------- Texte  ------------------------- */}
               <div>
                 <h3>Actif :</h3>

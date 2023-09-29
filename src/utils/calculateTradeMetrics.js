@@ -27,9 +27,6 @@ export function calculMetrics (trade){
       : (+trade.neutral - tradeQuote) * trade.actualQuantity
   ).toFixed(2);
 
-
- 
-
   const balancePc = +(
     trade.position === "long"
       ? ((tradeQuote - trade.neutral) / trade.neutral) * 100
