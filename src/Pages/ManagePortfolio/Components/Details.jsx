@@ -77,7 +77,7 @@ function Details({ portfolio }) {
           <td>Loading</td>
         </tr>
       ) : (
-        !isError && (
+        !isError && data && (
           <tr>
             <td
               className={styles.toinfo}
