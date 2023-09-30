@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { useLogByRememberQuery, useSignUserInMutation } from "../../store/slice/tradeApi";
+import {
+  useLogByRememberQuery,
+  useSignUserInMutation,
+  useGetGlobalDashBoardByUserQuery,
+} from "../../store/slice/tradeApi";
 import { signIn } from "../../store/slice/user";
 
 import BtnSubmit from "../../Components/UI/BtnSubmit";
@@ -79,6 +83,38 @@ function SignIn() {
     //c'est la fermeture du modal qui déclanche la poursuite de la navigatio
     // eslint-disable-next-line
   }, [data, isError]);
+
+  // // declanche la requete  de recup des data globales dès que l'on a un id de user.
+
+  // const [skip2, setSkip2] = useState(true);
+  // const [idToWorkOn, setIdToWorkOn] = useState (null)
+
+
+
+  // // const { data: global } = useGetGlobalDashBoardByUserQuery(idToWorkOn, {
+  // //   skip2,
+  // // });
+
+  // useEffect(() => {
+  //   if (data && !isError) {
+  //     if (data.response.role.substring(0, 7) === "visitor") {
+  //       setIdToWorkOn (data.response.role.substring(8));
+  //       setSkip2(false);
+  //     }else{
+  //       setIdToWorkOn(data.response.id);
+  //       setSkip2(false);
+  //       console.log ("jugh")
+  //     }
+  //   }
+  // }, [data]);
+
+  // console.log (idToWorkOn)
+
+
+
+
+
+
 
   //////////////////////////////////////////////////////////////////////////////////
   // gestion du formulaire - bind des champs
