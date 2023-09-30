@@ -48,7 +48,7 @@ function Portfolio() {
   // puis on recupère le portfolio par son id  *******************************************
   const [data, setData]= useState(null)
 
-  useEffect(()=>{
+  useEffect(() => {
     if (global) {
       setData(
         global.portfoliosArray.find(
@@ -57,7 +57,7 @@ function Portfolio() {
       );
     }
     // eslint-disable-next-line
-  },[global])
+  }, [global, portfolioId]);
 
   //-------------------------------------------------------------------------------
 
@@ -71,7 +71,7 @@ function Portfolio() {
       setPortTitle(title, data);
     }
     // eslint-disable-next-line
-  }, [portfolios, data]);
+  }, [portfolios, data, id]);
 
   const [baseCurrencie, setBaseCurrencie] = useState("");
   // recup des infos sur les currrencies (toutes)
@@ -88,7 +88,7 @@ function Portfolio() {
       navigate("/");
     }
     // eslint-disable-next-line
-  }, [isError]);
+  }, [isError, id]);
 
   // set de la currency
   useEffect(() => {
@@ -98,7 +98,7 @@ function Portfolio() {
       );
       setBaseCurrencie(portfolioCurrencie.symbol);
     }
-  }, [data, currencyInfos]);
+  }, [data, currencyInfos, id]);
 
   return (
     <>
