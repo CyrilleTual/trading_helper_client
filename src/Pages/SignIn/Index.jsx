@@ -52,6 +52,14 @@ function SignIn() {
   const [skip, setSkip] = useState(true); // attend que l'on ai bien un remember pour action
   const { data, isError } = useLogByRememberQuery(null, { skip });
 
+  // pour aller chercher les infos du globalportfolio
+  const [skip2, setSkip2] = useState(true);
+  const [idToWorkOn, setIdToWorkOn] = useState (null)
+
+    const { data: global } = useGetGlobalDashBoardByUserQuery(idToWorkOn, {
+    skip2,
+  });
+
   // Vérification de l'existence de la clé "remember" dans le local storage pour une connexion automatique
   useEffect(() => {
     const rmemb = JSON.parse(localStorage.getItem("remember"));
@@ -61,7 +69,7 @@ function SignIn() {
     // eslint-disable-next-line
   }, []);
 
-  // log automatique
+  // log automatique suite au rementber 
   useEffect(() => {
     if (data && !isError) {
       dispatch(
@@ -69,9 +77,17 @@ function SignIn() {
           id: data.response.id,
           alias: data.response.alias,
           email: data.response.email,
-          role: data.response.role,
+          role:data.response.role,
         })
       );
+      // //lance la requete pour aller cherhcer les infos de global
+       if (data.response.role.substring(0, 7) === "visitor") {
+        setIdToWorkOn ((data.response.role).substring(8));
+        setSkip2(false);
+      }else{
+        setIdToWorkOn(data.response.id);
+        setSkip2(false);
+      }
       // déclenche le modal -> information que l'on est loggé
       setRememberMe(true);
       setDisplay(data.response.email);
@@ -83,34 +99,6 @@ function SignIn() {
     //c'est la fermeture du modal qui déclanche la poursuite de la navigatio
     // eslint-disable-next-line
   }, [data, isError]);
-
-  // // declanche la requete  de recup des data globales dès que l'on a un id de user.
-
-  // const [skip2, setSkip2] = useState(true);
-  // const [idToWorkOn, setIdToWorkOn] = useState (null)
-
-
-
-  // // const { data: global } = useGetGlobalDashBoardByUserQuery(idToWorkOn, {
-  // //   skip2,
-  // // });
-
-  // useEffect(() => {
-  //   if (data && !isError) {
-  //     if (data.response.role.substring(0, 7) === "visitor") {
-  //       setIdToWorkOn (data.response.role.substring(8));
-  //       setSkip2(false);
-  //     }else{
-  //       setIdToWorkOn(data.response.id);
-  //       setSkip2(false);
-  //       console.log ("jugh")
-  //     }
-  //   }
-  // }, [data]);
-
-  // console.log (idToWorkOn)
-
-
 
 
 

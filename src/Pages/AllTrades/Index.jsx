@@ -84,7 +84,7 @@ function Alltrades({ portfolioId }) {
   return (
     <>
       {!tradesisSuccess ? (
-        <Loading />
+   <>Loading.... </>
       ) : (
         <>
           {show.trades.map((trade, key) => (
