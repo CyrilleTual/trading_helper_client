@@ -29,7 +29,13 @@ html {
   display: none;
   margin-bottom: -50px;
   font-size: 10px;
+  height:72px;
+  @media (min-width:768) {
+    height: 44px;
+    
+  }
 }
+ 
 @media (min-height: 732px) {
   .tape{
     display: block;

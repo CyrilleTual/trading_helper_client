@@ -56,9 +56,9 @@ function SignIn() {
   const [skip2, setSkip2] = useState(true);
   const [idToWorkOn, setIdToWorkOn] = useState (null)
 
-    const { data: global } = useGetGlobalDashBoardByUserQuery(idToWorkOn, {
-    skip2,
-  });
+  //   const { data: global } = useGetGlobalDashBoardByUserQuery(idToWorkOn, {
+  //   skip2,
+  // });
 
   // Vérification de l'existence de la clé "remember" dans le local storage pour une connexion automatique
   useEffect(() => {
