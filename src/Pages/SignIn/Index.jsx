@@ -54,11 +54,13 @@ function SignIn() {
 
   // pour aller chercher les infos du globalportfolio
   const [skip2, setSkip2] = useState(true);
-  const [idToWorkOn, setIdToWorkOn] = useState (null)
-
-  //   const { data: global } = useGetGlobalDashBoardByUserQuery(idToWorkOn, {
-  //   skip2,
-  // });
+  const [idToWorkOn, setIdToWorkOn] = useState(null);
+ function useFetchGlobalDashboard(idToWorkOn, skip) {
+   const { data: globalData } = useGetGlobalDashBoardByUserQuery(idToWorkOn, {
+     skip,
+   });
+   return globalData;
+ }
 
   // Vérification de l'existence de la clé "remember" dans le local storage pour une connexion automatique
   useEffect(() => {
@@ -83,10 +85,8 @@ function SignIn() {
       // //lance la requete pour aller cherhcer les infos de global
        if (data.response.role.substring(0, 7) === "visitor") {
         setIdToWorkOn ((data.response.role).substring(8));
-        setSkip2(false);
       }else{
         setIdToWorkOn(data.response.id);
-        setSkip2(false);
       }
       // déclenche le modal -> information que l'on est loggé
       setRememberMe(true);
@@ -94,15 +94,20 @@ function SignIn() {
       setInputs({ ...inputs, remember: !remember }); // pour cohérence
     }
     if (isError) {
-      navigate("/");
+     navigate("/");
     }
     //c'est la fermeture du modal qui déclanche la poursuite de la navigatio
     // eslint-disable-next-line
   }, [data, isError]);
 
+  // une fois que l'on a l'idtoworkon on déclanche le prefetch
+  useEffect (()=>{
+    {
+       if (idToWorkOn !== null)setSkip2(false);
+    }
+ } ,[idToWorkOn])
 
-
-
+ useFetchGlobalDashboard(idToWorkOn, skip2);
 
   //////////////////////////////////////////////////////////////////////////////////
   // gestion du formulaire - bind des champs

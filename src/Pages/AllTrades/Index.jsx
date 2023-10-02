@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useGetTradesActivesByUserQuery } from "../../store/slice/tradeApi";
 import { lazy, Suspense } from "react";
- 
 
-import { Loading } from "../../Components/Loading/Index";
 import { prepare } from "./utils";
 //import Card from "../../Components/Card/Card";
 import BtnAction from "../../Components/UI/BtnAction";
