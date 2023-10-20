@@ -1,5 +1,5 @@
 .cardShow{
-    width: 430px;
+    width: 100%;
     margin: auto;
     border-radius: 30px;
     margin-bottom: 20px;
@@ -7,6 +7,13 @@
     padding: 10px;
     text-align: start;
 
+   
+}
+
+@media  screen and (min-width:430px) {
+   .cardShow{
+    width: 430px;
+    }
 }
 
  
@@ -24,6 +31,7 @@ par des variables ( et de les setter 2* -> pour la div container et
 Pour le svg) */
 
 .cardShow{
+    
     --metW :80vw;
     --metH : calc((var(--metW))*0.58);
 }

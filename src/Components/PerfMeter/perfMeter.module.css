@@ -8,6 +8,10 @@ Pour le svg) */
 
 .wrapper_meter {
   position: relative;
+  display: flex;
+  justify-content: center;
+
+ 
 }
 .alertInvalid {
   position: absolute;
@@ -21,7 +25,7 @@ Pour le svg) */
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 .alertVisible{
-    display: block;
+  display: block;
 }
 .alertInvalid_content{
  background-color: #fefefe;

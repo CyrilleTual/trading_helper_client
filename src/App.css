@@ -50,6 +50,31 @@ body {
   height: 100%;
 }
 
+/*
+* on  defini ici les break point  de l'application 
+*/
+main{
+  
+  width : 360 px;
+  
+}
+
+@media screen and ( min-width: 390px ) {
+  main {
+    width : 390 px;
+}
+}
+
+@media screen and ( min-width: 428px ) {
+  main {
+    width : 428 px;
+}
+}
+
+
+
+
+
 section {
   background-color: white;
 }
@@ -76,6 +101,10 @@ h1 {
   h1 {
   font-size: 3rem;
 }
+
+
+
+
 }
 
 ul {
