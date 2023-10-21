@@ -1,5 +1,5 @@
 .details{
-    width: 400px;
+    width: 360px;
     margin: auto;
     --metW :80vw;
     --metH : calc((var(--metW))*0.58);

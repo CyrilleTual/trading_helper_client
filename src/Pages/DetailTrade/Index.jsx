@@ -40,6 +40,7 @@ function DetailTrade() {
   // array des trades avec { [portifId,tradeId], [etc...]}
 
 
+
   // on selectionne le trade et on complète les données du trade par les valeurs calculées
   useEffect(() => {
     if (isSuccess) {
@@ -152,7 +153,7 @@ function DetailTrade() {
         <Loading />
       ) : (
         trade && (
-          <div className={styles.details}>
+          <main className={styles.details}>
             <div className="comments">
               <h1>Détail</h1>
 
@@ -370,7 +371,7 @@ function DetailTrade() {
                 )}
               </>
             )}
-          </div>
+          </main>
         )
       )}
     </>
