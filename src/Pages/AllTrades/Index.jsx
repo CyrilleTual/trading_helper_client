@@ -82,12 +82,12 @@ function Alltrades({ portfolioId }) {
   return (
     <>
       {!tradesisSuccess ? (
-   <>Loading.... </>
+        <>Loading.... </>
       ) : (
         <>
           {show.trades.map((trade, key) => (
-            <Suspense fallback={<p>...</p>}>
-              <Card key={key} trade={trade} />
+            <Suspense key={key}  fallback={<p>...</p>}>
+              <Card trade={trade} />
             </Suspense>
           ))}
 

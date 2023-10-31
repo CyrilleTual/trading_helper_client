@@ -179,7 +179,9 @@ function NewTrade() {
           (portfolio) => portfolio.symbol === lastInfos.currency
         ).id, // premier portfolio dans la bonne devise,
         strategyId: strategies[0].id, // première stratégie de l'utilisateur
+        price: lastInfos.last,
       });
+       
     }
     // }
 
@@ -194,7 +196,7 @@ function NewTrade() {
     reset,
   ]);
 
-  // Set de la devise du trade ////////////////////////////////////
+  // Set de la devise du trade /////////////////////////////
   useEffect(() => {
     if (
       portfolios &&
@@ -202,8 +204,6 @@ function NewTrade() {
       !!portfolios.find((portfolio) => +portfolio.id === +values.portfolioId) &&
       isSuccess1
     ) {
-
- 
       let {symbol, abbr } = portfolios.find(
         (portfolio) => +portfolio.id === +values.portfolioId
       );
@@ -212,6 +212,8 @@ function NewTrade() {
         symbol: symbol,
         abbr: abbr,
       });
+     
+
     }
     // eslint-disable-next-line
   }, [values.portfolioId, portfolios]);
@@ -258,22 +260,7 @@ function NewTrade() {
       return;
     } else {
       try {
-
-   
-
         await newTrade(datas);
-
-
-
-
-
-     
-
-
-
-
-
-
         // on va sur le portefeuille : portfolioID
         navigate(`/portfolio/${datas.portfolio_id}/detail`);
               } catch (err) {

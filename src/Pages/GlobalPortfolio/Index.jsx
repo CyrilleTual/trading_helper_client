@@ -1,21 +1,16 @@
- import { lazy, Suspense } from "react";
-import { useSelector } from "react-redux";
-import { useGetGlobalDashBoardByUserQuery } from "../../store/slice/tradeApi";
-import styles from "./globalPortfolio.module.css";
-import PerfMeter from "../../Components/PerfMeter/Index";
-//import PortTable from "../../Components/PortTable";
-import { useEffect, useState } from "react";
-import { resetStorage } from "../../utils/tools";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useGetGlobalDashBoardByUserQuery } from "../../store/slice/tradeApi";
 import { signOut } from "../../store/slice/user";
-import { Loading } from "../../Components/Loading/Index";
+import { resetStorage } from "../../utils/tools";
+import styles from "./globalPortfolio.module.css";
+import {Loading}  from "../../Components/Loading/Index";
 import Alltrades from "../AllTrades/Index";
+import PerfMeter from "../../Components/PerfMeter/Index";
 
 const PortTable = lazy(() => import("../../Components/PortTable"));
  
- 
-
 function Global() {
   // Recupère l'id user depuis le store -> id
   const role = useSelector((state) => state.user.infos.role);
@@ -28,7 +23,6 @@ function Global() {
   // on va chercher la tableau de bord global pour un user (idUser)
   const {
     data: global,
-    isLoading,
     isError,
   } = useGetGlobalDashBoardByUserQuery(id);
 
@@ -75,11 +69,9 @@ function Global() {
                     meterHeight={styles.meterHeight}
                   />
                 </div>
-
                 <Suspense fallback={<p> </p>}>
                   <PortTable datas={global} baseCurrencie={baseCurrencie} />
                 </Suspense>
-
               </div>
 
               <h2>Apperçu des positions</h2>
