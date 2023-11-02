@@ -15,7 +15,7 @@ import styles from "./detailTrade.module.css";
 import styleMeter from "../../Components/PerfMeter/perfMeter.module.css";
 import BtnAction from "../../Components/UI/BtnAction";
 import Movements from "../../Pages/Movements/Index.jsx"
-import { arrayOfIdsFct } from "../../utils/arrayOfIds";
+  
  
 
 function DetailTrade() {

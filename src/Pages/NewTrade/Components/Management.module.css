@@ -1,0 +1,46 @@
+/* Attention pour les dimensions du meter indispensable de passer
+par des variables ( et de les setter 2* -> pour la div container et 
+Pour le svg) */
+
+.metrics 
+{
+    width: 100%;
+    margin: auto;
+    border-radius: 30px;
+    margin-bottom: 20px;
+    box-shadow: 1px 2px 10px 1px rgb(201, 201, 201);
+    padding: 10px;
+    text-align: start;
+}
+
+.portfolio{
+    --metW :80vw;
+    --metH : calc((var(--metW))*0.58);
+        width: 100%;
+    margin: auto;
+    border-radius: 30px;
+    margin-bottom: 20px;
+    box-shadow: 1px 2px 10px 1px rgb(201, 201, 201);
+    padding: 10px;
+    text-align: start;
+}
+
+@media  screen and (min-width:480px) {
+   .portfolio{
+    --metW :400px;
+    --metH :230px; 
+    }
+}
+
+:export {
+    meterWidth: var(--metW);
+    meterHeight: var(--metH);
+}
+
+.portfolio .meter_container {
+     text-align: center;
+    width: var(--metW);
+    height: var(--metH); 
+    margin: auto;
+    /* text-align: center; */  
+}

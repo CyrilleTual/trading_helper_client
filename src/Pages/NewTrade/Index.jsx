@@ -18,6 +18,7 @@ import { Loading } from "../../Components/Loading/Index";
 import { resetStorage } from "../../utils/tools";
 import { validate } from "./validateInputs";
 import styles from "./newTrade.module.css";
+import Management from "./Components/Management";
 
 function NewTrade() {
   const navigate = useNavigate();
@@ -273,6 +274,12 @@ function NewTrade() {
   const [errorsInForm, setErrorsInForm] = useState([]);
 
   const handleChange = (e) => {
+
+
+
+
+
+
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
@@ -303,10 +310,6 @@ function NewTrade() {
         beforeQuote: +lastInfos.before,
         lastQuote: +lastInfos.last,
       });
-
-      
-
-
 
       setSkip(false); // on déclanche le middle ware existingActiveTrad
     }
@@ -623,6 +626,8 @@ function NewTrade() {
                             </select>
                           </div>
 
+
+
                           <label htmlFor="strategyId">strategies</label>
                           <div className={styles.input_wrapLong}>
                             <select
@@ -648,6 +653,16 @@ function NewTrade() {
                             <BtnSubmit value="Validation" name="validation" />
                           </div>
                         </form>
+
+                        {lastIsSuccess && lastInfos.last && !lastIsFetching && (
+                          <>
+                            <Management
+                              values={values}
+                              lastInfos={lastInfos}
+                              portfolios={portfolios}
+                            />
+                          </>
+                        )}
                       </div>
                     </>
                   )}

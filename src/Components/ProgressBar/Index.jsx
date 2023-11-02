@@ -16,6 +16,8 @@ function ProgressBar({
   pru,
 }) {
 
+
+
   let level = null;
   let color = "black";
   if (status === "OnStop") {

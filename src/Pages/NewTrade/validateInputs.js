@@ -4,6 +4,7 @@
  * @returns - Un objet contenant les erreurs de validation et les valeurs nettoyées.
  */
 export function validate(values) {
+
   const {
     fees,
     portfolioId,
@@ -15,6 +16,7 @@ export function validate(values) {
     tax,
     position,
     comment,
+    cash,
   } = values;
 
   const inputErrors = []; // Tableau des erreurs de validation
@@ -34,6 +36,7 @@ export function validate(values) {
 
   for (const value of mustBeNumbers) {
     if (
+      value === "" || // verifie si non vide
       isNaN(value) || // Vérifie si c'est un nombre
       value < 0 || // Vérifie qu'il n'est pas négatif
       value > 9999999 || // Vérifie qu'il n'a pas plus de 7 chiffres
@@ -44,13 +47,18 @@ export function validate(values) {
     }
   }
 
+  //  quantité sup à 0 
+  if (quantity <= 0)  inputErrors.push(
+          "quantité invalide"
+        );
+
   // Vérification de la cohérence des saisies en fonction de la position
   switch (position) {
     case "long":
       if (+target < +price || +stop > +price) {
-        inputErrors.push(
-          "Incohérence des valeurs saisies avec le sens de trade"
-        );
+       inputErrors.push(
+         "Incohérence des valeurs saisies avec le sens de trade"
+       );
       }
       break;
     case "short":
