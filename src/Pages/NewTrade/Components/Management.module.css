@@ -16,13 +16,18 @@ Pour le svg) */
 .portfolio{
     --metW :80vw;
     --metH : calc((var(--metW))*0.58);
-        width: 100%;
+    width: 100%;
     margin: auto;
     border-radius: 30px;
     margin-bottom: 20px;
     box-shadow: 1px 2px 10px 1px rgb(201, 201, 201);
-    padding: 10px;
+   
     text-align: start;
+}
+@media  screen and (min-width:390px) {
+   .portfolio{
+    padding: 10px;
+    }
 }
 
 @media  screen and (min-width:480px) {
@@ -43,4 +48,12 @@ Pour le svg) */
     height: var(--metH); 
     margin: auto;
     /* text-align: center; */  
+}
+
+.risk{
+    background-color: rgb(213, 202, 202);
+    text-align: center;
+     border-radius: 10px;
+ 
+  border: 1px solid rgba(0, 0, 0, 0.094);
 }

@@ -11,9 +11,6 @@
   padding: 0;
 }
 
-
-
-
 html {
   font-size: 62.5%;
   height: 100%;
@@ -22,22 +19,27 @@ html {
 .container {
   max-width: 1100px;
   margin: auto;
-  padding: 10px; 
+  padding: 2px;
 }
 
-.tape{
+@media (min-width: 390px) {
+  .container {
+    padding: 10px;
+  }
+}
+
+.tape {
   display: none;
   margin-bottom: -50px;
   font-size: 10px;
-  height:72px;
-  @media (min-width:768) {
+  height: 72px;
+  @media (min-width: 768) {
     height: 44px;
-    
   }
 }
- 
+
 @media (min-height: 732px) {
-  .tape{
+  .tape {
     display: block;
   }
 }
@@ -53,27 +55,22 @@ body {
 /*
 * on  defini ici les break point  de l'application 
 */
-main{
-  
-  width : 360 px;
-  
+main {
+  width: 360px;
+  margin: auto;
 }
 
-@media screen and ( min-width: 390px ) {
+@media screen and (min-width: 390px) {
   main {
-    width : 390 px;
-}
+    width: 390px;
+  }
 }
 
-@media screen and ( min-width: 428px ) {
+@media screen and (min-width: 428px) {
   main {
-    width : 428 px;
+    width: 428px;
+  }
 }
-}
-
-
-
-
 
 section {
   background-color: white;
@@ -84,27 +81,23 @@ h2,
 h3 {
   font-family: var(--title-font);
   text-align: center;
-  font-weight: normal; 
+  font-weight: normal;
 }
 
 h1 {
   font-size: 2.6rem;
   position: relative;
-  top :-105px;
+  top: -105px;
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
-  margin-bottom:-40px;
+  margin-bottom: -40px;
 }
 
-@media screen and ( min-width: 400px ) {
+@media screen and (min-width: 400px) {
   h1 {
-  font-size: 3rem;
-}
-
-
-
-
+    font-size: 3rem;
+  }
 }
 
 ul {
@@ -131,10 +124,9 @@ img {
   clear: both;
 }
 
-.hidden{
-  display: none; 
+.hidden {
+  display: none;
 }
-
 
 /* .basicBtn{
     padding: 10px;
@@ -150,41 +142,44 @@ img {
 } */
 
 /********** Pour avoir le footer en bas de page  ********/
-.page-wrapper{
+.page-wrapper {
   display: block;
   min-height: 100vh;
-	margin-bottom: -70px; 
+  margin-bottom: -70px;
   overflow-x: scroll;
 }
-
-
 
 .page-wrapper:after {
   content: "";
   display: block;
-} 
-.site-footer, .page-wrapper:after {
-	height: 50px; 
 }
-
+.site-footer,
+.page-wrapper:after {
+  height: 50px;
+}
 
 /******* Pour faire clignotter un texte (err)   ********/
-.blinck  {
-   animation-duration: 1.2s;
-   animation-name: blinck;
-   animation-iteration-count: 3;
-   transition: ease-in-out;
+.blinck {
+  animation-duration: 1.2s;
+  animation-name: blinck;
+  animation-iteration-count: 3;
+  transition: ease-in-out;
 }
 @keyframes blinck {
-  0%   { opacity:1; }
-  40%   {opacity:0; }
-  100% { opacity:1; }
+  0% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
-
 
 /********** Pour bloquer le scroll vertical   ********/
 .blockedY {
-    overflow-y: hidden;
+  overflow-y: hidden;
 }
 
 /** enlève les fleches des inputs de type number ****/
@@ -195,7 +190,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 /* Firefox */
-input[type=number] {
+input[type="number"] {
   -moz-appearance: textfield;
   appearance: textfield;
 }

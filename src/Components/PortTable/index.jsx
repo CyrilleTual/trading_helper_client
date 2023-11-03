@@ -19,14 +19,14 @@ function PortTable({ datas, baseCurrencie }) {
           <td>{datas.dailyVariationPc}%</td>
         </tr>
         <tr>
-          <td>Potentiel :</td>
+          <td>Potentiel restant:</td>
           <td>
             {datas.potential} {baseCurrencie}
           </td>
           <td>{datas.potentialPc}%</td>
         </tr>
         <tr>
-          <td>Perf si stops touchés :</td>
+          <td>Si stops touchés :</td>
           <td>
             {datas.perfIfStopeed} {baseCurrencie}
           </td>

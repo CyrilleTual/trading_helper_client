@@ -274,12 +274,6 @@ function NewTrade() {
   const [errorsInForm, setErrorsInForm] = useState([]);
 
   const handleChange = (e) => {
-
-
-
-
-
-
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 

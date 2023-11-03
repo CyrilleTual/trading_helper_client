@@ -30,6 +30,11 @@ function Management({ values, lastInfos, portfolios }) {
   // risk par position / valeur du portefeuille en % (totalBalance - pv latente )
   const [riskLigne, setRiskLigne] = useState(5);
 
+  const handleChange = (e) => {
+    if (e.target.value >= 0 && e.target.value < 100)
+      setRiskLigne(+e.target.value);
+  };
+
   // caractères du trade
   const [tradeParams, setTradeParams] = useState(
     {
@@ -56,8 +61,8 @@ function Management({ values, lastInfos, portfolios }) {
       );
       const maxSize = +Math.floor(
         +(
-          ((+portfolio.totalBalance - +portfolio.currentPv) * +riskLigne) /
-          100
+          (+portfolio.totalBalance * +riskLigne) / 100 -
+          (+values.fees + +values.tax)
         ) / Math.abs(+values.price - +values.stop)
       );
 
@@ -84,6 +89,11 @@ function Management({ values, lastInfos, portfolios }) {
         (elet) => elet.id === +values.portfolioId
       );
 
+      // plafond de titres avant cash dépassé
+      const nbSharesMaxCash = Math.floor(
+        (portfolio.cash - (+values.fees + values.tax)) / values.price
+      );
+
       setTradeParams({
         ...tradeParams,
         maxSize: +maxSize,
@@ -94,24 +104,51 @@ function Management({ values, lastInfos, portfolios }) {
         riskReward: (potentialWin / potentialLost).toFixed(2),
         portfolioName: title,
         portfolioCash: portfolio.cash,
+        nbSharesMaxCash: nbSharesMaxCash,
       });
     }
-  }, [global, values, portfolios, portfolio]);
+  }, [global, values, portfolios, portfolio, riskLigne]);
 
   return (
     <>
       <div className={styles.metrics}>
         <h2>Métriques du trade :</h2>
+
         <p>
-          Sur le portefeuille {tradeParams.portfolioName}, pour respecter un
-          risque maximum de perte de {riskLigne} % de capital par ligne, vous
-          pouvez entrer sur {tradeParams.maxSize} titres.
+          Portefeuille : {tradeParams.portfolioName} <br />
+          Cash disponible : {portfolio.cash + " " + currencySymbol} <br />
+          Risque par ligne : &nbsp;
+          <input
+            className={styles.risk}
+            type="number"
+            id="risk"
+            name="risk"
+            value={riskLigne}
+            onChange={handleChange}
+            min="0"
+            max="100"
+            step="0.1"
+          />
+          &nbsp; %
+          <br />
+          Pour respecter un risque maximum de perte de {riskLigne} % de capital
+          par ligne, vous pouvez entrer sur {tradeParams.maxSize} titres.
         </p>
+        {tradeParams.maxSize > tradeParams.nbSharesMaxCash && (
+          <p>
+            Attention, compte tenu du cash disponible vous ne pouvez entrer que
+            sur {tradeParams.nbSharesMaxCash} titres. 
+          </p>
+        )}
+
+        <br />
+        <hr />
         {inputErrors.length === 0 && (
           <>
             <p>
-              Pour un trade de {values.quantity} titres soit un capital engagé
-              de {tradeParams.capitalInvested} {currencySymbol}
+              Pour un trade de {values.quantity} titres <br />
+              Capital engagé : {tradeParams.capitalInvested}&nbsp;
+              {currencySymbol}
               <br />
               Gain potentiel : {tradeParams.potentialWin} {currencySymbol} soit{" "}
               {(
@@ -161,12 +198,11 @@ function Management({ values, lastInfos, portfolios }) {
 
       {inputErrors.length === 0 && (
         <div className={styles.portfolio}>
-
-          <h2>Consequences sur le portefeuille</h2>
+          <h2>Conséquences sur le portefeuille</h2>
 
           <div className={styles.meter_container}>
             <PerfMeter
-              legend={`Simulation - ${tradeParams.portfolioName}`}
+              legend={`${tradeParams.portfolioName}`}
               min={(
                 portfolio.perfIfStopeed - tradeParams.potentialLost
               ).toFixed(0)}
@@ -183,11 +219,10 @@ function Management({ values, lastInfos, portfolios }) {
 
           <PortfolioAfter
             portfolio={portfolio}
-            currencySymbol={currencySymbol}
             tradeParams={tradeParams}
             values={values}
+            lastInfos={lastInfos}
           />
-          
         </div>
       )}
     </>

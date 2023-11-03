@@ -59,7 +59,7 @@
 .form_enter textarea,
 .form_enter select {
   display: inline-block;
-  width: 100px;
+  width: 85px;
   border-radius: 10px;
   padding: 4px;
   text-align: right;

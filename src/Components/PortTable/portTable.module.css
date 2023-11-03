@@ -1,8 +1,6 @@
 .portTable {
     table-layout: fixed;
     width: 100%;
-    min-width: 360px;
-    max-width: 400px;
     margin: 10px auto;
     border-collapse: collapse;
     border: 3px solid var(--color-bgTableaux);
@@ -10,8 +8,8 @@
 }
 
 .portTable td:first-of-type {
-  width:40%;
-  padding-right: 20px;
+  width:30%;
+  padding-right: 5px;
   text-align: right;
 }
 
@@ -31,4 +29,14 @@
 
 .portTable td {
   padding: 2px 3px;
+}
+
+@media screen and ( min-width: 390px ) {
+  .portTable{
+    max-width: 400px;
+  }
+  .portTable td:first-of-type {
+  width:40%;
+  padding-right: 20px;
+}
 }
