@@ -1,40 +1,39 @@
-import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import PerfMeter from "../../../Components/PerfMeter/Index";
-import PortfolioAfter from "./PortfolioAfter";
-import ProgressBar from "../../../Components/ProgressBar/Index";
-import { useGetGlobalDashBoardByUserQuery} from "../../../store/slice/tradeApi";
-import { validate } from "../validateInputs";
+import { useGetGlobalDashBoardByUserQuery, useGetPortfoliosByUserQuery } from "../../../store/slice/tradeApi";
+import { useEffect, useState } from "react";
 import styles from "./Management.module.css";
+import PerfMeter from "../../../Components/PerfMeter/Index";
+import ProgressBar from "../../../Components/ProgressBar/Index";
+import { validate } from "../validateInputs";
+import PortfolioAfter from "./PortfolioAfter";
 
 // prends en paramètre les valeurs du trade à venir
 // recupère les données globales des différents portefeuilles et les données du portefeuille selectionné
 // pour avertir des conséquences du trade sur le money management
 // on a donc 5 sources de données  : values  lastInfos, portfolios /  global / portfolio
 
-function Management({ values, lastInfos, portfolios}) {
-
-
+function Management({ values, lastInfos}) {
   const last = +lastInfos.last;
   const currencySymbol = lastInfos.currency;
 
-  const { inputErrors } = validate(values);
-
+  const { inputErrors, verifiedValues } = validate(values);
 
   // Recupère l'id user depuis le store -> id
-   let id = useSelector((state) => state.user.infos.id);
-  //const role = useSelector((state) => state.user.infos.role);
-  // if (role.substring(0, 7) === "visitor") {
-  //   id = role.substring(8);
-  // }
+  const role = useSelector((state) => state.user.infos.role);
+  let id = useSelector((state) => state.user.infos.id);
+  if (role.substring(0, 7) === "visitor") {
+    id = role.substring(8);
+  }
   // on va chercher la tableau de bord global pour un user (idUser)
-  const { data: global   } = useGetGlobalDashBoardByUserQuery(id);
+  const { data: global, isError } = useGetGlobalDashBoardByUserQuery(id);
 
-  // // liste des portfolios de l'utilisateur
-  // const {
-  //   data: portfolios,
-  //   isSuccess: isSuccess1,
-  // } = useGetPortfoliosByUserQuery(id);
+  // liste des portfolios de l'utilisateur
+  const {
+    data: portfolios,
+    isLoading: portfolioIsLoading,
+    isSuccess: isSuccess1,
+    isError: isError1,
+  } = useGetPortfoliosByUserQuery(id);
 
   // risk par position / valeur du portefeuille en % (totalBalance - pv latente )
   const [riskLigne, setRiskLigne] = useState(5);
@@ -62,7 +61,7 @@ function Management({ values, lastInfos, portfolios}) {
   const [portfolio, setPortfolio] = useState([]);
 
   useEffect(() => {
-    if (global && values && lastInfos && portfolio) {
+    if (global && values && lastInfos && portfolios.length > 0 && portfolio) {
       setPortfolio(
         global.portfoliosArray.find(
           (element) => +element.id === +values.portfolioId
@@ -82,6 +81,8 @@ function Management({ values, lastInfos, portfolios}) {
             values.quantity
           : (+values.price * +values.quantity + -values.fees + -values.tax) /
             values.quantity;
+
+      const initPv = (neutral - last) * +values.quantity;
 
       const capitalInvested =
         +values.price * +values.quantity + +values.fees + +values.tax;
@@ -116,7 +117,6 @@ function Management({ values, lastInfos, portfolios}) {
         nbSharesMaxCash: nbSharesMaxCash,
       });
     }
-    // eslint-disable-next-line
   }, [global, values, portfolios, portfolio, riskLigne]);
 
   return (

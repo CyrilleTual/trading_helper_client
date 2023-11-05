@@ -15,6 +15,7 @@ import { ReactComponent as Adjust } from "../../assets/img/adjust.svg";
 import { ReactComponent as Details } from "../../assets/img/details.svg";
 import Modal from "../../Components/Modal/Index";
 import { calculMetrics } from "../../utils/calculateTradeMetrics";
+import DeleteTrade from "../../Components/DeleteTrade/Index";
 
 /**
  *
@@ -42,11 +43,17 @@ function DetailPorfolio() {
     isError ,
   } = useGetTradesActivesByUserQuery(id);
 
+ 
+
+
   const [tradesFiltered, setTradesFiltered] = useState([]);
   useEffect(() => {
-    setTradesFiltered(
-      originalsTrades.filter((trade) => +trade.portfolioId === +portfolioId)
-    );
+    if (tradesisSuccess) {
+      setTradesFiltered(
+        originalsTrades.filter((trade) => +trade.portfolioId === +portfolioId)
+      );
+    }
+    // eslint-disable-next-line
   }, [originalsTrades]);
 
   ///// recupère un tableau des trades complétés //////////
@@ -60,6 +67,8 @@ function DetailPorfolio() {
     setTradesFull(completedTrade);
   }, [tradesFiltered]);
 
+
+
   ///////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////
   //////////  on reconstitue  le  même squelette que la première methode //////
@@ -72,6 +81,7 @@ function DetailPorfolio() {
     for (const trade of tradesFull) {
       let newTrade = {
         tradeId: trade.tradeId,
+        uid: (trade.uidForUser).toFixed(0),
         title: trade.title,
         last: trade.lastQuote,
         position: trade.position,
@@ -118,6 +128,7 @@ function DetailPorfolio() {
   /////////////////////////////////////////////////////////////////////////////
 
   let myLabels = [
+    "trade N°",
     "trade N°",
     "support",
     "dernier",
@@ -216,6 +227,22 @@ function DetailPorfolio() {
       });
     });
   }
+
+
+  //// delete trade 
+
+  const [displayModalAlert, setDisplayModalAlert] = useState (false)
+  const [tradeToDelete, setTradeToDelete] = useState ()
+
+  const afterModal2 = () => {
+    setDisplayModalAlert(false);
+  };
+
+  function deleteTrade(trade) {
+    setDisplayModalAlert(true);
+    setTradeToDelete(trade);
+  }
+
   return (
     <>
       {isLoading ? (
@@ -225,6 +252,7 @@ function DetailPorfolio() {
           <main className={styles.detail}>
             <h1>Trades actifs</h1>
             <div className={styles.arraysContainer}>
+              {/********************** Modal d'alerte si tp ou stop atteint **************************/}
               {(valuesOnObjective.length > 0 || valuesStopped.length > 0) && (
                 <Modal
                   display={
@@ -250,6 +278,21 @@ function DetailPorfolio() {
                 />
               )}
 
+              {/********************** Modal d'alerte demande de suppression **************************/}
+
+              {displayModalAlert && (
+                <Modal
+                  display={
+                    <DeleteTrade
+                      trade={tradeToDelete}
+                      abort={afterModal2}
+                    />
+                  }
+                  action={afterModal2}
+                />
+              )}
+
+              {/***************************************************************************************/}
               <div className={styles.leftArray}>
                 {" "}
                 <table>
@@ -260,12 +303,11 @@ function DetailPorfolio() {
                       </tr>
                     ))}
 
-                     <tr>
-                          <td>Détail ?</td>
-                        </tr>
+                    <tr>
+                      <td>Détail ?</td>
+                    </tr>
                     {!isVisitor && (
                       <>
-                       
                         <tr>
                           <td>Renforcer ?</td>
                         </tr>
@@ -274,6 +316,9 @@ function DetailPorfolio() {
                         </tr>
                         <tr>
                           <td>Ajuster ?</td>
+                        </tr>
+                        <tr>
+                          <td>Effacer ?</td>
                         </tr>
                       </>
                     )}
@@ -305,26 +350,20 @@ function DetailPorfolio() {
                       ))}
                     </tr>
 
-
-
-
-                   
-
                     {!isVisitor && (
                       <>
-
-                       <tr>
-                      {data.map((elt, j) => (
-                        <td key={j}>
-                          <NavLink
-                            className={` ${styles.action}`}
-                            to={`/reEnter/portfolio/${portfolioId}/stock/${elt.tradeId}`}
-                          >
-                            <Plus className={styles.plus} />
-                          </NavLink>
-                        </td>
-                      ))}
-                    </tr>
+                        <tr>
+                          {data.map((elt, j) => (
+                            <td key={j}>
+                              <NavLink
+                                className={` ${styles.action}`}
+                                to={`/reEnter/portfolio/${portfolioId}/stock/${elt.tradeId}`}
+                              >
+                                <Plus className={styles.plus} />
+                              </NavLink>
+                            </td>
+                          ))}
+                        </tr>
                         <tr>
                           {data.map((elt, k) => (
                             <td key={k}>
@@ -352,6 +391,18 @@ function DetailPorfolio() {
                               >
                                 <Adjust className={styles.ajust}></Adjust>
                               </NavLink>
+                            </td>
+                          ))}
+                        </tr>
+                        <tr>
+                          {data.map((elt, k) => (
+                            <td key={k}>
+                              <div
+                                className={`${styles.action}`}
+                                onClick={() => deleteTrade(elt)}
+                              >
+                                <Adjust className={styles.ajust}></Adjust>
+                              </div>
                             </td>
                           ))}
                         </tr>

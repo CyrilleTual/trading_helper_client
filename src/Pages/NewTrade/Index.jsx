@@ -29,6 +29,26 @@ function NewTrade() {
 
   // Recherche les paramètres de l'utilisateur ////////////////////
   const id = useSelector((state) => state.user.infos.id);
+
+  // gère l'existance d'au moins une stratégie + listes des strategies
+  const [noStrategie, setNoStrategie] = useState(false);
+  const {
+    data: strategies,
+    isLoading: stategiesIsLoading,
+    isError: isError2,
+  } = useGetStategiesByUserIdQuery(id);
+
+  useEffect(() => {
+    if (strategies && strategies.length === 0) {
+      setNoStrategie(true);
+    }
+    // eslint-disable-next-line
+  }, [strategies]);
+
+  const goCreateStrategie = () => {
+    navigate("/strategies");
+  }
+
   // liste des portfolios de l'utilisateur
   const {
     data: portfolios,
@@ -36,12 +56,6 @@ function NewTrade() {
     isSuccess: isSuccess1,
     isError: isError1,
   } = useGetPortfoliosByUserQuery(id);
-  // listes des strategies de l'utilisateur
-  const {
-    data: strategies,
-    isLoading: stategiesIsLoading,
-    isError: isError2,
-  } = useGetStategiesByUserIdQuery(id);
 
   // le titre selectionné , la selection se fait dans le composant SearchStock
   // qui reçoit en props selectedItemet et  setSelectedItem
@@ -107,8 +121,8 @@ function NewTrade() {
     fees: 0,
     tax: 0,
     comment: "",
-    strategyId: 1,
-    portfolioId: 1,
+    strategyId: 0,
+    portfolioId: 0,
     position: "long",
   };
 
@@ -182,7 +196,6 @@ function NewTrade() {
         strategyId: strategies[0].id, // première stratégie de l'utilisateur
         price: lastInfos.last,
       });
-       
     }
     // }
 
@@ -205,7 +218,7 @@ function NewTrade() {
       !!portfolios.find((portfolio) => +portfolio.id === +values.portfolioId) &&
       isSuccess1
     ) {
-      let {symbol, abbr } = portfolios.find(
+      let { symbol, abbr } = portfolios.find(
         (portfolio) => +portfolio.id === +values.portfolioId
       );
       setTradeCurrency({
@@ -213,8 +226,6 @@ function NewTrade() {
         symbol: symbol,
         abbr: abbr,
       });
-     
-
     }
     // eslint-disable-next-line
   }, [values.portfolioId, portfolios]);
@@ -255,7 +266,6 @@ function NewTrade() {
 
   // création effective du nouveau trade -> trade et enter ////////
   async function go() {
-
     if (lastInfos.currency !== tradeCurrency.symbol) {
       cancelEnter();
       return;
@@ -264,7 +274,7 @@ function NewTrade() {
         await newTrade(datas);
         // on va sur le portefeuille : portfolioID
         navigate(`/portfolio/${datas.portfolio_id}/detail`);
-              } catch (err) {
+      } catch (err) {
         console.log(err);
       }
     }
@@ -308,8 +318,6 @@ function NewTrade() {
       setSkip(false); // on déclanche le middle ware existingActiveTrad
     }
   };
-
-
 
   const afterError = () => {
     setErrorsInForm([]);
@@ -369,6 +377,17 @@ function NewTrade() {
       ) : (
         <main className={`container ${styles.newTrade}`}>
           <h1>Création d'un trade :</h1>
+
+          {noStrategie && (
+            <Modal
+              display={
+                <p>
+                  Vous devez disposer d'au moins une stratégie avant de prendre position.
+                </p>
+              }
+              action={goCreateStrategie}
+            />
+          )}
 
           {errorsInForm.length > 0 && (
             <Modal
@@ -620,8 +639,6 @@ function NewTrade() {
                             </select>
                           </div>
 
-
-
                           <label htmlFor="strategyId">strategies</label>
                           <div className={styles.input_wrapLong}>
                             <select
@@ -648,7 +665,7 @@ function NewTrade() {
                           </div>
                         </form>
 
-                        {lastIsSuccess && lastInfos.last && !lastIsFetching && (
+                        {lastIsSuccess && lastInfos.last && !lastIsFetching && isSuccess1 &&portfolios&& values.strategyId!==0 &&(
                           <>
                             <Management
                               values={values}

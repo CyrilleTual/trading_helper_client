@@ -21,6 +21,12 @@ function PortfolioAfter({ portfolio, tradeParams, values, lastInfos }) {
     portfolio.potential + portfolio.currentPv + +tradeParams.potentialWin;
   const newPerfAtStop = portfolio.perfIfStopeed - +tradeParams.potentialLost;
 
+ 
+
+
+
+
+
   return (
     <div>
       <table className={styles.portTable}>
@@ -83,11 +89,12 @@ function PortfolioAfter({ portfolio, tradeParams, values, lastInfos }) {
             <td>
               <span className={styles.minus}>
                 (
-                {(
-                  ((portfolio.potential + portfolio.currentPv) /
-                    portfolio.activeK) *
-                  100
-                ).toFixed(2)}
+                {portfolio.activeK === 0 ? 0 :(
+                    ((+portfolio.potential + portfolio.currentPv) /
+                      +portfolio.activeK) *
+                      100
+                  )
+                  .toFixed(2)}
                 )
               </span>
             </td>

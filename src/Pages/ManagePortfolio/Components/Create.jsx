@@ -66,9 +66,7 @@ function Create({ setCreate }) {
   // Gestion de la soumission du formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
-
     
-
     // Appel de la fonction de traitement des données du formulaire
     const { inputErrors, verifiedValues } = validate(
       values,

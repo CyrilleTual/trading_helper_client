@@ -22,15 +22,8 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 ///>; 
 
 
-
-
-
-
-
-
-
-export default function Modal({ display, action }) {
-
+export default function Modal({ display, action = () => {} }) {
+  
   const [modal, setModal] = useState(true);
 
   const toggleModal = () => {
@@ -52,7 +45,7 @@ export default function Modal({ display, action }) {
           <div className={styles.content}>
             {display}
             <button className={styles.btn_close} onClick={toggleModal}>
-                <FontAwesomeIcon icon={faXmark} size={"xl"} color={"red"} />
+              <FontAwesomeIcon icon={faXmark} size={"xl"} color={"red"} />
             </button>
           </div>
         </div>

@@ -9,6 +9,7 @@
 
 .leftArray {
   min-width: 130px;
+ 
 }
 .leftArray td {
   min-width: 130px;
@@ -26,12 +27,13 @@
 }
 
 
-.rightArray tr:nth-child(2) td:hover{
+.rightArray tr:nth-child(3) td:hover{
    cursor:help;
+    
 }
 
 
-.rightArray tr:nth-child(2) td:hover:after {
+.rightArray tr:nth-child(3) td:hover:after {
    width: fit-content;
   height: fit-content;
   content: attr(datatofocus);
@@ -61,7 +63,11 @@
   border: 2px solid var(--color-bgTableaux);
 }
 
-.arraysContainer tr:nth-of-type(even) {
+.arraysContainer tr:first-of-type{
+  display: none;
+}
+
+.arraysContainer tr:nth-of-type(odd) {
   background-color: var(--color-bgTableaux);
 }
 

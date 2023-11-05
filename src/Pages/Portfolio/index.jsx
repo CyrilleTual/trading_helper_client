@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import {
-
   useGetGlobalDashBoardByUserQuery,
   useGetCurrenciesQuery,
   useGetPortfoliosByUserQuery,

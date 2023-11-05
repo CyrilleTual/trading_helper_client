@@ -2,7 +2,6 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
  
 const baseTradeUrl = process.env.REACT_APP_TRADE_URL;
 
- 
 export const tradeApi = createApi({
   reducerPath: "tradeApi",
   baseQuery: fetchBaseQuery({
@@ -32,7 +31,7 @@ export const tradeApi = createApi({
     // autolog par remember d'un utilisateur
     logByRemember: builder.query({
       query: () => `users/logByRemenber`,
-      providesTags: ["Auth"],
+      providesTags: ["Autolog"],
       transformResponse: (response, meta, arg) => {
         return { response: response, status: meta.response.status };
       },
@@ -81,18 +80,6 @@ export const tradeApi = createApi({
       providesTags: ["GlobalDatas"],
     }),
 
-    // le dashboard d'un portfolio particulier par id de portfolio
-    // getPortfolioDashboardById: builder.query({
-    //   query: (id) => `/portfolios/${id}/dashboard`,
-    //   providesTags: ["PortfolioByUser"],
-    // }),
-
-    // le détail d'un portefeuille par id de portefeuille
-    // getDetailPortfolioById: builder.query({
-    //   query: (id) => `/portfolios/${id}/details`,
-    //   providesTags: ["PortfolioById"],
-    // }),
-
     // nouveau portfolio
     newPortfolio: builder.mutation({
       query: (payload) => ({
@@ -100,13 +87,23 @@ export const tradeApi = createApi({
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: ["Global", "Portfolio"],
+      invalidatesTags: ["Portfolio", "GlobalDatas"],
     }),
 
     // liste des strategies par user
     getStategiesByUserId: builder.query({
       query: (id) => `strategies/user/${id}`,
-      providesTags: ["strategy"],
+      providesTags: ["Strategy"],
+    }),
+
+    // creation d'une stratégie
+    newStrategy: builder.mutation({
+      query: (payload) => ({
+        url: "strategies/new",
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["Strategy"],
     }),
 
     //recherhce des stocks
@@ -138,6 +135,21 @@ export const tradeApi = createApi({
         url: "/trades/newEntry",
         method: "POST",
         body: payload,
+      }),
+      invalidatesTags: [
+        "GlobalDatas",
+        "CheckIfTradeIsActive",
+        "PortfolioByUser",
+        "PortfolioById",
+        "DetailActivesTrades",
+      ],
+    }),
+
+    // delete un trade
+    deleteTrade: builder.mutation({
+      query: (id) => ({
+        url: `/trades/${id}/delete`,
+        method: "DELETE",
       }),
       invalidatesTags: [
         "GlobalDatas",
@@ -219,14 +231,12 @@ export const {
   useSignUserUpMutation,
   useGetPortfoliosByUserQuery,
   useGetGlobalDashBoardByUserQuery,
-  //useGetPortfolioDashboardByIdQuery,
-  // useGetDetailPortfolioByIdQuery,
   useGetStategiesByUserIdQuery,
+  useNewStrategyMutation,
   useSearchStocksQuery,
   useLastQuoteQuery,
   useNewTradeMutation,
   useExitProcessMutation,
-
   useReEnterMutation,
   useCheckIfActiveTradeQuery,
   useGetCurrenciesQuery,
@@ -237,6 +247,6 @@ export const {
   useAdjustmentMutation,
   useGetTradesActivesByUserQuery,
   useGetMovementsByTradeIdQuery,
-
+  useDeleteTradeMutation,
 
 } = tradeApi;
