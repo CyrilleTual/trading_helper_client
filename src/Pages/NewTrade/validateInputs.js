@@ -16,6 +16,7 @@ export function validate(values) {
     tax,
     position,
     comment,
+    date,
     cash,
   } = values;
 
@@ -81,19 +82,25 @@ export function validate(values) {
     return { inputErrors, verifiedValues };  
   }
 
-  // Les valeurs validées et formatées
-  verifiedValues = {
-    fees:   +fees,
-    portfolioId: +portfolioId,
-    price: +price,
-    quantity: +quantity,
-    stop: +stop,
-    strategyId: +strategyId,
-    target: +target,
-    tax: +tax,
-    position: position,
-    comment: cleanComment,
+  // verification de la date 
+  if (!(new Date(date) instanceof Date)){
+     inputErrors.push("Date invalide");
+     return { inputErrors, verifiedValues };   
   }
+    // Les valeurs validées et formatées
+    verifiedValues = {
+      fees: +fees,
+      portfolioId: +portfolioId,
+      price: +price,
+      quantity: +quantity,
+      stop: +stop,
+      strategyId: +strategyId,
+      target: +target,
+      tax: +tax,
+      position: position,
+      comment: cleanComment,
+      date: date,
+    };
 
   // Retourne le tableau des erreurs et les valeurs formatées
   return { inputErrors, verifiedValues };

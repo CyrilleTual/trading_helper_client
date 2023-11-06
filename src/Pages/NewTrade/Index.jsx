@@ -124,6 +124,7 @@ function NewTrade() {
     strategyId: 0,
     portfolioId: 0,
     position: "long",
+    date: new Date().toISOString().split("T")[0],
   };
 
   const [values, setValues] = useState(initValues); // valeurs des inputs
@@ -271,6 +272,8 @@ function NewTrade() {
       return;
     } else {
       try {
+
+  
         await newTrade(datas);
         // on va sur le portefeuille : portfolioID
         navigate(`/portfolio/${datas.portfolio_id}/detail`);
@@ -313,6 +316,7 @@ function NewTrade() {
         currency_abbr: tradeCurrency.abbr,
         beforeQuote: +lastInfos.before,
         lastQuote: +lastInfos.last,
+        date: verifiedValues.date,
       });
 
       setSkip(false); // on déclanche le middle ware existingActiveTrad
@@ -382,7 +386,8 @@ function NewTrade() {
             <Modal
               display={
                 <p>
-                  Vous devez disposer d'au moins une stratégie avant de prendre position.
+                  Vous devez disposer d'au moins une stratégie avant de prendre
+                  position.
                 </p>
               }
               action={goCreateStrategie}
@@ -613,6 +618,19 @@ function NewTrade() {
                             rows="2"
                           />
 
+                          <label className={styles.label} htmlFor="date">
+                            date
+                          </label>
+                          <div className={styles.input_wrap}>
+                            <input
+                              type="date"
+                              id="date"
+                              name="date"
+                              value={values.date}
+                              onChange={handleChange}
+                            ></input>
+                          </div>
+
                           <label htmlFor="portfolioId">portefeuille</label>
                           <div className={styles.input_wrapLong}>
                             <select
@@ -665,15 +683,20 @@ function NewTrade() {
                           </div>
                         </form>
 
-                        {lastIsSuccess && lastInfos.last && !lastIsFetching && isSuccess1 &&portfolios&& values.strategyId!==0 &&(
-                          <>
-                            <Management
-                              values={values}
-                              lastInfos={lastInfos}
-                              portfolios={portfolios}
-                            />
-                          </>
-                        )}
+                        {lastIsSuccess &&
+                          lastInfos.last &&
+                          !lastIsFetching &&
+                          isSuccess1 &&
+                          portfolios &&
+                          values.strategyId !== 0 && (
+                            <>
+                              <Management
+                                values={values}
+                                lastInfos={lastInfos}
+                                portfolios={portfolios}
+                              />
+                            </>
+                          )}
                       </div>
                     </>
                   )}
