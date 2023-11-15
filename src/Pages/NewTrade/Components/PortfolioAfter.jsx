@@ -3,12 +3,30 @@ import styles from "./portfolioAfter.module.css";
 function PortfolioAfter({ portfolio, tradeParams, values, lastInfos }) {
   const currencySymbol = lastInfos.currency;
 
-  // console.log(portfolio, currencySymbol, tradeParams, values, lastInfos);
+  //console.log(portfolio, currencySymbol, tradeParams, values, lastInfos);
   // plus value sur la nouvelle ligne
-  const newPv =
-    portfolio.currentPv -
-    tradeParams.capitalInvested +
-    values.quantity * lastInfos.last;
+
+ 
+
+ let newPv = 0;
+
+  if (values.position === "long") {
+   newPv =
+      portfolio.currentPv -
+      +tradeParams.capitalInvested +
+      +values.quantity * lastInfos.last;
+  }
+
+  if (values.position === "short"){
+
+
+     newPv =
+       portfolio.currentPv +
+       +tradeParams.capitalInvested -
+       +(values.quantity * lastInfos.last);
+  }
+
+
 
   const newCapitalengaged = portfolio.activeK + +tradeParams.capitalInvested;
 
@@ -20,12 +38,6 @@ function PortfolioAfter({ portfolio, tradeParams, values, lastInfos }) {
   const newPerfAtTp =
     portfolio.potential + portfolio.currentPv + +tradeParams.potentialWin;
   const newPerfAtStop = portfolio.perfIfStopeed - +tradeParams.potentialLost;
-
- 
-
-
-
-
 
   return (
     <div>
@@ -89,12 +101,13 @@ function PortfolioAfter({ portfolio, tradeParams, values, lastInfos }) {
             <td>
               <span className={styles.minus}>
                 (
-                {portfolio.activeK === 0 ? 0 :(
-                    ((+portfolio.potential + portfolio.currentPv) /
-                      +portfolio.activeK) *
+                {portfolio.activeK === 0
+                  ? 0
+                  : (
+                      ((+portfolio.potential + portfolio.currentPv) /
+                        +portfolio.activeK) *
                       100
-                  )
-                  .toFixed(2)}
+                    ).toFixed(2)}
                 )
               </span>
             </td>
