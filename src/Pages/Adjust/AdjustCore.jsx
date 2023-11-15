@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
-import {
-  useAdjustmentMutation,
-} from "../../store/slice/tradeApi";
-import styles from "./adjust.module.css";
-import BtnSubmit from "../../Components/UI/BtnSubmit";
-import BtnCancel from "../../Components/UI/BtnCancel";
+import { useAdjustmentMutation } from "../../store/slice/tradeApi";
 import { validate } from "./validateInputsAdjust";
 import { calculNewMetrics } from "./metrics.js";
+import BtnCancel from "../../Components/UI/BtnCancel";
 import PerfMeter from "../../Components/PerfMeter/Index";
+import BtnSubmit from "../../Components/UI/BtnSubmit";
+import styles from "./adjust.module.css";
 import styleMeter from "../../Components/PerfMeter/perfMeter.module.css";
 import Modal from "../../Components/Modal/Index";
 import ProgressBar from "../../Components/ProgressBar/Index.jsx"
@@ -231,7 +229,7 @@ function AdjustCore({ trade, afterProcess }) {
         />
 
         {/* --------------------------------- début perfMeter --------------- */}
-        <div className={` ${styleMeter.wrapper_meter}`}>
+        <div className={` ${styleMeter.wrapper_meter} ${styles.local_wrapper}`}>
           <div
             className={`${styleMeter.alertInvalid} ${
               meterInvalid ? styleMeter.alertVisible : ""
@@ -244,7 +242,7 @@ function AdjustCore({ trade, afterProcess }) {
           </div>
 
           <div
-            className={`${styleMeter.meter_container} ${
+            className={`${styles.adjust} ${styleMeter.meter_container} ${
               meterInvalid ? styleMeter.opacify : ""
             }`}
           >

@@ -13,6 +13,7 @@ import { ReactComponent as Minus } from "../../assets/img/minus.svg";
 import { ReactComponent as Plus } from "../../assets/img/plus.svg";
 import { ReactComponent as Adjust } from "../../assets/img/adjust.svg";
 import { ReactComponent as Details } from "../../assets/img/details.svg";
+import { ReactComponent as Trash } from "../../assets/img/trash.svg";
 import Modal from "../../Components/Modal/Index";
 import { calculMetrics } from "../../utils/calculateTradeMetrics";
 import DeleteTrade from "../../Components/DeleteTrade/Index";
@@ -401,7 +402,7 @@ function DetailPorfolio() {
                                 className={`${styles.action}`}
                                 onClick={() => deleteTrade(elt)}
                               >
-                                <Adjust className={styles.ajust}></Adjust>
+                                <Trash className={styles.trash}></Trash>
                               </div>
                             </td>
                           ))}

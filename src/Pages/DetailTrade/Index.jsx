@@ -15,6 +15,9 @@ import styles from "./detailTrade.module.css";
 import styleMeter from "../../Components/PerfMeter/perfMeter.module.css";
 import BtnAction from "../../Components/UI/BtnAction";
 import Movements from "../../Pages/Movements/Index.jsx"
+
+import { ReactComponent as Next } from "../../assets/img/next.svg";
+import { ReactComponent as Previous} from "../../assets/img/previous.svg";
   
  
 
@@ -70,7 +73,6 @@ function DetailTrade() {
         (elt) => elt.tradeId === trade.tradeId
       );
 
-     
       const previousIndex =
         indexOfActual !== 0 && indexOfActual !== -1
           ? indexOfActual - 1
@@ -79,7 +81,6 @@ function DetailTrade() {
         indexOfActual !== originalsTrades.length - 1 && indexOfActual !== -1
           ? indexOfActual + 1
           : indexOfActual;
-
 
       setPreviousItem({
         ...previousItem,
@@ -93,7 +94,6 @@ function DetailTrade() {
          tradeId: originalsTrades[nextIndex].tradeId,
        });
 
-      
     }
   }, [trade]);
 
@@ -154,7 +154,7 @@ function DetailTrade() {
       ) : (
         trade && (
           <main className={styles.details}>
-            <div className="comments">
+            <div className={styles.comments}>
               <h1>Détail</h1>
 
               <h2>{trade.title}</h2>
@@ -221,7 +221,7 @@ function DetailTrade() {
                     pathname: `/portfolio/${previousItem.portfolioId}/detail/${previousItem.tradeId}`,
                   }}
                 >
-                  {`Prev`}
+                  <Previous />
                 </NavLink>
 
                 <NavLink
@@ -230,12 +230,12 @@ function DetailTrade() {
                     pathname: `/portfolio/${nextItem.portfolioId}/detail/${nextItem.tradeId}`,
                   }}
                 >
-                  {`Next`}
+                  <Next />
                 </NavLink>
               </div>
 
               {/* -------------------------------- Texte  ------------------------- */}
-              <div>
+              <div className={styles.text}>
                 <h3>Actif :</h3>
                 <ul>
                   <li>

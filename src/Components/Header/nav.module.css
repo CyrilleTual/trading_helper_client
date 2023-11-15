@@ -17,6 +17,7 @@
   padding: 1rem;
   background: transparent;
   color: var(--txt-color-dark);
+ 
 }
 
 .navbar_links {
@@ -24,7 +25,7 @@
   flex-direction: column;
   justify-content: center;
   position: absolute;
-  z-index: 10;
+  z-index: 100;
   bottom: 0;
   width: 0;
   height: 100%;
@@ -47,11 +48,23 @@
   padding: 0 0.3rem;
   color: inherit;
   display: block;
-  padding: 1.5rem;
+  padding: 15px;
   font-size: 2.5rem;
   flex-direction: column;
-  white-space:nowrap;
+  white-space: nowrap;
   border-bottom: 1px gray solid;
+}
+
+.navbar_link:hover {
+  padding: 12px;
+  font-size: 2.5rem;
+   
+  border: 3px solid black;
+   border-bottom: 4px solid  black;
+}
+
+.navbar_link:hover .navbar_item {
+  display: none;
 }
 
 .navbar_item {
@@ -59,28 +72,23 @@
   text-align: center;
   background-color: #fff;
   overflow: hidden;
-  
 }
 
- 
- 
- 
 @media screen and (min-width: 672px) {
-.navbar_item {
-  width: 50%;
-  max-width: 400px;
+  .navbar_item {
+    width: 50%;
+    max-width: 400px;
+  }
+  .navbar_links {
+    align-items: flex-start;
+  }
 }
-.navbar_links {
-  align-items: flex-start;
-}
-}
-
 
 /**********************  burger  ****************/
 .navbar_burger {
   width: 40px;
   height: 40px;
-  background: transparent; 
+  background: transparent;
   border: none;
   /* color: inherit; */
   display: inline-block;
@@ -90,7 +98,6 @@
   right: 1 rem;
   z-index: 10;
 }
-
 
 .burger_bar,
 .burger_bar::before,
@@ -106,7 +113,7 @@
 
 .navbar_burger:hover .burger_bar,
 .navbar_burger:hover .burger_bar::before,
-.navbar_burger:hover .burger_bar::after{
+.navbar_burger:hover .burger_bar::after {
   background-color: black;
 }
 
@@ -134,5 +141,3 @@
 .show_nav .burger_bar::after {
   transform: rotate(-45deg);
 }
-
-

@@ -16,6 +16,13 @@ function Nav() {
 
   const [showLinks, setShowLinks] = useState(false);
 
+  if (showLinks) {
+    document.body.classList.add`blockedY`;
+  } else {
+    document.body.classList.remove`blockedY`;
+  }
+
+
   const handleShowLinks = () => {
     setShowLinks(!showLinks);
   };

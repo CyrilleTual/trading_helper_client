@@ -1,80 +1,107 @@
-.details{
-    width: 360px;
-    margin: auto;
-    --metW :80vw;
-    --metH : calc((var(--metW))*0.58);
+.details {
+  width: 360px;
+  margin: auto;
+  --metW: 80vw;
+  --metH: calc((var(--metW)) * 0.58);
 }
 
-@media  screen and (min-width:480px) {
-   .details{
-    --metW :400px;
-    --metH :230px; 
-    }
+.comments {
+  position: relative;
 }
 
+@media screen and (min-width: 480px) {
+  .details {
+    --metW: 400px;
+    --metH: 230px;
+  }
+}
 
 /* Attention pour les dimensions du meter indispensable de passer
 par des variables ( et de les setter 2* -> pour la div container et 
 Pour le svg) */
 :export {
-    meterWidth: var(--metW);
-    meterHeight: var(--metH);
+  meterWidth: var(--metW);
+  meterHeight: var(--metH);
 }
 
-.next_prev{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.next_prev {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.next, .prev {
-    
-   border: 1px gray solid !important;
+.next,
+.prev {
+  margin-top: 15px;
+  padding: 5px;
+  background-color: rgba(211, 211, 211, 0.26);
+  border-radius: 50%;
+}
+
+.text {
+  width: 100%;
+  margin: auto;
+  margin-top: 30px;
+  border-radius: 30px;
+  margin-bottom: 20px;
+  box-shadow: 1px 2px 10px 1px rgb(201, 201, 201);
+  padding: 10px;
 }
 
 .details .meter_container {
-    text-align: center;
-    width: var(--metW);
-    height: var(--metH); 
-    margin: auto;
+  text-align: center;
+  width: var(--metW);
+  height: var(--metH);
+  margin: auto;
 }
-.btn_wrapper{
-    display: flex;
-    margin: 20px auto;
+.btn_wrapper {
+  display: flex;
+  margin: 20px auto;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 
-.reEnter{
-    background-color: rgba(0, 128, 0, 0.1);
-    margin: 10px auto;
-    border-radius: 30px;
-    margin-bottom: 20px;
-    box-shadow: 1px 2px 10px 1px  green;
-    padding: 10px;
+.btn_wrapper input {
+  width: 110px;
+  margin: 5px;
+}
 
+.reEnter {
+  background-color: rgba(0, 128, 0, 0.1);
+  margin: 10px auto;
+  border-radius: 30px;
+  margin-bottom: 20px;
+  box-shadow: 1px 2px 10px 1px green;
+  padding: 10px;
 }
 
 .exit {
-    background-color: rgba(0, 0, 0, 0.1);
-     margin: 10px auto;
-    border-radius: 30px;
-    margin-bottom: 20px;
-    box-shadow: 1px 2px 10px 1px  red;
-    padding: 10px;
+  background-color: rgba(0, 0, 0, 0.1);
+  margin: 10px auto;
+  border-radius: 30px;
+  margin-bottom: 20px;
+  box-shadow: 1px 2px 10px 1px red;
+  padding: 10px;
 }
 
-.adjust{
-    background-color: rgba(0, 0, 255, 0.036);
-     margin: 10px auto;
-    border-radius: 30px;
-    margin-bottom: 20px;
-    box-shadow: 1px 2px 10px 1px  blue;
-    padding: 10px;
+.adjust {
+  background-color: rgba(0, 0, 255, 0.036);
+  margin: 10px auto;
+  border-radius: 30px;
+  margin-bottom: 20px;
+  box-shadow: 1px 2px 10px 1px blue;
+  padding: 10px;
 }
-.mvts{
-    background-color:  rgba(128, 128, 128, 0.086);
-     margin: 10px auto;
-    border-radius: 30px;
-    margin-bottom: 20px;
-    box-shadow: 1px 2px 10px 1px  gray;
-    padding: 10px;
+.mvts {
+  background-color: rgba(128, 128, 128, 0.086);
+  margin: 10px auto;
+  border-radius: 30px;
+  margin-bottom: 20px;
+  box-shadow: 1px 2px 10px 1px gray;
+  padding: 10px;
 }
