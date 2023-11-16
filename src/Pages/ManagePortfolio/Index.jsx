@@ -32,7 +32,7 @@ function ManagePortfolio() {
       ) : ( 
         <div>
           <main className={styles.managePort}>
-            <h1>Gestion des portefeuilles</h1>
+            <h1>Gestion portefeuilles</h1>
             {portfolios.length > 0 &&
             <table>
               <thead>

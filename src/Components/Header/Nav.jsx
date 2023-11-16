@@ -13,6 +13,9 @@ function Nav() {
   ) {
     isVisitor = false;
   }
+  
+  // retourne le nom du connecté :
+  const alias = useSelector((state) => state.user.infos.alias);
 
   const [showLinks, setShowLinks] = useState(false);
 
@@ -82,6 +85,10 @@ function Nav() {
           >
             Se déconnecter
           </NavLink>
+        </li>
+        { }
+        <li className={styles.navbar_item}>
+            Connecté(e) : {alias}
         </li>
       </ul>
     </div>

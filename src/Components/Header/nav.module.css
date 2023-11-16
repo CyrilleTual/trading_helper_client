@@ -17,7 +17,6 @@
   padding: 1rem;
   background: transparent;
   color: var(--txt-color-dark);
- 
 }
 
 .navbar_links {
@@ -58,7 +57,6 @@
 .navbar_link:hover {
   padding: 12px;
   font-size: 2.5rem;
-   
   border: 3px solid black;
    border-bottom: 4px solid  black;
 }
@@ -132,7 +130,7 @@
 
 /* pour faire disparaitre la barre milieu */
 .show_nav .burger_bar {
-  background: transparent;
+  background: transparent  !important;
 }
 
 .show_nav .burger_bar::before {

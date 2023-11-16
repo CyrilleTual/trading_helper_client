@@ -25,7 +25,7 @@ par des variables ( et de les setter 2* -> pour la div container et
 Pour le svg) */
 .adjust {
   --metW: 70vw;
-  --metH: calc((var(--metW)) * 0.58);
+  --metH: calc((var(--metW)) * 0.60);
   text-align: center;
   width: var(--metW);
   height: var(--metH);
