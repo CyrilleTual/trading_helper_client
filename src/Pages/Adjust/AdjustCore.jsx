@@ -242,7 +242,7 @@ function AdjustCore({ trade, afterProcess }) {
           </div>
 
           <div
-            className={`${styles.adjust} ${styleMeter.meter_container} ${
+            className={`${styles.adjust_page} ${styleMeter.meter_container} ${
               meterInvalid ? styleMeter.opacify : ""
             }`}
           >

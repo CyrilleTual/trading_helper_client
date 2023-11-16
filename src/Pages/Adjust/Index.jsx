@@ -7,6 +7,11 @@ import { Loading } from "../../Components/Loading/Index";
 import { calculMetrics } from "../../utils/calculateTradeMetrics";
 import AdjustCore from "./AdjustCore";
 
+import { ReactComponent as Next } from "../../assets/img/next.svg";
+import { ReactComponent as Previous } from "../../assets/img/previous.svg";
+  
+
+
 
 function Adjust() {
 
@@ -113,9 +118,9 @@ function Adjust() {
             }
           />
 
-          <div>
+          <div className={styles.next_prev}>
             <NavLink
-              className={`${styles.action}`}
+              className={`${styles.action} ${styles.prev}`}
               to={{
                 pathname: `/portfolio/${portfolioId}/ajust/${previousTradeId}`,
               }}
@@ -124,11 +129,11 @@ function Adjust() {
                 tradesIdArray: tradesIdArray,
               }}
             >
-              {`Prev`}
+              <Previous />
             </NavLink>
 
             <NavLink
-              className={`${styles.action}`}
+              className={`${styles.action} ${styles.next}`}
               to={{
                 pathname: `/portfolio/${portfolioId}/ajust/${nextTradeId}`,
               }}
@@ -137,7 +142,7 @@ function Adjust() {
                 tradesIdArray: tradesIdArray,
               }}
             >
-              {`Next`}
+              <Next />
             </NavLink>
           </div>
         </main>

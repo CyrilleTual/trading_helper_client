@@ -1,3 +1,8 @@
+.adjust{
+  position: relative;
+}
+
+
 .form_reEnter {
   composes: form_enter from "../NewTrade/newTrade.module.css";
 }
@@ -23,7 +28,7 @@
 /* Attention pour les dimensions du meter indispensable de passer
 par des variables ( et de les setter 2* -> pour la div container et 
 Pour le svg) */
-.adjust {
+.adjust_page {
   --metW: 70vw;
   --metH: calc((var(--metW)) * 0.60);
   text-align: center;
@@ -33,7 +38,7 @@ Pour le svg) */
 }
 
 @media screen and (min-width: 480px) {
-  .adjust {
+  .adjust_page {
     --metW: 320px !important;
     --metH: 185px;
     text-align: center;
@@ -49,3 +54,20 @@ Pour le svg) */
   meterHeight: var(--metH);
 }
 
+.next_prev {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.next,
+.prev {
+  margin-top: 10px;
+  padding: 5px;
+  background-color: rgba(211, 211, 211, 0.26);
+  border-radius: 50%;
+}
