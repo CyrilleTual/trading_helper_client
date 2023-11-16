@@ -146,6 +146,10 @@ function DetailTrade() {
     navigate(`/portfolio/${trade.portfolioId}/detail/${trade.tradeId}`);
   };
 
+  const returnArray = () => {
+    navigate(`/portfolio/${trade.portfolioId}/detail`)
+  }
+ 
   ///////////////////////// Display /////////////////////////////////////////////////////
   return (
     <>
@@ -330,6 +334,11 @@ function DetailTrade() {
                     value={"Ajuster"}
                     action={() => handleAction("adjust")}
                     name={"adjust"}
+                  />
+                  <BtnAction
+                    value={"retour"}
+                    action={() => returnArray()}
+                    name={"return"}
                   />
                   <BtnAction
                     value={"Historique"}
